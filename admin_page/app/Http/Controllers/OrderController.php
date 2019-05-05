@@ -14,7 +14,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::latest()->paginate(Order::ITEMS_PER_PAGE);
+        $orders = Order::latestOrdersPaginated();
         return view('orders.index', compact('orders'))
             ->with('rowItem', Order::rowNumber(request()->input('page', 1)) );
     }
@@ -90,7 +90,7 @@ class OrderController extends Controller
     {
         $order->delete();
 
-        return redirect()->route('products.index')
+        return redirect()->route('orders.index')
             ->with('success', 'Pedido eliminado exitosamente');
     }
 }

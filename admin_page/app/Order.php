@@ -12,4 +12,8 @@ class Order extends Model
     public static function rowNumber($page) {
         return ($page - 1) * self::ITEMS_PER_PAGE;
     }
+
+    public function latestOrders() {
+        return $this->latesst()->paginate(self::ITEMS_PER_PAGE);
+    }
 }
