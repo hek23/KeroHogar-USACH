@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\TimeBlocks;
+use App\TimeBlock;
 use Illuminate\Http\Request;
 
-class TimeBlocksController extends Controller
+class TimeBlockController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -41,10 +41,10 @@ class TimeBlocksController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\TimeBlocks  $timeBlocks
+     * @param  \App\TimeBlock  $timeBlock
      * @return \Illuminate\Http\Response
      */
-    public function show(TimeBlocks $timeBlocks)
+    public function show(TimeBlock $timeBlock)
     {
         //
     }
@@ -52,10 +52,10 @@ class TimeBlocksController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\TimeBlocks  $timeBlocks
+     * @param  \App\TimeBlock  $timeBlock
      * @return \Illuminate\Http\Response
      */
-    public function edit(TimeBlocks $timeBlocks)
+    public function edit(TimeBlock $timeBlock)
     {
         //
     }
@@ -64,10 +64,10 @@ class TimeBlocksController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\TimeBlocks  $timeBlocks
+     * @param  \App\TimeBlock  $timeBlock
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, TimeBlocks $timeBlocks)
+    public function update(Request $request, TimeBlock $timeBlock)
     {
         //
     }
@@ -75,10 +75,10 @@ class TimeBlocksController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\TimeBlocks  $timeBlocks
+     * @param  \App\TimeBlock  $timeBlock
      * @return \Illuminate\Http\Response
      */
-    public function destroy(TimeBlocks $timeBlocks)
+    public function destroy(TimeBlock $timeBlock)
     {
         //
     }

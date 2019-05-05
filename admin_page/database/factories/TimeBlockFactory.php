@@ -2,10 +2,10 @@
 
 /* @var $factory \Illuminate\Database\Eloquent\Factory */
 
-use App\TimeBlocks;
+use App\TimeBlock;
 use Faker\Generator as Faker;
 
-$factory->define(TimeBlocks::class, function (Faker $faker) {
+$factory->define(TimeBlock::class, function (Faker $faker) {
     return [
         //
     ];

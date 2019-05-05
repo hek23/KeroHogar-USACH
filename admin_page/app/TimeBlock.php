@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TimeBlocks extends Model
+class TimeBlock extends Model
 {
     //
 }

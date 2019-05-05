@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Order;
-use Illuminate\Http\Request;
+use App\Http\Requests\OrderRequest;
 
 class OrderController extends Controller
 {
@@ -14,7 +14,9 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
+        $orders = Order::latest()->paginate(Order::ITEMS_PER_PAGE);
+        return view('orders.index', compact('orders'))
+            ->with('rowItem', Order::rowNumber(request()->input('page', 1)) );
     }
 
     /**
@@ -24,7 +26,7 @@ class OrderController extends Controller
      */
     public function create()
     {
-        //
+        return view('orders.create');
     }
 
     /**
@@ -33,9 +35,12 @@ class OrderController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(OrderRequest $request)
     {
-        //
+        Order::create($request->validated());
+
+        return redirect()->route('orders.index')
+            ->with('success', 'Pedido creado exitosamente');
     }
 
     /**
@@ -46,7 +51,7 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        //
+        return view('orders.create', compact('order'));
     }
 
     /**
@@ -57,7 +62,7 @@ class OrderController extends Controller
      */
     public function edit(Order $order)
     {
-        //
+        return view('orders.edit', compact('order'));
     }
 
     /**
@@ -67,9 +72,12 @@ class OrderController extends Controller
      * @param  \App\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Order $order)
+    public function update(OrderRequest $request, Order $order)
     {
-        //
+        $order->update($request->validated());
+
+        return redirect()->route('orders.index')
+            ->with('success', 'Pedido actualizado exitosamente');
     }
 
     /**
@@ -80,6 +88,9 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        //
+        $order->delete();
+
+        return redirect()->route('products.index')
+            ->with('success', 'Pedido eliminado exitosamente');
     }
 }
