@@ -13,25 +13,59 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->to(route('login'));
 });
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-
 Route::middleware('auth')->group( function() {
-    Route::resource('pedidos', 'OrderController')->parameters([
+    Route::resource('pedidos', 'OrderController')->names([
+        'index' => 'orders.index',
+        'create' => 'orders.create',
+        'store' => 'orders.store',
+        'show' => 'orders.show',
+        'edit' => 'orders.edit',
+        'update' => 'orders.update',
+        'destroy' => 'orders.destroy',
+    ])->parameters([
         'pedidos' => 'order'
     ]);
-    Route::resource('precios', 'OrderPriceController')->parameters([
+
+    Route::resource('precios', 'OrderPriceController')->names([
+        'index' => 'prices.index',
+        'create' => 'prices.create',
+        'store' => 'prices.store',
+        'show' => 'prices.show',
+        'edit' => 'prices.edit',
+        'update' => 'prices.update',
+        'destroy' => 'prices.destroy',
+    ])->parameters([
         'precios' => 'orderPrice',
     ]);
-    Route::resource('precios/{precio}/descuentos', 'PriceDiscountController')->parameters([
+    
+    Route::resource('precios/{precio}/descuentos', 'PriceDiscountController')->names([
+        'index' => 'discounts.index',
+        'create' => 'discounts.create',
+        'store' => 'discounts.store',
+        'show' => 'discounts.show',
+        'edit' => 'discounts.edit',
+        'update' => 'discounts.update',
+        'destroy' => 'discounts.destroy',
+    ])->parameters([
         'precios' => 'orderPrice',
         'descuentos' => 'priceDiscount',
     ]);
-    Route::resource('horarios', 'TimeBlockController')->parameters([
+
+    Route::resource('horario', 'TimeBlockController')->names([
+        'index' => 'schedule.index',
+        'create' => 'schedule.create',
+        'store' => 'schedule.store',
+        'show' => 'schedule.show',
+        'edit' => 'schedule.edit',
+        'update' => 'schedule.update',
+        'destroy' => 'schedule.destroy',
+    ])->parameters([
         'horarios' => 'timeBlock',
     ]);
+    
 });

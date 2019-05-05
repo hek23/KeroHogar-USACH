@@ -13,7 +13,7 @@ class Order extends Model
         return ($page - 1) * self::ITEMS_PER_PAGE;
     }
 
-    public function latestOrders() {
-        return $this->latesst()->paginate(self::ITEMS_PER_PAGE);
+    public function scopeLatestOrdersPaginated($query) {
+        return $query->latest()->paginate(self::ITEMS_PER_PAGE);
     }
 }

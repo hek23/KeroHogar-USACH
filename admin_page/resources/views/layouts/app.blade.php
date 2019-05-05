@@ -18,6 +18,8 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    @yield('style')
 </head>
 <body>
     <div id="app">
@@ -41,6 +43,15 @@
                         <!-- Authentication Links -->
                         @guest
                         @else
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('orders.index') }}">{{ __('navigation.orders.index') }}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('prices.index') }}">{{ __('navigation.prices.index') }}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('schedule.index') }}">{{ __('navigation.schedule.index') }}</a>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>
@@ -64,9 +75,10 @@
             </div>
         </nav>
 
-        <main class="py-4">
+        <main class="py-3">
             @yield('content')
         </main>
     </div>
+    @yield('script')
 </body>
 </html>

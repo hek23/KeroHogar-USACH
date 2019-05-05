@@ -24,7 +24,7 @@ class OrderRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'price' => 'numeric',
         ];
     }
 
@@ -36,7 +36,7 @@ class OrderRequest extends FormRequest
     public function messages()
     {
         return [
-            'title.required' => 'A title is required',
+            'price.numeric' => 'El precio debe ser un número',
             'body.required'  => 'A message is required',
         ];
     }
