@@ -17,14 +17,14 @@ return [
         'destroy' => 'Eliminar pedido',
     ],
 
-    'prices' => [
-        'index' => 'Precios',
-        'create' => 'Crear nuevo precio de pedido',
-        'store' => 'Guardar precio',
-        'show' => 'Detalles del precio',
-        'edit' => 'Editar precio',
-        'update' => 'Actualizar precio',
-        'destroy' => 'Eliminar precio',
+    'products' => [
+        'index' => 'Productos',
+        'create' => 'Crear nuevo producto',
+        'store' => 'Guardar producto',
+        'show' => 'Detalles del producto',
+        'edit' => 'Editar producto',
+        'update' => 'Actualizar producto',
+        'destroy' => 'Eliminar producto',
     ],
 
     'schedule' => [

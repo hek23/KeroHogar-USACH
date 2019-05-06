@@ -15,7 +15,7 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::allPaginated();
-        return view('prices.index', compact('products'))
+        return view('products.index', compact('products'))
             ->with('rowItem', $this->rowNumber(request()->input('page', 1), Product::ITEMS_PER_PAGE));
     }
 
@@ -26,7 +26,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('prices.create');
+        return view('products.create');
     }
 
     /**
@@ -39,7 +39,7 @@ class ProductController extends Controller
     {
         Product::create($request->validated());
 
-        return redirect()->route('prices.index')
+        return redirect()->route('products.index')
             ->with('success', 'Producto creado exitosamente');
     }
 
@@ -51,7 +51,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return view('prices.show', compact('product'));
+        return view('products.show', compact('product'));
     }
 
     /**
@@ -62,7 +62,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return view('prices.edit', compact('product'));
+        return view('products.edit', compact('product'));
     }
 
     /**
@@ -76,7 +76,7 @@ class ProductController extends Controller
     {
         $product->update($request->validated());
 
-        return redirect()->route('prices.index')
+        return redirect()->route('products.index')
             ->with('success', 'Producto actualizado exitosamente');
     }
 
@@ -90,7 +90,7 @@ class ProductController extends Controller
     {
         $product->delete();
 
-        return redirect()->route('prices.index')
+        return redirect()->route('products.index')
             ->with('success', 'Producto eliminado exitosamente');
     }
 }

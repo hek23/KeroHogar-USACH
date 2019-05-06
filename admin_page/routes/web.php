@@ -31,19 +31,19 @@ Route::middleware('auth')->group( function() {
         'pedidos' => 'order'
     ]);
 
-    Route::resource('precios', 'OrderPriceController')->names([
-        'index' => 'prices.index',
-        'create' => 'prices.create',
-        'store' => 'prices.store',
-        'show' => 'prices.show',
-        'edit' => 'prices.edit',
-        'update' => 'prices.update',
-        'destroy' => 'prices.destroy',
+    Route::resource('productos', 'ProductController')->names([
+        'index' => 'products.index',
+        'create' => 'products.create',
+        'store' => 'products.store',
+        'show' => 'products.show',
+        'edit' => 'products.edit',
+        'update' => 'products.update',
+        'destroy' => 'products.destroy',
     ])->parameters([
-        'precios' => 'orderPrice',
+        'productos' => 'product',
     ]);
     
-    Route::resource('precios/{orderPrice}/descuentos', 'PriceDiscountController')->names([
+    Route::resource('productos/{product}/descuentos', 'PriceDiscountController')->names([
         'index' => 'discounts.index',
         'create' => 'discounts.create',
         'store' => 'discounts.store',

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateOrderPricesTable extends Migration
+class CreateOrderTimeBlockTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateOrderPricesTable extends Migration
      */
     public function up()
     {
-        Schema::create('order_prices', function (Blueprint $table) {
+        Schema::create('order_time_block', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
         });
@@ -26,6 +26,6 @@ class CreateOrderPricesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('order_prices');
+        Schema::dropIfExists('order_time_block');
     }
 }

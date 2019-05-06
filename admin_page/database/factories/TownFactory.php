@@ -2,10 +2,10 @@
 
 /* @var $factory \Illuminate\Database\Eloquent\Factory */
 
-use App\OrderPrice;
+use App\Town;
 use Faker\Generator as Faker;
 
-$factory->define(OrderPrice::class, function (Faker $faker) {
+$factory->define(Town::class, function (Faker $faker) {
     return [
         //
     ];

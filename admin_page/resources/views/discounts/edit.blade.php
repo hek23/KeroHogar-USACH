@@ -10,7 +10,7 @@
                 </div>
                 <div class="card-body">
                     @include('partials.errors')
-                    <form method="post" action="{{ route('discounts.update', [$orderPrice->id, $priceDiscount->id]) }}">
+                    <form method="post" action="{{ route('discounts.update', [$product->id, $priceDiscount->id]) }}">
                         @method('PATCH')
                         @csrf
                         <div class="form-group">

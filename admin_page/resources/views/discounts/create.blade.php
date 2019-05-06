@@ -10,7 +10,7 @@
                 </div>
                 <div class="card-body">
                     @include('partials.errors')
-                    <form method="post" action="{{ route('discounts.store', $orderPrice->id) }}">
+                    <form method="post" action="{{ route('discounts.store', $product->id) }}">
                         @csrf
                         <div class="form-group">
                             <label for="name">Nombre del pedido:</label>

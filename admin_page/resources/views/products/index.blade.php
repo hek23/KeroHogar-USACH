@@ -23,14 +23,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($orderPrices as $orderPrice)
+                    @foreach($products as $product)
                     <tr>
                         <td>{{ ++$rowItem }}</td>
-                        <td><a href="{{ route('discounts.index', $orderPrice->id)}}" class="btn btn-info">{{__('navigation.discounts.index')}}</a></td>
-                        <td><a href="{{ route('prices.show', $orderPrice->id)}}" class="btn btn-info">{{__('navigation.show')}}</a></td>
-                        <td><a href="{{ route('prices.edit', $orderPrice->id)}}" class="btn btn-primary">{{__('navigation.edit')}}</a></td>
+                        <td><a href="{{ route('discounts.index', $product->id)}}" class="btn btn-info">{{__('navigation.discounts.index')}}</a></td>
+                        <td><a href="{{ route('prices.show', $product->id)}}" class="btn btn-info">{{__('navigation.show')}}</a></td>
+                        <td><a href="{{ route('prices.edit', $product->id)}}" class="btn btn-primary">{{__('navigation.edit')}}</a></td>
                         <td>
-                            <form action="{{ route('prices.destroy', $orderPrice->id)}}" method="post">
+                            <form action="{{ route('prices.destroy', $product->id)}}" method="post">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-danger delete" data-confirm="{{__('navigation.confirm_deletion')}}" type="submit">{{__('navigation.delete')}}</button>
@@ -41,7 +41,7 @@
                 </tbody>
             </table>
 
-            {!! $orderPrices->links() !!}
+            {!! $products->links() !!}
         </div>
     </div>
 </div>

@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class OrderPrice extends Model
+class Product extends Model
 {
     const ITEMS_PER_PAGE = 10;
 
