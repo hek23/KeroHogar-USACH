@@ -14,7 +14,7 @@ class TimeBlockController extends Controller
      */
     public function index()
     {
-        $timeBlocks = TimeBlock::latestOrdersPaginated();
+        $timeBlocks = TimeBlock::orderedBlocksPaginated();
         return view('schedule.index', compact('timeBlocks'))
             ->with('rowItem', $this->rowNumber(request()->input('page', 1), TimeBlock::ITEMS_PER_PAGE));
     }
