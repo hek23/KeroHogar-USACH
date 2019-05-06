@@ -7,11 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     const ITEMS_PER_PAGE = 10;
-    //
-
-    public static function rowNumber($page) {
-        return ($page - 1) * self::ITEMS_PER_PAGE;
-    }
+    
+    public $guarded = [];
 
     public function scopeLatestOrdersPaginated($query) {
         return $query->latest()->paginate(self::ITEMS_PER_PAGE);

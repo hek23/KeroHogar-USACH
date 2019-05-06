@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\TimeBlock;
-use Illuminate\Http\Request;
+use App\Http\Requests\TimeBlockRequest;
 
 class TimeBlockController extends Controller
 {
@@ -14,7 +14,9 @@ class TimeBlockController extends Controller
      */
     public function index()
     {
-        //
+        $timeBlocks = TimeBlock::latestOrdersPaginated();
+        return view('schedule.index', compact('timeBlocks'))
+            ->with('rowItem', $this->rowNumber(request()->input('page', 1), TimeBlock::ITEMS_PER_PAGE));
     }
 
     /**
@@ -24,18 +26,21 @@ class TimeBlockController extends Controller
      */
     public function create()
     {
-        //
+        return view('schedule.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Http\Requests\TimeBlockRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TimeBlockRequest $request)
     {
-        //
+        TimeBlock::create($request->validated());
+
+        return redirect()->route('schedule.index')
+            ->with('success', 'Bloque horario creado exitosamente');
     }
 
     /**
@@ -46,7 +51,7 @@ class TimeBlockController extends Controller
      */
     public function show(TimeBlock $timeBlock)
     {
-        //
+        return view('schedule.show', compact('timeBlock'));
     }
 
     /**
@@ -57,19 +62,22 @@ class TimeBlockController extends Controller
      */
     public function edit(TimeBlock $timeBlock)
     {
-        //
+        return view('schedule.edit', compact('timeBlock'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Http\Requests\TimeBlockRequest  $request
      * @param  \App\TimeBlock  $timeBlock
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, TimeBlock $timeBlock)
+    public function update(TimeBlockRequest $request, TimeBlock $timeBlock)
     {
-        //
+        $timeBlock->update($request->validated());
+
+        return redirect()->route('schedule.index')
+            ->with('success', 'Bloque horario actualizado exitosamente');
     }
 
     /**
@@ -80,6 +88,9 @@ class TimeBlockController extends Controller
      */
     public function destroy(TimeBlock $timeBlock)
     {
-        //
+        $timeBlock->delete();
+
+        return redirect()->route('schedule.index')
+            ->with('success', 'Bloque horario eliminado exitosamente');
     }
 }

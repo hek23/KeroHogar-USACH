@@ -16,7 +16,7 @@ class OrderController extends Controller
     {
         $orders = Order::latestOrdersPaginated();
         return view('orders.index', compact('orders'))
-            ->with('rowItem', Order::rowNumber(request()->input('page', 1)) );
+            ->with('rowItem', $this->rowNumber(request()->input('page', 1), Order::ITEMS_PER_PAGE) );
     }
 
     /**
@@ -32,7 +32,7 @@ class OrderController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Http\Requests\OrderRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(OrderRequest $request)
@@ -68,7 +68,7 @@ class OrderController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Http\Requests\OrderRequest  $request
      * @param  \App\Order  $order
      * @return \Illuminate\Http\Response
      */

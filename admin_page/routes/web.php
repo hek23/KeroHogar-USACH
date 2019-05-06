@@ -43,7 +43,7 @@ Route::middleware('auth')->group( function() {
         'precios' => 'orderPrice',
     ]);
     
-    Route::resource('precios/{precio}/descuentos', 'PriceDiscountController')->names([
+    Route::resource('precios/{orderPrice}/descuentos', 'PriceDiscountController')->names([
         'index' => 'discounts.index',
         'create' => 'discounts.create',
         'store' => 'discounts.store',
@@ -52,7 +52,6 @@ Route::middleware('auth')->group( function() {
         'update' => 'discounts.update',
         'destroy' => 'discounts.destroy',
     ])->parameters([
-        'precios' => 'orderPrice',
         'descuentos' => 'priceDiscount',
     ]);
 
@@ -65,7 +64,7 @@ Route::middleware('auth')->group( function() {
         'update' => 'schedule.update',
         'destroy' => 'schedule.destroy',
     ])->parameters([
-        'horarios' => 'timeBlock',
+        'horario' => 'timeBlock',
     ]);
     
 });

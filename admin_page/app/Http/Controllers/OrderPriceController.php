@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\OrderPrice;
-use Illuminate\Http\Request;
+use App\Http\Requests\OrderPriceRequest;
 
 class OrderPriceController extends Controller
 {
@@ -14,7 +14,9 @@ class OrderPriceController extends Controller
      */
     public function index()
     {
-        //
+        $orderPrices = OrderPrice::allPaginated();
+        return view('prices.index', compact('orderPrices'))
+            ->with('rowItem', $this->rowNumber(request()->input('page', 1), OrderPrice::ITEMS_PER_PAGE));
     }
 
     /**
@@ -24,18 +26,21 @@ class OrderPriceController extends Controller
      */
     public function create()
     {
-        //
+        return view('prices.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Http\Requests\OrderPriceRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(OrderPriceRequest $request)
     {
-        //
+        OrderPrice::create($request->validated());
+
+        return redirect()->route('prices.index')
+            ->with('success', 'Precio creado exitosamente');
     }
 
     /**
@@ -46,7 +51,7 @@ class OrderPriceController extends Controller
      */
     public function show(OrderPrice $orderPrice)
     {
-        //
+        return view('prices.show', compact('orderPrice'));
     }
 
     /**
@@ -57,19 +62,22 @@ class OrderPriceController extends Controller
      */
     public function edit(OrderPrice $orderPrice)
     {
-        //
+        return view('prices.edit', compact('orderPrice'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Http\Requests\OrderPriceRequest  $request
      * @param  \App\OrderPrice  $orderPrice
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, OrderPrice $orderPrice)
+    public function update(OrderPriceRequest $request, OrderPrice $orderPrice)
     {
-        //
+        $orderPrice->update($request->validated());
+
+        return redirect()->route('prices.index')
+            ->with('success', 'Precio actualizado exitosamente');
     }
 
     /**
@@ -80,6 +88,9 @@ class OrderPriceController extends Controller
      */
     public function destroy(OrderPrice $orderPrice)
     {
-        //
+        $orderPrice->delete();
+
+        return redirect()->route('prices.index')
+            ->with('success', 'Precio eliminado exitosamente');
     }
 }
