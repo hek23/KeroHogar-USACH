@@ -6,11 +6,11 @@
         <div class="col-md-10">
             <div class="card">
                 <div class="card-header">
-                    {{__('navigation.prices.create')}}
+                    {{__('navigation.products.create')}}
                 </div>
                 <div class="card-body">
                     @include('partials.errors')
-                    <form method="post" action="{{ route('prices.store') }}">
+                    <form method="post" action="{{ route('products.store') }}">
                         @csrf
                         <div class="form-group">
                             <label for="name">Nombre del pedido:</label>
@@ -24,7 +24,7 @@
                             <label for="quantity">Cantidad del pedido:</label>
                             <input type="text" class="form-control" name="quantity" />
                         </div>
-                        <button type="submit" class="btn btn-primary">{{__('navigation.prices.store')}}</button>
+                        <button type="submit" class="btn btn-primary">{{__('navigation.products.store')}}</button>
                     </form>
                 </div>
             </div>

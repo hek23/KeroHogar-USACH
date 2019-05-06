@@ -8,7 +8,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="float-right mr-3 mb-2">
-                <a class="btn btn-success" href="{{ route('prices.create') }}"> {{__('navigation.prices.create')}} </a>
+                <a class="btn btn-success" href="{{ route('products.create') }}"> {{__('navigation.products.create')}} </a>
             </div>
         </div>
     </div>
@@ -27,10 +27,10 @@
                     <tr>
                         <td>{{ ++$rowItem }}</td>
                         <td><a href="{{ route('discounts.index', $product->id)}}" class="btn btn-info">{{__('navigation.discounts.index')}}</a></td>
-                        <td><a href="{{ route('prices.show', $product->id)}}" class="btn btn-info">{{__('navigation.show')}}</a></td>
-                        <td><a href="{{ route('prices.edit', $product->id)}}" class="btn btn-primary">{{__('navigation.edit')}}</a></td>
+                        <td><a href="{{ route('products.show', $product->id)}}" class="btn btn-info">{{__('navigation.show')}}</a></td>
+                        <td><a href="{{ route('products.edit', $product->id)}}" class="btn btn-primary">{{__('navigation.edit')}}</a></td>
                         <td>
-                            <form action="{{ route('prices.destroy', $product->id)}}" method="post">
+                            <form action="{{ route('products.destroy', $product->id)}}" method="post">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-danger delete" data-confirm="{{__('navigation.confirm_deletion')}}" type="submit">{{__('navigation.delete')}}</button>

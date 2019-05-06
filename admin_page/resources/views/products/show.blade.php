@@ -6,7 +6,7 @@
         <div class="col-md-10">
             <div class="card">
                 <div class="card-header">
-                    {{__('navigation.prices.show')}}
+                    {{__('navigation.products.show')}}
                 </div>
                 <div class="card-body">
                     <p><strong>Nombre del pedido</strong>: {{$product->name}}</p>

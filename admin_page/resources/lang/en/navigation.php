@@ -3,6 +3,6 @@
 return [
 
     'orders' => 'Orders',
-    'prices' => 'Prices',
+    'products' => 'Products',
     'delivery_schedule' => 'Delivery Schedule',
 ];
