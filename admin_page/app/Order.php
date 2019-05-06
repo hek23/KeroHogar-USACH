@@ -76,7 +76,7 @@ class Order extends Model
         if($request->has('order_status') && $request->query('order_status') != 0) {
             $query->where('status', $request->order_status);
         }
-        return $query->latest()->paginate(self::ITEMS_PER_PAGE);
+        return $query->latest();
     }
 
     public function statusFormat() {

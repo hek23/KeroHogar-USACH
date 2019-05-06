@@ -24,6 +24,10 @@ class TimeBlock extends Model
         return $query->orderBy('start', 'asc')->paginate(self::ITEMS_PER_PAGE);
     }
 
+    public function format() {
+        return $this->start . ' - ' . $this->end;
+    }
+
     public function getStartAttribute($time) {
         return Carbon::parse($time)->format('H:i');
     }

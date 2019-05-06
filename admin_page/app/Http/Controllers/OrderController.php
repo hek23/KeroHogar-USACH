@@ -7,6 +7,7 @@ use App\Http\Requests\OrderRequest;
 use App\Town;
 use App\Http\Requests\FilterRequest;
 use App\Client;
+use App\Exports\OrdersExport;
 
 class OrderController extends Controller
 {
@@ -29,8 +30,9 @@ class OrderController extends Controller
         $clientTypes = Client::getClientTypes();
 
         if($request->has('generate_excel') && $request->generate_excel == true) {
-            dd('make excel');
+            return \Excel::download(new OrdersExport($orders->get()), 'export.xlsx');
         }
+        $orders = $orders->paginate(Order::ITEMS_PER_PAGE);
 
         return view('orders.index', compact('orders', 'towns', 'orderStatuses', 'clientTypes', 'client_type', 'time_interval_start', 'time_interval_end', 'town_id', 'order_status'))
             ->with('rowItem', $this->rowNumber(request()->input('page', 1), Order::ITEMS_PER_PAGE) );
