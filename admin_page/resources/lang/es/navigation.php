@@ -5,7 +5,9 @@ return [
     'edit' => 'Editar',
     'delete' => 'Eliminar',
     'store' => 'Agregar',
-    'confirm_deletion' => '¿Estás seguro que quieres eliminar esto?',
+    'confirm_deletion' => '¿Estás seguro que quieres eliminar esto?', 
+    'confirm_delivered' => '¿Estás seguro que este pedido fue entregado?',
+    'delivered' => 'Entregado',
 
     'orders' =>[
         // CRUD navigation localization

@@ -7,6 +7,9 @@ use \Freshwork\ChileanBundle\Rut;
 
 class Client extends Model
 {
+    const INDIVIDUAL = 1;
+    const WHOLESALER = 2;
+
     public $guarded = [];
 
     public function addresses() {
@@ -16,5 +19,12 @@ class Client extends Model
     public function rutFormat()
     {
         return Rut::parse($this->rut)->format();
+    }
+
+    public static function getClientTypes() {
+        return [
+            self::INDIVIDUAL => 'Individuo',
+            self::WHOLESALER => 'Mayorista',
+        ];
     }
 }

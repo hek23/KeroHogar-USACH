@@ -19,7 +19,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::middleware('auth')->group( function() {
-    Route::post('pedidos/filtrar', 'OrderController@filter')->name('orders.filter');
+    Route::post('pedidos/{order}/entregado', 'OrderController@delivered')->name('orders.delivered');
 
     Route::resource('pedidos', 'OrderController')->names([
         'index' => 'orders.index',

@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Order;
 use App\Http\Requests\OrderRequest;
+use App\Town;
+use App\Http\Requests\FilterRequest;
+use App\Client;
 
 class OrderController extends Controller
 {
@@ -12,10 +15,24 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(FilterRequest $request)
     {
-        $orders = Order::latestOrdersPaginated();
-        return view('orders.index', compact('orders'))
+        $client_type = $request->client_type;
+        $time_interval_start = $request->time_interval_start;
+        $time_interval_end = $request->time_interval_end;
+        $town_id = $request->town_id;
+        $order_status = $request->order_status;
+
+        $orders = Order::search($request);
+        $towns = Town::pluck('name', 'id');
+        $orderStatuses = Order::getStatuses();
+        $clientTypes = Client::getClientTypes();
+
+        if($request->has('generate_excel') && $request->generate_excel == true) {
+            dd('make excel');
+        }
+
+        return view('orders.index', compact('orders', 'towns', 'orderStatuses', 'clientTypes', 'client_type', 'time_interval_start', 'time_interval_end', 'town_id', 'order_status'))
             ->with('rowItem', $this->rowNumber(request()->input('page', 1), Order::ITEMS_PER_PAGE) );
     }
 
@@ -94,17 +111,11 @@ class OrderController extends Controller
             ->with('success', 'Pedido eliminado exitosamente');
     }
 
-    /**
-     * Filter the resources and return index view with filtered orders.
-     *
-     * @param  \App\Order  $order
-     * @return \Illuminate\Http\Response
-     */
-    public function filter(Order $order)
+    public function delivered(Order $order)
     {
-        $order->delete();
+        $order->delivered();
 
         return redirect()->route('orders.index')
-            ->with('success', 'Pedido eliminado exitosamente');
+            ->with('success', 'Estado cambiado exitosamente');
     }
 }

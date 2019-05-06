@@ -13,7 +13,7 @@ class FilterRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,12 @@ class FilterRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'client_type' => 'nullable|integer',
+            'time_interval_start' => 'nullable|date',
+            'time_interval_end' => 'nullable|date',
+            'town_id' => 'nullable|integer',
+            'order_status' => 'nullable|integer',
+            'generate_excel' => 'nullable|bool',
         ];
     }
 }

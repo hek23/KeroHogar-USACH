@@ -12,5 +12,6 @@ $factory->define(Client::class, function (Faker $faker) {
 
     return [
         'rut' => $rut->fix()->normalize(),
+        'name' => $faker->name,
     ];
 });
