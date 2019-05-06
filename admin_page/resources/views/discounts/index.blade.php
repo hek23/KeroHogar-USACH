@@ -19,6 +19,9 @@
                 <thead>
                     <tr>
                         <td>N°</td>
+                        <td>Descuento por litro</td>
+                        <td>Cantidad mínima</td>
+                        <td>Cantidad máxima</td>
                         <td colspan="3">Acciones</td>
                     </tr>
                 </thead>
@@ -26,6 +29,9 @@
                     @foreach($productDiscounts as $productDiscount)
                     <tr>
                         <td>{{ ++$rowItem }}</td>
+                        <td>{{ $productDiscount->formatDiscount() }}</td>
+                        <td>{{ $productDiscount->formatMinQuantity() }}</td>
+                        <td>{{ $productDiscount->formatMaxQuantity() }}</td>
                         <td><a href="{{ route('discounts.show', [$product->id, $productDiscount->id]) }}" class="btn btn-info">{{__('navigation.show')}}</a></td>
                         <td><a href="{{ route('discounts.edit', [$product->id, $productDiscount->id]) }}" class="btn btn-primary">{{__('navigation.edit')}}</a></td>
                         <td>

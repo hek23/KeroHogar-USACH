@@ -18,6 +18,12 @@ return [
         'destroy' => 'Eliminar pedido',
 
         // Attributes localization
+        'address_id' => '',
+        'status' => '',
+        'amount' => '',
+        'delivery_date' => '',
+        'delivery_time' => '',
+        'address' => '',
     ],
 
     'products' => [
@@ -31,6 +37,12 @@ return [
         'destroy' => 'Eliminar producto',
 
         // Attributes localization
+        'name' => 'Nombre del producto',
+        'unit' => 'Unidad del producto',
+        'plural' => 'Pluralización de la unidad',
+        'price' => 'Precio del producto',
+        'liters_per_unit' => 'Litros por unidad',
+        'minimum_amount' => 'Cantidad mínima de compra',
     ],
 
     'schedule' =>[
@@ -59,5 +71,8 @@ return [
         'destroy' => 'Eliminar descuento',
 
         // Attributes localization
+        'discount_per_liter' => 'Descuento por litro comprado',
+        'min_quantity' => 'Cantidad mínima para habilitar este descuento',
+        'max_quantity' => 'Cantidad máxima en la que es efectivo este descuento',
     ],
 ];

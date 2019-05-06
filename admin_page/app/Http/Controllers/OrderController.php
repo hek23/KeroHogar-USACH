@@ -93,4 +93,18 @@ class OrderController extends Controller
         return redirect()->route('orders.index')
             ->with('success', 'Pedido eliminado exitosamente');
     }
+
+    /**
+     * Filter the resources and return index view with filtered orders.
+     *
+     * @param  \App\Order  $order
+     * @return \Illuminate\Http\Response
+     */
+    public function filter(Order $order)
+    {
+        $order->delete();
+
+        return redirect()->route('orders.index')
+            ->with('success', 'Pedido eliminado exitosamente');
+    }
 }

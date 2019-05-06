@@ -20,6 +20,10 @@ class Order extends Model
         return $this->belongsTo('App\Address');
     }
 
+    public function client() {
+        return $this->address->client();
+    }
+
     public function delivery_blocks() {
         return $this->belongsToMany('App\TimeBlock')->withTimestamps();;
     }

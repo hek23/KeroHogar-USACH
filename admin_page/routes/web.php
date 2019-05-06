@@ -19,6 +19,8 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::middleware('auth')->group( function() {
+    Route::post('pedidos/filtrar', 'OrderController@filter')->name('orders.filter');
+
     Route::resource('pedidos', 'OrderController')->names([
         'index' => 'orders.index',
         'create' => 'orders.create',

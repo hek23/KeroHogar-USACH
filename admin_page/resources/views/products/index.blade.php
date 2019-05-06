@@ -19,13 +19,19 @@
                 <thead>
                     <tr>
                         <td>N°</td>
-                        <td colspan="4">Acciones</td>
+                        <td>Producto</td>
+                        <td>Precio</td>
+                        <td>Unidad</td>
+                        <td colspan="4" width=25%>Acciones</td>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($products as $product)
                     <tr>
                         <td>{{ ++$rowItem }}</td>
+                        <td>{{ $product->name }}</td>
+                        <td>{{ '$' . $product->price }}</td>
+                        <td>{{ $product->unit }}</td>
                         <td><a href="{{ route('discounts.index', $product->id)}}" class="btn btn-info">{{__('navigation.discounts.index')}}</a></td>
                         <td><a href="{{ route('products.show', $product->id)}}" class="btn btn-info">{{__('navigation.show')}}</a></td>
                         <td><a href="{{ route('products.edit', $product->id)}}" class="btn btn-primary">{{__('navigation.edit')}}</a></td>

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 
 class ProductRequest extends FormRequest
 {
@@ -24,7 +25,29 @@ class ProductRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => 'required|string',
+            'price' => 'required|integer',
+            'minimum_amount' => 'required|integer',
+            'unit' => 'required|string',
+            'plural' => 'required|string',
+            'liters_per_unit' => 'required|integer',
+        ];
+    }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'name' => Str::lower(__('navigation.products.name')),
+            'price' => Str::lower(__('navigation.products.price')),
+            'minimum_amount' => Str::lower(__('navigation.products.minimum_amount')),
+            'unit' => Str::lower(__('navigation.products.unit')),
+            'plural' => Str::lower(__('navigation.products.plural')),
+            'liters_per_unit' => Str::lower(__('navigation.products.liters_per_unit')),
         ];
     }
 }

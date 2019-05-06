@@ -13,4 +13,16 @@ class ProductDiscount extends Model
     public function product() {
         return $this->belongsTo('App\Product');
     }
+
+    public function formatDiscount() {
+        return '$' . $this->discount_per_liter . '/litro';
+    }
+
+    public function formatMinQuantity() {
+        return $this->min_quantity . ' ' . $this->product->plural;
+    }
+
+    public function formatMaxQuantity() {
+        return $this->max_quantity . ' ' . $this->product->plural;
+    }
 }

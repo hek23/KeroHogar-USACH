@@ -23,6 +23,6 @@ class Product extends Model
     }
 
     public function discountsPaginated() {
-        return $this->discounts()->paginate(ProductDiscount::ITEMS_PER_PAGE);
+        return $this->discounts()->orderBy('min_quantity','asc')->paginate(ProductDiscount::ITEMS_PER_PAGE);
     }
 }
