@@ -11,7 +11,7 @@ class Product extends Model
     public $guarded = [];
 
     public function discounts() {
-        return $this->hasMany('App\PriceDiscount');
+        return $this->hasMany('App\ProductDiscount');
     }
 
     public function scopeAllPaginated($query) {
@@ -19,6 +19,6 @@ class Product extends Model
     }
 
     public function discountsPaginated() {
-        return $this->discounts()->paginate(PriceDiscount::ITEMS_PER_PAGE);
+        return $this->discounts()->paginate(ProductDiscount::ITEMS_PER_PAGE);
     }
 }

@@ -2,10 +2,10 @@
 
 /* @var $factory \Illuminate\Database\Eloquent\Factory */
 
-use App\PriceDiscount;
+use App\ProductDiscount;
 use Faker\Generator as Faker;
 
-$factory->define(PriceDiscount::class, function (Faker $faker) {
+$factory->define(ProductDiscount::class, function (Faker $faker) {
     return [
         //
     ];

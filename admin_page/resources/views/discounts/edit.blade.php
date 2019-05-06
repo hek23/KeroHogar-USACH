@@ -10,20 +10,20 @@
                 </div>
                 <div class="card-body">
                     @include('partials.errors')
-                    <form method="post" action="{{ route('discounts.update', [$product->id, $priceDiscount->id]) }}">
+                    <form method="post" action="{{ route('discounts.update', [$product->id, $productDiscount->id]) }}">
                         @method('PATCH')
                         @csrf
                         <div class="form-group">
                             <label for="name">Nombre del pedido:</label>
-                            <input type="text" class="form-control" name="name" value="{{$priceDiscount->name}}" />
+                            <input type="text" class="form-control" name="name" value="{{$productDiscount->name}}" />
                         </div>
                         <div class="form-group">
                             <label for="price">Precio del pedido:</label>
-                            <input type="text" class="form-control" name="price" value="{{$priceDiscount->price}}" />
+                            <input type="text" class="form-control" name="price" value="{{$productDiscount->price}}" />
                         </div>
                         <div class="form-group">
                             <label for="quantity">Cantidad del pedido:</label>
-                            <input type="text" class="form-control" name="quantity" value="{{$priceDiscount->quantity}}" />
+                            <input type="text" class="form-control" name="quantity" value="{{$productDiscount->quantity}}" />
                         </div>
                         <button type="submit" class="btn btn-primary">{{__('navigation.discounts.store')}}</button>
                     </form>

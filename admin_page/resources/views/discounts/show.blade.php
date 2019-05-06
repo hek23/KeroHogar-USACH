@@ -9,9 +9,9 @@
                     {{__('navigation.discounts.show')}}
                 </div>
                 <div class="card-body">
-                    <p><strong>Nombre del pedido</strong>: {{$priceDiscount->name}}</p>
-                    <p><strong>Precio del pedido</strong>: {{$priceDiscount->price}}</p>
-                    <p><strong>Cantidad del pedido</strong>: {{$priceDiscount->quantity}}</p>
+                    <p><strong>Nombre del pedido</strong>: {{$productDiscount->name}}</p>
+                    <p><strong>Precio del pedido</strong>: {{$productDiscount->price}}</p>
+                    <p><strong>Cantidad del pedido</strong>: {{$productDiscount->quantity}}</p>
                 </div>
             </div>
         </div>

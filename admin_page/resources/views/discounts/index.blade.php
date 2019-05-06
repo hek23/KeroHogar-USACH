@@ -23,13 +23,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($priceDiscounts as $priceDiscount)
+                    @foreach($productDiscounts as $productDiscount)
                     <tr>
                         <td>{{ ++$rowItem }}</td>
-                        <td><a href="{{ route('discounts.show', [$product->id, $priceDiscount->id]) }}" class="btn btn-info">{{__('navigation.show')}}</a></td>
-                        <td><a href="{{ route('discounts.edit', [$product->id, $priceDiscount->id]) }}" class="btn btn-primary">{{__('navigation.edit')}}</a></td>
+                        <td><a href="{{ route('discounts.show', [$product->id, $productDiscount->id]) }}" class="btn btn-info">{{__('navigation.show')}}</a></td>
+                        <td><a href="{{ route('discounts.edit', [$product->id, $productDiscount->id]) }}" class="btn btn-primary">{{__('navigation.edit')}}</a></td>
                         <td>
-                            <form action="{{ route('discounts.destroy', [$product->id, $priceDiscount->id]) }}" method="post">
+                            <form action="{{ route('discounts.destroy', [$product->id, $productDiscount->id]) }}" method="post">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-danger delete" data-confirm="{{__('navigation.confirm_deletion')}}" type="submit">{{__('navigation.delete')}}</button>
@@ -40,7 +40,7 @@
                 </tbody>
             </table>
 
-            {!! $priceDiscounts->links() !!}
+            {!! $productDiscounts->links() !!}
         </div>
     </div>
 </div>
