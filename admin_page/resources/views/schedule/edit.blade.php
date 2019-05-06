@@ -14,16 +14,12 @@
                         @method('PATCH')
                         @csrf
                         <div class="form-group">
-                            <label for="name">Nombre del pedido:</label>
-                            <input type="text" class="form-control" name="name" value="{{$timeBlock->name}}" />
+                            <label for="name">{{ __('navigation.schedule.start') }}</label>
+                            <input type="text" class="form-control" name="name" value="{{$timeBlock->start}}" />
                         </div>
                         <div class="form-group">
-                            <label for="price">Precio del pedido:</label>
-                            <input type="text" class="form-control" name="price" value="{{$timeBlock->price}}" />
-                        </div>
-                        <div class="form-group">
-                            <label for="quantity">Cantidad del pedido:</label>
-                            <input type="text" class="form-control" name="quantity" value="{{$timeBlock->quantity}}" />
+                            <label for="price">{{ __('navigation.schedule.end') }}</label>
+                            <input type="text" class="form-control" name="price" value="{{$timeBlock->end}}" />
                         </div>
                         <button type="submit" class="btn btn-primary">{{__('navigation.schedule.store')}}</button>
                     </form>

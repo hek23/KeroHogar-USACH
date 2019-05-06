@@ -9,9 +9,8 @@
                     {{__('navigation.schedule.show')}}
                 </div>
                 <div class="card-body">
-                    <p><strong>Nombre del pedido</strong>: {{$timeBlock->name}}</p>
-                    <p><strong>Precio del pedido</strong>: {{$timeBlock->price}}</p>
-                    <p><strong>Cantidad del pedido</strong>: {{$timeBlock->quantity}}</p>
+                    <p><strong>{{ __('navigation.schedule.start') }}</strong>: {{$timeBlock->start}}</p>
+                    <p><strong>{{ __('navigation.schedule.end') }}</strong>: {{$timeBlock->end}}</p>
                 </div>
             </div>
         </div>

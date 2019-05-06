@@ -19,13 +19,17 @@
                 <thead>
                     <tr>
                         <td>N°</td>
-                        <td colspan="3">Acciones</td>
+                        <td>Inicio</td>
+                        <td>Fin</td>
+                        <td colspan="3" width="20%">Acciones</td>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($timeBlocks as $timeBlock)
                     <tr>
                         <td>{{ ++$rowItem }}</td>
+                        <td>{{ $timeBlock->start }}</td>
+                        <td>{{ $timeBlock->end }}</td>
                         <td><a href="{{ route('schedule.show', $timeBlock->id)}}" class="btn btn-info">{{__('navigation.show')}}</a></td>
                         <td><a href="{{ route('schedule.edit', $timeBlock->id)}}" class="btn btn-primary">{{__('navigation.edit')}}</a></td>
                         <td>

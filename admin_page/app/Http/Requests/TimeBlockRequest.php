@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 
 class TimeBlockRequest extends FormRequest
 {
@@ -24,7 +25,21 @@ class TimeBlockRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'start' => 'required|date_format:H:i',
+            'end' => 'required|date_format:H:i|after:start',
+        ];
+    }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'start' => Str::lower(__('navigation.schedule.start')),
+            'end' => Str::lower(__('navigation.schedule.end')),
         ];
     }
 }

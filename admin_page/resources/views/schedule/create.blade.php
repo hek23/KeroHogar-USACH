@@ -13,16 +13,12 @@
                     <form method="post" action="{{ route('schedule.store') }}">
                         @csrf
                         <div class="form-group">
-                            <label for="name">Nombre del pedido:</label>
-                            <input type="text" class="form-control" name="name" />
+                            <label for="start">{{ __('navigation.schedule.start') }}</label>
+                            <input class="form-control" type="time" placeholder="13:45:00" name="start" id="start" />
                         </div>
                         <div class="form-group">
-                            <label for="price">Precio del pedido:</label>
-                            <input type="text" class="form-control" name="price" />
-                        </div>
-                        <div class="form-group">
-                            <label for="quantity">Cantidad del pedido:</label>
-                            <input type="text" class="form-control" name="quantity" />
+                            <label for="end">{{ __('navigation.schedule.end') }}</label>
+                            <input class="form-control" type="time" placeholder="13:45:00" name="end" id="end" />
                         </div>
                         <button type="submit" class="btn btn-primary">{{__('navigation.schedule.store')}}</button>
                     </form>
