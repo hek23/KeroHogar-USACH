@@ -16,6 +16,10 @@ class TimeBlock extends Model
         'updated_at',
     ];
 
+    public function orders() {
+        return $this->belongsToMany('App\Order')->withTimestamps();
+    }
+
     public function scopeOrderedBlocksPaginated($query) {
         return $query->orderBy('start', 'asc')->paginate(self::ITEMS_PER_PAGE);
     }

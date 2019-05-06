@@ -10,6 +10,10 @@ class Product extends Model
 
     public $guarded = [];
 
+    public function orders() {
+        return $this->belongsToMany('App\Order')->withPivot('quantity')->withTimestamps();
+    }
+
     public function discounts() {
         return $this->hasMany('App\ProductDiscount');
     }

@@ -16,7 +16,7 @@ class CreateProductDiscountsTable extends Migration
         Schema::create('product_discounts', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('product_id');
-            $table->integer('discount_per_unit');
+            $table->integer('discount_per_liter');
             $table->integer('min_quantity');
             $table->integer('max_quantity');
             $table->timestamps();

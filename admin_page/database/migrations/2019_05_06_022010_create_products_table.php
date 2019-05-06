@@ -16,7 +16,11 @@ class CreateProductsTable extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name', 64);
+            $table->string('unit', 32);
+            $table->string('plural', 32);
             $table->integer('price');
+            $table->integer('liters_per_unit');
+            $table->integer('minimum_amount');
             $table->timestamps();
         });
     }
