@@ -14,7 +14,7 @@
                         <div class="form-group" style="flex-flow:column;">
                             <label for="client_type">Tipo de cliente:</label>
                             <select class="custom-select form-control mx-2" name="client_type" id="client_type">
-                                <option value="0">Escoger...</option>
+                                <option value="0">{{ __('navigation.default_option') }}</option>
                                 @foreach($clientTypes as $id => $name)
                                     <option value="{{$id}}" @if($client_type == $id) {{'selected'}} @endif>{{$name}}</option>
                                 @endforeach
@@ -31,7 +31,7 @@
                         <div class="form-group" style="flex-flow:column;">
                             <label for="client_type">Comuna:</label>
                             <select class="custom-select form-control mx-2" name="town_id" id="town_id" >
-                                <option value="0">Escoger...</option>
+                                <option value="0">{{ __('navigation.default_option') }}</option>
                                 @foreach($towns as $id => $name)
                                     <option value="{{$id}}" @if($town_id == $id) {{'selected'}} @endif>{{$name}}</option>
                                 @endforeach
@@ -40,7 +40,7 @@
                         <div class="form-group" style="flex-flow:column;">
                             <label for="client_type">Estado:</label>
                             <select class="custom-select form-control mx-2" name="order_status" id="order_status" >
-                                <option value="0">Escoger...</option>
+                                <option value="0">{{ __('navigation.default_option') }}</option>
                                 @foreach($orderStatuses as $id => $name)
                                     <option value="{{$id}}" @if($order_status == $id) {{'selected'}} @endif>{{$name}}</option>
                                 @endforeach

@@ -8,6 +8,7 @@ return [
     'confirm_deletion' => '¿Estás seguro que quieres eliminar esto?', 
     'confirm_delivered' => '¿Estás seguro que este pedido fue entregado?',
     'delivered' => 'Entregado',
+    'default_option' => 'Escoger...',
 
     'orders' =>[
         // CRUD navigation localization
@@ -20,12 +21,17 @@ return [
         'destroy' => 'Eliminar pedido',
 
         // Attributes localization
-        'address_id' => '',
-        'status' => '',
-        'amount' => '',
-        'delivery_date' => '',
-        'delivery_time' => '',
-        'address' => '',
+        'rut' => 'Rut',
+        'name' => 'Nombre',
+        'town' => 'Comuna',
+        'alias' => 'Alias dirección',
+        'address' => 'Dirección',
+        'product' => 'Nombre del producto',
+        'amount' => 'Monto pagado',
+        'quantity' => 'Cantidad comprada',
+        'status' => 'Estado de la compra',
+        'delivery_date' => 'Dia de entrega escogido',
+        'delivery_time' => 'Bloques horarios de entrega elegidos',
     ],
 
     'products' => [

@@ -25,7 +25,15 @@ class OrderRequest extends FormRequest
     public function rules()
     {
         return [
-            'price' => 'numeric',
+            'product' => 'required|integer',
+            'quantity' => 'required|integer',
+            'status' => 'required|integer',
+            'delivery_date' => 'required|date',
+            'delivery_time' => 'required|array',
+            'rut' => 'required|cl_rut',
+            'name' => 'required|string|max:64',
+            'town' => 'required|integer',
+            'address' => 'required|string',
         ];
     }
 
@@ -37,8 +45,28 @@ class OrderRequest extends FormRequest
     public function messages()
     {
         return [
-            'price.numeric' => 'El precio debe ser un número',
-            'body.required'  => 'A message is required',
+            'rut.cl_rut' => 'El rut ingresado no es válido',
+        ];
+    }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'product' => Str::lower(__('navigation.orders.product')),
+            'amount' => Str::lower(__('navigation.orders.amount')),
+            'quantity' => Str::lower(__('navigation.orders.quantity')),
+            'status' => Str::lower(__('navigation.orders.status')),
+            'delivery_date' => Str::lower(__('navigation.orders.delivery_date')),
+            'delivery_time' => Str::lower(__('navigation.orders.delivery_time')),
+            'rut' => Str::lower(__('navigation.orders.rut')),
+            'name' => Str::lower(__('navigation.orders.name')),
+            'town' => Str::lower(__('navigation.orders.town')),
+            'address' => Str::lower(__('navigation.orders.address')),
         ];
     }
 }

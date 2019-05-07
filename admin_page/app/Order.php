@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Http\Requests\FilterRequest;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class Order extends Model
 {
@@ -12,7 +13,7 @@ class Order extends Model
     const PENDING = 1;
     const DELIVERED = 2;
     const CANCELED = 3;
-    const WHOLESALER_PRICE = 80000;
+    const WHOLESALER_PRICE = 100000;
     
     public $guarded = [];
 
@@ -46,7 +47,6 @@ class Order extends Model
         }
 
         $this->amount = $price;
-        $this->save();
     }
 
     public function delivered() {
@@ -56,9 +56,9 @@ class Order extends Model
 
     public function scopeSearch($query, FilterRequest $request) {
         if($request->has('client_type') && $request->query('client_type') !== 0) {
-            if($request->query('client_type') === Client::INDIVIDUAL) {
+            if($request->query('client_type') == Client::INDIVIDUAL) {
                 $query->where('amount', '<', self::WHOLESALER_PRICE);
-            } elseif ($request->query('client_type') === Client::WHOLESALER) {
+            } elseif ($request->query('client_type') == Client::WHOLESALER) {
                 $query->where('amount', '>=', self::WHOLESALER_PRICE);
             }
         }
@@ -81,6 +81,48 @@ class Order extends Model
 
     public function statusFormat() {
         return $this->getStatuses()[$this->status];
+    }
+
+    public static function createFromForm($validatedOrderRequest) {
+        $product_id = $validatedOrderRequest['product'];
+        $quantity = $validatedOrderRequest['quantity'];
+        $status = $validatedOrderRequest['status'];
+        $delivery_date = $validatedOrderRequest['delivery_date'];
+        $delivery_time = $validatedOrderRequest['delivery_time'];
+        $rut = $validatedOrderRequest['rut'];
+        $name = $validatedOrderRequest['name'];
+        $town = Town::where('id', $validatedOrderRequest['town'])->first();
+        $input_address = $validatedOrderRequest['address'];
+
+        $client = Client::whereRutEquals($rut)->first();
+        if(is_null($client)) {
+            $client = Client::create([
+                'rut' => Client::normalizeRut($rut),
+                'name' => $name,
+            ]);
+        }
+
+        $address = Address::where(DB::raw('LOWER(address)'), 'like', '%' . strtolower( $input_address) . '%')->first();
+        if(is_null($address)) {
+            $address = Address::create([
+                'client_id' => $client->id,
+                'town_id' => $town->id,
+                'address' => $input_address,
+                'alias' => 'Hogar',
+            ]);
+        }
+
+        $order = Order::create([
+            'address_id' => $address->id,
+            'delivery_date' => $delivery_date,
+            'status' => $status,
+            'amount' => 0,
+        ]);
+
+        $order->products()->sync([$product_id => ['quantity' => $quantity]]);
+        $order->delivery_blocks()->sync(array_values($delivery_time));
+        $order->calculateAmount();
+        $order->save();
     }
 
     public static function getStatuses() {

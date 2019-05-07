@@ -9,12 +9,12 @@
                     {{__('navigation.orders.show')}}
                 </div>
                 <div class="card-body">
-                    <p><strong>Nombre de lo pedido</strong>: <a href="{{route('products.show', $order->products[0]->id)}}">{{$order->products[0]->name}}</a></p>
-                    <p><strong>Monto pagado</strong>: {{$order->amount}}</p>
-                    <p><strong>Cantidad comprada</strong>: {{$order->products[0]->pivot->quantity . ' ' . $order->products[0]->plural}}</p>
-                    <p><strong>Estado de la compra</strong>: {{$order->statusFormat()}}</p>
-                    <p><strong>Dia de entrega escogido</strong>: {{$order->delivery_date}}</p>
-                    <p><strong>Bloques horarios de entrega elegidos</strong>:</p>
+                    <p><strong>{{ __('navigation.orders.product') }}</strong>: <a href="{{route('products.show', $order->products[0]->id)}}">{{$order->products[0]->name}}</a></p>
+                    <p><strong>{{ __('navigation.orders.amount') }}</strong>: {{$order->amount}}</p>
+                    <p><strong>{{ __('navigation.orders.quantity') }}</strong>: {{$order->products[0]->pivot->quantity . ' ' . $order->products[0]->plural}}</p>
+                    <p><strong>{{ __('navigation.orders.status') }}</strong>: {{$order->statusFormat()}}</p>
+                    <p><strong>{{ __('navigation.orders.delivery_date') }}</strong>: {{$order->delivery_date}}</p>
+                    <p><strong>{{ __('navigation.orders.delivery_time') }}</strong>:</p>
                     <p>
                         @foreach ($order->delivery_blocks as $timeBlock)
                             {{ $timeBlock->start . " - " . $timeBlock->end }}<br>
@@ -29,10 +29,11 @@
                     Detalles del cliente
                 </div>
                 <div class="card-body">
-                    <p><strong>Rut</strong>: {{$order->client->rutFormat()}}</a></p>
-                    <p><strong>Alias dirección</strong>: {{$order->address->alias}}</p>
-                    <p><strong>Comuna</strong>: {{$order->address->town->name}}</p>
-                    <p><strong>Dirección</strong>: {{$order->address->address}}</p>
+                    <p><strong>{{ __('navigation.orders.rut') }}</strong>: {{$order->client->rutFormat()}}</a></p>
+                    <p><strong>{{ __('navigation.orders.name') }}</strong>: {{$order->client->name}}</a></p>
+                    <p><strong>{{ __('navigation.orders.alias') }}</strong>: {{$order->address->alias}}</p>
+                    <p><strong>{{ __('navigation.orders.town') }}</strong>: {{$order->address->town->name}}</p>
+                    <p><strong>{{ __('navigation.orders.address') }}</strong>: {{$order->address->address}}</p>
                 </div>
             </div>
         </div>

@@ -8,6 +8,8 @@ use App\Town;
 use App\Http\Requests\FilterRequest;
 use App\Client;
 use App\Exports\OrdersExport;
+use App\Product;
+use App\TimeBlock;
 
 class OrderController extends Controller
 {
@@ -45,7 +47,12 @@ class OrderController extends Controller
      */
     public function create()
     {
-        return view('orders.create');
+        $towns = Town::pluck('name', 'id');
+        $products = Product::pluck('name', 'id');
+        $orderStatuses = Order::getStatuses();
+        $timeBlocks = TimeBlock::orderBy('start')->get();
+
+        return view('orders.create', compact('towns', 'products', 'orderStatuses', 'timeBlocks'));
     }
 
     /**
@@ -56,7 +63,7 @@ class OrderController extends Controller
      */
     public function store(OrderRequest $request)
     {
-        Order::create($request->validated());
+        Order::createFromForm($request->validated());
 
         return redirect()->route('orders.index')
             ->with('success', 'Pedido creado exitosamente');

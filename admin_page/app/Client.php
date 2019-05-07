@@ -21,10 +21,18 @@ class Client extends Model
         return Rut::parse($this->rut)->format();
     }
 
+    public function scopeWhereRutEquals($query, $rut) {
+        return $query->where('rut', self::normalizeRut($rut));
+    }
+
     public static function getClientTypes() {
         return [
             self::INDIVIDUAL => 'Individuo',
             self::WHOLESALER => 'Mayorista',
         ];
+    }
+
+    public static function normalizeRut($rut) {
+        return Rut::parse($rut)->normalize();
     }
 }

@@ -27,6 +27,7 @@ class OrdersTableSeeder extends Seeder
             $timeBlocks = TimeBlock::inRandomOrder()->take($timeBlocksSelected)->pluck('id');
             $order->delivery_blocks()->sync($timeBlocks);
             $order->calculateAmount();
+            $order->save();
         }
     }
 }
