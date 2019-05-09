@@ -15,6 +15,7 @@ class OrdersExport implements FromCollection, WithHeadings
     public function __construct($orders)
     {
         $i = 0;
+        $orders_array = array();
         foreach ($orders as $order) {
             $product = $order->products[0];
 

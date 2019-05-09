@@ -20,11 +20,17 @@ class OrderController extends Controller
      */
     public function index(FilterRequest $request)
     {
-        $client_type = $request->client_type;
-        $time_interval_start = $request->time_interval_start;
-        $time_interval_end = $request->time_interval_end;
-        $town_id = $request->town_id;
-        $order_status = $request->order_status;
+        $client_type = $request->query('client_type');
+        $time_interval_start = $request->query('time_interval_start');
+        $time_interval_end = $request->query('time_interval_end');
+        $town_id = $request->query('town_id');
+        $order_status = $request->query('order_status');
+
+        session(['client_type' => $client_type]);
+        session(['time_interval_start' => $time_interval_start]);
+        session(['time_interval_end' => $time_interval_end]);
+        session(['town_id' => $town_id]);
+        session(['order_status' => $order_status]);
 
         $orders = Order::search($request);
         $towns = Town::pluck('name', 'id');
@@ -116,15 +122,25 @@ class OrderController extends Controller
     {
         $order->delete();
 
-        return redirect()->route('orders.index')
-            ->with('success', 'Pedido eliminado exitosamente');
+        return redirect()->route('orders.index', [
+                'client_type' => session('client_type'),
+                'time_interval_start' => session('time_interval_start'),
+                'time_interval_end' => session('time_interval_end'),
+                'town_id' => session('town_id'),
+                'order_status' => session('order_status')
+            ])->with('success', 'Pedido eliminado exitosamente');
     }
 
     public function delivered(Order $order)
     {
         $order->delivered();
 
-        return redirect()->route('orders.index')
-            ->with('success', 'Estado cambiado exitosamente');
+        return redirect()->route('orders.index', [
+                'client_type' => session('client_type'),
+                'time_interval_start' => session('time_interval_start'),
+                'time_interval_end' => session('time_interval_end'),
+                'town_id' => session('town_id'),
+                'order_status' => session('order_status')
+            ])->with('success', 'Estado cambiado exitosamente');
     }
 }
