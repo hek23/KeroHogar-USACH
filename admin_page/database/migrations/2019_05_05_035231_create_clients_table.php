@@ -17,6 +17,7 @@ class CreateClientsTable extends Migration
             $table->bigIncrements('id');
             $table->string('rut', 20)->unique();
             $table->string('name', 64)->unique();
+            $table->string('password');
             $table->timestamps();
         });
     }

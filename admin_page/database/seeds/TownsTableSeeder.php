@@ -12,10 +12,10 @@ class TownsTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(Town::class)->create(['name' => 'Peñalolén']);
+        factory(Town::class)->create(['name' => 'Vitacura']);
+        factory(Town::class)->create(['name' => 'Las condes']);
+        factory(Town::class)->create(['name' => 'La reina']);
+        factory(Town::class)->create(['name' => 'Ñuñoa']);
         factory(Town::class)->create(['name' => 'Providencia']);
-        factory(Town::class)->create(['name' => 'Pudahuel']);
-        factory(Town::class)->create(['name' => 'Quilicura']);
-        factory(Town::class)->create(['name' => 'Quinta Normal']);
     }
 }
