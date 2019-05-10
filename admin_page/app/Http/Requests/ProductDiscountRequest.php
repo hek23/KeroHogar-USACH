@@ -25,9 +25,9 @@ class ProductDiscountRequest extends FormRequest
     public function rules()
     {
         return [
-            'discount_per_liter' => 'required|integer',
-            'min_quantity' => 'required|integer',
-            'max_quantity' => 'required|integer|gt:min_quantity',
+            'discount_per_liter' => 'required|integer|min:0',
+            'min_quantity' => 'required|integer|min:0',
+            'max_quantity' => 'required|integer|gte:min_quantity|min:0',
         ];
     }
 
@@ -39,7 +39,8 @@ class ProductDiscountRequest extends FormRequest
     public function messages()
     {
         return [
-            'max_quantity.gt' => 'La cantidad máxima debe ser mayor que la cantidad mínima',
+            'max_quantity.gte' => 'La cantidad máxima debe ser mayor que la cantidad mínima',
+            '*.min' => 'El campo :attribute debe ser positivo',
         ];
     }
 

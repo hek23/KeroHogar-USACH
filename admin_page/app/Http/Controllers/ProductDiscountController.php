@@ -41,6 +41,10 @@ class ProductDiscountController extends Controller
      */
     public function store(ProductDiscountRequest $request, Product $product)
     {
+        if (ProductDiscount::where('product_id', $product->id)->intersecting($request->min_quantity, $request->max_quantity)->exists()) {
+            return redirect()->back()->withErrors(['min_quantity' => 'El descuento ingresado intersecta con otro descuento ya registrado.'])
+                ->withInput($request->input());
+        }
         $product->discounts()->create($request->validated());
 
         return redirect()->route('discounts.index', $product->id)
@@ -81,6 +85,10 @@ class ProductDiscountController extends Controller
      */
     public function update(ProductDiscountRequest $request, Product $product, ProductDiscount $productDiscount)
     {
+        if (ProductDiscount::where('product_id', $product->id)->where('id', '<>', $productDiscount->id)->intersecting($request->min_quantity, $request->max_quantity)->exists()) {
+            return redirect()->back()->withErrors(['min_quantity' => 'El descuento ingresado intersecta con otro descuento ya registrado.'])
+                ->withInput($request->input());
+        }
         $productDiscount->update($request->validated());
 
         return redirect()->route('discounts.index', $product->id)

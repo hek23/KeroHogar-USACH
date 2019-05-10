@@ -25,4 +25,10 @@ class ProductDiscount extends Model
     public function formatMaxQuantity() {
         return $this->max_quantity . ' ' . $this->product->plural;
     }
+
+    public function scopeIntersecting($query, $min_quantity, $max_quantity)
+    {
+        return $query->where('max_quantity', '>=', $min_quantity)
+            ->where('min_quantity', '<=', $max_quantity);
+    }
 }

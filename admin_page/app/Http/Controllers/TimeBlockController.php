@@ -37,6 +37,10 @@ class TimeBlockController extends Controller
      */
     public function store(TimeBlockRequest $request)
     {
+        if (TimeBlock::intersecting($request->start, $request->end)->exists()) {
+            return redirect()->back()->withErrors(['start' => 'El bloque ingresado intersecta con el horario de algún otro bloque.'])
+                ->withInput($request->input());
+        }
         TimeBlock::create($request->validated());
 
         return redirect()->route('schedule.index')
@@ -74,6 +78,10 @@ class TimeBlockController extends Controller
      */
     public function update(TimeBlockRequest $request, TimeBlock $timeBlock)
     {
+        if (TimeBlock::where('id', '<>', $timeBlock->id)->intersecting($request->start, $request->end)->exists()) {
+            return redirect()->back()->withErrors(['start' => 'El bloque ingresado intersecta con el horario de algún otro bloque.'])
+                ->withInput($request->input());
+        }
         $timeBlock->update($request->validated());
 
         return redirect()->route('schedule.index')

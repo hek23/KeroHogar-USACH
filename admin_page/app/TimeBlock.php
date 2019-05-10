@@ -24,6 +24,11 @@ class TimeBlock extends Model
         return $query->orderBy('start', 'asc')->paginate(self::ITEMS_PER_PAGE);
     }
 
+    public function scopeIntersecting($query, $start, $end) {
+        return $query->where('end', '>', $start)
+                ->where('start', '<', $end);
+    }
+
     public function format() {
         return $this->start . ' - ' . $this->end;
     }
