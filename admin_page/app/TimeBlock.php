@@ -9,7 +9,7 @@ class TimeBlock extends Model
 {
     const ITEMS_PER_PAGE = 10;
     
-    public $guarded = [];
+    protected $guarded = [];
 
     protected $dates = [
         'created_at',

@@ -20,6 +20,7 @@ Auth::routes();
 
 Route::middleware('auth')->group( function() {
     Route::post('pedidos/{order}/entregado', 'OrderController@delivered')->name('orders.delivered');
+    Route::post('pedidos/{order}/pagado', 'OrderController@paid')->name('orders.paid');
 
     Route::resource('pedidos', 'OrderController')->names([
         'index' => 'orders.index',

@@ -12,7 +12,8 @@
                     <p><strong>{{ __('navigation.orders.product') }}</strong>: <a href="{{route('products.show', $order->products[0]->id)}}">{{$order->products[0]->name}}</a></p>
                     <p><strong>{{ __('navigation.orders.amount') }}</strong>: {{$order->amount}}</p>
                     <p><strong>{{ __('navigation.orders.quantity') }}</strong>: {{$order->products[0]->pivot->quantity . ' ' . $order->products[0]->plural}}</p>
-                    <p><strong>{{ __('navigation.orders.status') }}</strong>: {{$order->statusFormat()}}</p>
+                    <p><strong>{{ __('navigation.orders.delivery_status') }}</strong>: {{$order->deliveryStatusFormat()}}</p>
+                    <p><strong>{{ __('navigation.orders.payment_status') }}</strong>: {{$order->paymentStatusFormat()}}</p>
                     <p><strong>{{ __('navigation.orders.delivery_date') }}</strong>: {{$order->delivery_date}}</p>
                     <p><strong>{{ __('navigation.orders.delivery_time') }}</strong>:</p>
                     <p>

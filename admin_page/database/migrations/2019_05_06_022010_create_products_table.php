@@ -19,6 +19,7 @@ class CreateProductsTable extends Migration
             $table->string('unit', 32);
             $table->string('plural', 32);
             $table->integer('price');
+            $table->integer('wholesaler_price');
             $table->integer('liters_per_unit');
             $table->integer('minimum_amount');
             $table->timestamps();

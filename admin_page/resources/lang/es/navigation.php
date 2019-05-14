@@ -7,8 +7,10 @@ return [
     'store' => 'Agregar',
     'confirm_deletion' => '¿Estás seguro que quieres eliminar esto?', 
     'confirm_delivered' => '¿Estás seguro que este pedido fue entregado?',
+    'confirm_paid' => '¿Estás seguro que este pedido fue pagado?',
     'delivered' => 'Entregado',
-    'default_option' => 'Escoger...',
+    'paid' => 'Pagado',
+    'default_option' => 'Todos',
 
     'orders' =>[
         // CRUD navigation localization
@@ -29,7 +31,8 @@ return [
         'product' => 'Nombre del producto',
         'amount' => 'Monto pagado',
         'quantity' => 'Cantidad comprada',
-        'status' => 'Estado de la compra',
+        'delivery_status' => 'Estado de entrega',
+        'payment_status' => 'Estado de pago',
         'delivery_date' => 'Dia de entrega escogido',
         'delivery_time' => 'Bloques horarios de entrega elegidos',
     ],

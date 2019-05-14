@@ -24,17 +24,20 @@ class OrderController extends Controller
         $time_interval_start = $request->query('time_interval_start');
         $time_interval_end = $request->query('time_interval_end');
         $town_id = $request->query('town_id');
-        $order_status = $request->query('order_status');
+        $delivery_status = $request->query('delivery_status');
+        $payment_status = $request->query('payment_status');
 
         session(['client_type' => $client_type]);
         session(['time_interval_start' => $time_interval_start]);
         session(['time_interval_end' => $time_interval_end]);
         session(['town_id' => $town_id]);
-        session(['order_status' => $order_status]);
+        session(['delivery_status' => $delivery_status]);
+        session(['payment_status' => $payment_status]);
 
         $orders = Order::search($request);
         $towns = Town::pluck('name', 'id');
-        $orderStatuses = Order::getStatuses();
+        $deliveryStatuses = Order::getDeliveryStatuses();
+        $paymentStatuses = Order::getPaymentStatuses();
         $clientTypes = Client::getClientTypes();
 
         if($request->has('generate_excel') && $request->generate_excel == true) {
@@ -42,7 +45,7 @@ class OrderController extends Controller
         }
         $orders = $orders->paginate(Order::ITEMS_PER_PAGE);
 
-        return view('orders.index', compact('orders', 'towns', 'orderStatuses', 'clientTypes', 'client_type', 'time_interval_start', 'time_interval_end', 'town_id', 'order_status'))
+        return view('orders.index', compact('orders', 'towns', 'deliveryStatuses', 'paymentStatuses', 'clientTypes', 'client_type', 'time_interval_start', 'time_interval_end', 'town_id', 'delivery_status', 'payment_status'))
             ->with('rowItem', $this->rowNumber(request()->input('page', 1), Order::ITEMS_PER_PAGE) );
     }
 
@@ -55,10 +58,11 @@ class OrderController extends Controller
     {
         $towns = Town::pluck('name', 'id');
         $products = Product::pluck('name', 'id');
-        $orderStatuses = Order::getStatuses();
+        $deliveryStatuses = Order::getDeliveryStatuses();
+        $paymentStatuses = Order::getPaymentStatuses();
         $timeBlocks = TimeBlock::orderBy('start')->get();
 
-        return view('orders.create', compact('towns', 'products', 'orderStatuses', 'timeBlocks'));
+        return view('orders.create', compact('towns', 'products', 'deliveryStatuses', 'paymentStatuses', 'timeBlocks'));
     }
 
     /**
@@ -127,7 +131,8 @@ class OrderController extends Controller
                 'time_interval_start' => session('time_interval_start'),
                 'time_interval_end' => session('time_interval_end'),
                 'town_id' => session('town_id'),
-                'order_status' => session('order_status')
+                'delivery_status' => session('delivery_status'),
+                'payment_status' => session('payment_status'),
             ])->with('success', 'Pedido eliminado exitosamente');
     }
 
@@ -140,7 +145,22 @@ class OrderController extends Controller
                 'time_interval_start' => session('time_interval_start'),
                 'time_interval_end' => session('time_interval_end'),
                 'town_id' => session('town_id'),
-                'order_status' => session('order_status')
+                'delivery_status' => session('delivery_status'),
+                'payment_status' => session('payment_status'),
+            ])->with('success', 'Estado cambiado exitosamente');
+    }
+
+    public function paid(Order $order)
+    {
+        $order->paid();
+
+        return redirect()->route('orders.index', [
+                'client_type' => session('client_type'),
+                'time_interval_start' => session('time_interval_start'),
+                'time_interval_end' => session('time_interval_end'),
+                'town_id' => session('town_id'),
+                'delivery_status' => session('delivery_status'),
+                'payment_status' => session('payment_status'),
             ])->with('success', 'Estado cambiado exitosamente');
     }
 }

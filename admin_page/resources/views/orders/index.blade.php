@@ -21,15 +21,15 @@
                             </select>
                         </div>
                         <div class="form-group" style="flex-flow:column;">
-                            <label for="client_type">Comienzo de intervalo:</label>
+                            <label for="time_interval_start">Comienzo de intervalo:</label>
                             <input type="date" class="form-control mx-2" name="time_interval_start" id="time_interval_start" value="{{$time_interval_start}}" />
                         </div>
                         <div class="form-group" style="flex-flow:column;">
-                            <label for="client_type">Fin de intervalo:</label>
+                            <label for="time_interval_end">Fin de intervalo:</label>
                             <input type="date" class="form-control mx-2" name="time_interval_end" id="time_interval_end" value="{{$time_interval_end}}" />
                         </div>
                         <div class="form-group" style="flex-flow:column;">
-                            <label for="client_type">Comuna:</label>
+                            <label for="town_id">Comuna:</label>
                             <select class="custom-select form-control mx-2" name="town_id" id="town_id" >
                                 <option value="0">{{ __('navigation.default_option') }}</option>
                                 @foreach($towns as $id => $name)
@@ -38,11 +38,20 @@
                             </select>
                         </div>
                         <div class="form-group" style="flex-flow:column;">
-                            <label for="client_type">Estado:</label>
-                            <select class="custom-select form-control mx-2" name="order_status" id="order_status" >
+                            <label for="delivery_status">Estado Entrega:</label>
+                            <select class="custom-select form-control mx-2" name="delivery_status" id="delivery_status" >
                                 <option value="0">{{ __('navigation.default_option') }}</option>
-                                @foreach($orderStatuses as $id => $name)
-                                    <option value="{{$id}}" @if($order_status == $id) {{'selected'}} @endif>{{$name}}</option>
+                                @foreach($deliveryStatuses as $id => $name)
+                                    <option value="{{$id}}" @if($delivery_status == $id) {{'selected'}} @endif>{{$name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex-flow:column;">
+                            <label for="payment_status">Estado Pago:</label>
+                            <select class="custom-select form-control mx-2" name="payment_status" id="payment_status" >
+                                <option value="0">{{ __('navigation.default_option') }}</option>
+                                @foreach($paymentStatuses as $id => $name)
+                                    <option value="{{$id}}" @if($payment_status == $id) {{'selected'}} @endif>{{$name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -65,12 +74,13 @@
                         <td>N°</td>
                         <td>Cliente</td>
                         <td>Pedido</td>
-                        <td>Estado</td>
+                        <td>E. Entrega</td>
+                        <td>E. Pago</td>
                         <td>Monto</td>
                         <td>Comuna</td>
                         <td>Día entrega</td>
                         <td>Horario entrega</td>
-                        <td colspan="3" width=20%>Acciones</td>
+                        <td colspan="4" width=20%>Acciones</td>
                     </tr>
                 </thead>
                 <tbody>
@@ -79,7 +89,8 @@
                         <td>{{ ++$rowItem }}</td>
                         <td>{{ $order->client->rutFormat() }}</td>
                         <td>{{ $order->products[0]->name }}</td>
-                        <td>{{ $order->statusFormat() }}</td>
+                        <td>{{ $order->deliveryStatusFormat() }}</td>
+                        <td>{{ $order->paymentStatusFormat() }}</td>
                         <td>{{ $order->amount }}</td>
                         <td>{{ $order->address->town->name }}</td>
                         <td>{{ $order->delivery_date }}</td>
@@ -90,12 +101,21 @@
                         </td>
                         <td><a href="{{ route('orders.show', $order->id)}}" class="btn btn-info">{{__('navigation.show')}}</a></td>
                         <td>
-                            @if($order->status !== App\Order::DELIVERED)
+                            @if($order->delivery_status !== App\Order::DELIVERED)
                             <form action="{{ route('orders.delivered', $order->id)}}" method="post">
                                 @csrf
                                 <button class="btn btn-primary delete" data-confirm="{{__('navigation.confirm_delivered')}}" type="submit">{{__('navigation.delivered')}}</button>
                             </form>
                             @endif
+                        </td>
+                        <td>
+                            @if($order->payment_status !== App\Order::PAID)
+                            <form action="{{ route('orders.paid', $order->id)}}" method="post">
+                                @csrf
+                                <button class="btn btn-primary delete" data-confirm="{{__('navigation.confirm_paid')}}" type="submit">{{__('navigation.paid')}}</button>
+                            </form>
+                            @endif
+                        </td>
                         <td>
                             <form action="{{ route('orders.destroy', $order->id)}}" method="post">
                                 @csrf

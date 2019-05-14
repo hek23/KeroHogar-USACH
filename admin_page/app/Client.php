@@ -7,10 +7,10 @@ use \Freshwork\ChileanBundle\Rut;
 
 class Client extends Model
 {
-    const INDIVIDUAL = 1;
+    const PARTICULAR = 1;
     const WHOLESALER = 2;
 
-    public $guarded = [];
+    protected $guarded = [];
 
     public function addresses() {
         return $this->hasMany('App\Address');
@@ -27,8 +27,8 @@ class Client extends Model
 
     public static function getClientTypes() {
         return [
-            self::INDIVIDUAL => 'Individuo',
-            self::WHOLESALER => 'Mayorista',
+            self::PARTICULAR => 'Particular',
+            self::WHOLESALER => 'Distribuidor',
         ];
     }
 

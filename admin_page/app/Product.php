@@ -8,7 +8,7 @@ class Product extends Model
 {
     const ITEMS_PER_PAGE = 10;
 
-    public $guarded = [];
+    protected $guarded = ['amount'];
 
     public function orders() {
         return $this->belongsToMany('App\Order')->withPivot('quantity')->withTimestamps();

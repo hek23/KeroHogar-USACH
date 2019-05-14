@@ -29,11 +29,21 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="status" class="col-sm-3 col-form-label">{{ __('navigation.orders.status') }}</label>
+                            <label for="delivery_status" class="col-sm-3 col-form-label">{{ __('navigation.orders.delivery_status') }}</label>
                             <div class="col-sm-9">
-                                <select class="custom-select form-control" name="status" id="status" >
-                                    @foreach($orderStatuses as $id => $name)
-                                        <option value="{{$id}}" @if(old('status')==$id) {{'selected'}} @endif>{{$name}}</option>
+                                <select class="custom-select form-control" name="delivery_status" id="delivery_status" >
+                                    @foreach($deliveryStatuses as $id => $name)
+                                        <option value="{{$id}}" @if(old('delivery_status')==$id) {{'selected'}} @endif>{{$name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="payment_status" class="col-sm-3 col-form-label">{{ __('navigation.orders.payment_status') }}</label>
+                            <div class="col-sm-9">
+                                <select class="custom-select form-control" name="payment_status" id="payment_status" >
+                                    @foreach($paymentStatuses as $id => $name)
+                                        <option value="{{$id}}" @if(old('payment_status')==$id) {{'selected'}} @endif>{{$name}}</option>
                                     @endforeach
                                 </select>
                             </div>

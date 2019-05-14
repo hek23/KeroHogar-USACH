@@ -10,12 +10,16 @@ use Illuminate\Support\Facades\DB;
 class Order extends Model
 {
     const ITEMS_PER_PAGE = 10;
-    const PENDING = 1;
+    // Delivery status
+    const PENDING_DELIVERY = 1;
     const DELIVERED = 2;
-    const CANCELED = 3;
+
+    // Payment status
+    const PENDING_PAYMENT = 1;
+    const PAID = 2;
     const WHOLESALER_PRICE = 100000;
     
-    public $guarded = [];
+    protected $guarded = [];
 
     public function products() {
         return $this->belongsToMany('App\Product')->withPivot('quantity')->withTimestamps();
@@ -50,13 +54,18 @@ class Order extends Model
     }
 
     public function delivered() {
-        $this->status = self::DELIVERED;
+        $this->delivery_status = self::DELIVERED;
+        $this->save();
+    }
+
+    public function paid() {
+        $this->payment_status = self::PAID;
         $this->save();
     }
 
     public function scopeSearch($query, FilterRequest $request) {
         if($request->has('client_type') && $request->query('client_type') !== 0) {
-            if($request->query('client_type') == Client::INDIVIDUAL) {
+            if($request->query('client_type') == Client::PARTICULAR) {
                 $query->where('amount', '<', self::WHOLESALER_PRICE);
             } elseif ($request->query('client_type') == Client::WHOLESALER) {
                 $query->where('amount', '>=', self::WHOLESALER_PRICE);
@@ -73,20 +82,28 @@ class Order extends Model
                 $innerQuery->where('town_id', $request->town_id);
             });
         }
-        if($request->has('order_status') && $request->query('order_status') != 0) {
-            $query->where('status', $request->order_status);
+        if($request->has('delivery_status') && $request->query('delivery_status') != 0) {
+            $query->where('delivery_status', $request->delivery_status);
+        }
+        if($request->has('payment_status') && $request->query('payment_status') != 0) {
+            $query->where('payment_status', $request->payment_status);
         }
         return $query->latest();
     }
 
-    public function statusFormat() {
-        return $this->getStatuses()[$this->status];
+    public function deliveryStatusFormat() {
+        return $this->getDeliveryStatuses()[$this->delivery_status];
+    }
+
+    public function paymentStatusFormat() {
+        return $this->getPaymentStatuses()[$this->payment_status];
     }
 
     public static function createFromForm($validatedOrderRequest) {
         $product_id = $validatedOrderRequest['product'];
         $quantity = $validatedOrderRequest['quantity'];
-        $status = $validatedOrderRequest['status'];
+        $delivery_status = $validatedOrderRequest['delivery_status'];
+        $payment_status = $validatedOrderRequest['payment_status'];
         $delivery_date = $validatedOrderRequest['delivery_date'];
         $delivery_time = $validatedOrderRequest['delivery_time'];
         $rut = $validatedOrderRequest['rut'];
@@ -115,7 +132,8 @@ class Order extends Model
         $order = Order::create([
             'address_id' => $address->id,
             'delivery_date' => $delivery_date,
-            'status' => $status,
+            'delivery_status' => $delivery_status,
+            'payment_status' => $payment_status,
             'amount' => 0,
         ]);
 
@@ -125,11 +143,17 @@ class Order extends Model
         $order->save();
     }
 
-    public static function getStatuses() {
+    public static function getDeliveryStatuses() {
         return [
-            self::PENDING => 'Pendiente',
+            self::PENDING_DELIVERY => 'Pendiente',
             self::DELIVERED => 'Entregado',
-            self::CANCELED => 'Cancelado',
+        ];
+    }
+
+    public static function getPaymentStatuses() {
+        return [
+            self::PENDING_PAYMENT => 'Pendiente',
+            self::PAID => 'Pagado',
         ];
     }
 }
