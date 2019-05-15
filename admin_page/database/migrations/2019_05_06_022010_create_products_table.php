@@ -18,6 +18,7 @@ class CreateProductsTable extends Migration
             $table->string('name', 64);
             $table->integer('price');
             $table->integer('wholesaler_price');
+            $table->boolean('is_compounded');
             $table->timestamps();
         });
     }

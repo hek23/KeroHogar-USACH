@@ -18,6 +18,7 @@ class CreateProductDiscountsTable extends Migration
             $table->unsignedBigInteger('product_id');
             $table->integer('discount_per_liter');
             $table->integer('min_quantity');
+            $table->integer('max_quantity');
             $table->timestamps();
 
             $table->foreign('product_id')

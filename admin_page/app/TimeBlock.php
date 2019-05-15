@@ -29,6 +29,10 @@ class TimeBlock extends Model
                 ->where('start', '<', $end);
     }
 
+    public function scopeAvailableBlocks($query) {
+        // Complete this function
+    }
+
     public function format() {
         return $this->start . ' - ' . $this->end;
     }

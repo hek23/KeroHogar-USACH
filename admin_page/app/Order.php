@@ -13,16 +13,20 @@ class Order extends Model
     // Delivery status
     const PENDING_DELIVERY = 1;
     const DELIVERED = 2;
-
     // Payment status
     const PENDING_PAYMENT = 1;
     const PAID = 2;
+
     const WHOLESALER_PRICE = 100000;
     
-    protected $guarded = [];
+    protected $guarded = ['amount'];
 
     public function products() {
-        return $this->belongsToMany('App\Product')->withPivot('quantity')->withTimestamps();
+        return $this->belongsToMany('App\Product')->withPivot('quantity', 'product_format_id')->withTimestamps();
+    }
+
+    public function product() {
+        return $this->products()->first();
     }
 
     public function address() {
