@@ -14,7 +14,7 @@ class TimeBlockRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth()->user()->hasRole('admin');
     }
 
     /**
@@ -27,6 +27,7 @@ class TimeBlockRequest extends FormRequest
         return [
             'start' => 'required|date_format:H:i',
             'end' => 'required|date_format:H:i|after:start',
+            'max_orders' => 'integer|min:1',
         ];
     }
 
@@ -40,6 +41,7 @@ class TimeBlockRequest extends FormRequest
         return [
             'start' => Str::lower(__('navigation.schedule.start')),
             'end' => Str::lower(__('navigation.schedule.end')),
+            'max_orders' => Str::lower(__('navigation.schedule.max_orders')),
         ];
     }
 }

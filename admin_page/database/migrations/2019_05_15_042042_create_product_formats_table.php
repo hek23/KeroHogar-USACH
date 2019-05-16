@@ -18,7 +18,7 @@ class CreateProductFormatsTable extends Migration
             $table->unsignedBigInteger('product_id');
             $table->string('name', 64);
             $table->integer('added_price');
-            $table->integer('capacity');
+            $table->integer('capacity')->nullable()->default(0);
             $table->integer('minimum_quantity');
             $table->timestamps();
 

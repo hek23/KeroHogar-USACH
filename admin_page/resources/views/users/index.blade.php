@@ -5,11 +5,11 @@
 
 @section('content')
 <div class="container-fluid">
-    @can('create', App\TimeBlock::class)
+    @can('create', App\User::class)
     <div class="row">
         <div class="col-md-12">
             <div class="float-right mr-3 mb-2">
-                <a class="btn btn-success" href="{{ route('schedule.create') }}"> {{__('navigation.schedule.create')}} </a>
+                <a class="btn btn-success" href="{{ route('users.create') }}"> {{__('navigation.users.create')}} </a>
             </div>
         </div>
     </div>
@@ -21,32 +21,32 @@
                 <thead>
                     <tr>
                         <td>N°</td>
-                        <td>Inicio</td>
-                        <td>Fin</td>
-                        <td>Máx. pedidos/entregas</td>
+                        <td>Nombre</td>
+                        <td>Rol</td>
+                        <td>Correo</td>
                         <td colspan="3" width="20%">Acciones</td>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($timeBlocks as $timeBlock)
+                    @foreach($users as $user)
                     <tr>
                         <td>{{ ++$rowItem }}</td>
-                        <td>{{ $timeBlock->start }}</td>
-                        <td>{{ $timeBlock->end }}</td>
-                        <td>{{ $timeBlock->max_orders }}</td>
+                        <td>{{ $user->name }}</td>
+                        <td>{{ $user->roleFormat() }}</td>
+                        <td>{{ $user->email }}</td>
                         <td>
-                        @can('view', App\TimeBlock::class)
-                            <a href="{{ route('schedule.show', $timeBlock->id)}}" class="btn btn-info">{{__('navigation.show')}}</a>
+                        @can('view', App\User::class)
+                            <a href="{{ route('users.show', $user->id)}}" class="btn btn-info">{{__('navigation.show')}}</a>
                         @endcan
                         </td>
                         <td>
-                        @can('update', App\TimeBlock::class)
-                            <a href="{{ route('schedule.edit', $timeBlock->id)}}" class="btn btn-primary">{{__('navigation.edit')}}</a>
+                        @can('update', App\User::class)
+                            <a href="{{ route('users.edit', $user->id)}}" class="btn btn-primary">{{__('navigation.edit')}}</a>
                         @endcan
                         </td>
                         <td>
-                        @can('delete', App\TimeBlock::class)
-                            <form action="{{ route('schedule.destroy', $timeBlock->id)}}" method="post">
+                        @can('delete', App\User::class)
+                            <form action="{{ route('users.destroy', $user->id)}}" method="post">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-danger delete" data-confirm="{{__('navigation.confirm_deletion')}}" type="submit">{{__('navigation.delete')}}</button>
@@ -58,7 +58,7 @@
                 </tbody>
             </table>
 
-            {!! $timeBlocks->links() !!}
+            {!! $users->links() !!}
         </div>
     </div>
 </div>

@@ -21,20 +21,13 @@
                             <input type="number" class="form-control" name="price" id="price" placeholder="24000" value="{{old('price')}}" required />
                         </div>
                         <div class="form-group">
-                            <label for="minimum_amount">{{ __('navigation.products.minimum_amount') }}:</label>
-                            <input type="number" class="form-control" name="minimum_amount" id="minimum_amount" placeholder="1" value="{{old('minimum_amount')}}" required />
+                            <label for="wholesaler_price">{{ __('navigation.products.wholesaler_price') }}:</label>
+                            <input type="number" class="form-control" name="wholesaler_price" id="wholesaler_price" placeholder="22000" value="{{old('wholesaler_price')}}" required />
                         </div>
-                        <div class="form-group">
-                            <label for="unit">{{ __('navigation.products.unit') }}:</label>
-                            <input type="text" class="form-control" name="unit" id="unit" placeholder="bidón" value="{{old('unit')}}" required />
-                        </div>
-                        <div class="form-group">
-                            <label for="plural">{{ __('navigation.products.plural') }}:</label>
-                            <input type="text" class="form-control" name="plural" id="plural" placeholder="bidones" value="{{old('plural')}}" required />
-                        </div>
-                        <div class="form-group">
-                            <label for="liters_per_unit">{{ __('navigation.products.liters_per_unit') }}:</label>
-                            <input type="number" class="form-control" name="liters_per_unit" id="liters_per_unit" placeholder="20" value="{{old('liters_per_unit')}}" required />
+                        <div class="form-check">
+                            <input type="hidden" name="is_compounded" value=0 />
+                            <input type="checkbox" class="form-check-input" name="is_compounded" id="is_compounded" value=1 />
+                            <label for="is_compounded">{{ __('navigation.products.is_compounded') }}</label>
                         </div>
                         <button type="submit" class="btn btn-primary">{{__('navigation.products.store')}}</button>
                     </form>

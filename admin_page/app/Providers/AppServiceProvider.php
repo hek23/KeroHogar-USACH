@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use App\Product;
+use App\Observers\ProductObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,5 +30,7 @@ class AppServiceProvider extends ServiceProvider
             'create' => 'crear',
             'edit' => 'editar',
         ]);
+
+        Product::observe(ProductObserver::class);
     }
 }

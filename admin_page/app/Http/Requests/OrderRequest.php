@@ -14,7 +14,7 @@ class OrderRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth()->user()->hasRole('admin');
     }
 
     /**
@@ -26,13 +26,17 @@ class OrderRequest extends FormRequest
     {
         return [
             'product' => 'required|integer',
-            'quantity' => 'required|integer',
+            'format' => 'required|integer',
+            'quantity' => 'required|integer|min:0',
             'delivery_status' => 'required|integer',
             'payment_status' => 'required|integer',
             'delivery_date' => 'required|date',
             'delivery_time' => 'required|array',
-            'rut' => 'required|cl_rut',
+            'rut' => 'nullable|cl_rut',
             'name' => 'required|string|max:64',
+            'email' => 'nullable|string|email|max:64',
+            'phone' => 'nullable|string|max:32',
+            'wholesaler' => 'required|boolean',
             'town' => 'required|integer',
             'address' => 'required|string',
         ];
@@ -59,6 +63,7 @@ class OrderRequest extends FormRequest
     {
         return [
             'product' => Str::lower(__('navigation.orders.product')),
+            'format' => Str::lower(__('navigation.orders.format')),
             'amount' => Str::lower(__('navigation.orders.amount')),
             'quantity' => Str::lower(__('navigation.orders.quantity')),
             'delivery_status' => Str::lower(__('navigation.orders.delivery_status')),
@@ -67,6 +72,9 @@ class OrderRequest extends FormRequest
             'delivery_time' => Str::lower(__('navigation.orders.delivery_time')),
             'rut' => Str::lower(__('navigation.orders.rut')),
             'name' => Str::lower(__('navigation.orders.name')),
+            'email' => Str::lower(__('navigation.orders.email')),
+            'phone' => Str::lower(__('navigation.orders.phone')),
+            'wholesaler' => Str::lower(__('navigation.orders.wholesaler')),
             'town' => Str::lower(__('navigation.orders.town')),
             'address' => Str::lower(__('navigation.orders.address')),
         ];

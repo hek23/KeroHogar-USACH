@@ -15,7 +15,7 @@ class OrdersTableSeeder extends Seeder
      */
     public function run()
     {
-        $orders = factory(Order::class, 40)->create();
+        $orders = factory(Order::class, 100)->create();
 
         foreach ($orders as $order) {
             $product = Product::inRandomOrder()->first();

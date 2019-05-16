@@ -14,7 +14,7 @@ class ProductRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth()->user()->hasRole('admin');
     }
 
     /**
@@ -25,12 +25,10 @@ class ProductRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string',
-            'price' => 'required|integer',
-            'minimum_amount' => 'required|integer',
-            'unit' => 'required|string',
-            'plural' => 'required|string',
-            'liters_per_unit' => 'required|integer',
+            'name' => 'required|string|max:64',
+            'price' => 'required|integer|min:0',
+            'wholesaler_price' => 'required|integer|min:0',
+            'is_compounded' => 'required|boolean',
         ];
     }
 
@@ -44,10 +42,8 @@ class ProductRequest extends FormRequest
         return [
             'name' => Str::lower(__('navigation.products.name')),
             'price' => Str::lower(__('navigation.products.price')),
-            'minimum_amount' => Str::lower(__('navigation.products.minimum_amount')),
-            'unit' => Str::lower(__('navigation.products.unit')),
-            'plural' => Str::lower(__('navigation.products.plural')),
-            'liters_per_unit' => Str::lower(__('navigation.products.liters_per_unit')),
+            'wholesaler_price' => Str::lower(__('navigation.products.wholesaler_price')),
+            'is_compounded' => Str::lower(__('navigation.products.is_compounded')),
         ];
     }
 }

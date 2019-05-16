@@ -5,11 +5,11 @@
 
 @section('content')
 <div class="container-fluid">
-    @can('create', App\TimeBlock::class)
+    @can('create', App\ProductFormat::class)
     <div class="row">
         <div class="col-md-12">
             <div class="float-right mr-3 mb-2">
-                <a class="btn btn-success" href="{{ route('schedule.create') }}"> {{__('navigation.schedule.create')}} </a>
+                <a class="btn btn-success" href="{{ route('formats.create', $product->id) }}"> {{__('navigation.formats.create')}} </a>
             </div>
         </div>
     </div>
@@ -21,32 +21,34 @@
                 <thead>
                     <tr>
                         <td>N°</td>
-                        <td>Inicio</td>
-                        <td>Fin</td>
-                        <td>Máx. pedidos/entregas</td>
-                        <td colspan="3" width="20%">Acciones</td>
+                        <td>Nombre</td>
+                        <td>Precio añadido</td>
+                        <td>Capacidad</td>
+                        <td>Cantidad mínima de compra</td>
+                        <td colspan="3" width=20%>Acciones</td>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($timeBlocks as $timeBlock)
+                    @foreach($productFormats as $productFormat)
                     <tr>
                         <td>{{ ++$rowItem }}</td>
-                        <td>{{ $timeBlock->start }}</td>
-                        <td>{{ $timeBlock->end }}</td>
-                        <td>{{ $timeBlock->max_orders }}</td>
+                        <td>{{ $productFormat->name }}</td>
+                        <td>{{ '$' . $productFormat->added_price }}</td>
+                        <td>{{ $productFormat->capacity }}</td>
+                        <td>{{ $productFormat->minimum_quantity }}</td>
                         <td>
-                        @can('view', App\TimeBlock::class)
-                            <a href="{{ route('schedule.show', $timeBlock->id)}}" class="btn btn-info">{{__('navigation.show')}}</a>
+                        @can('view', App\ProductFormat::class)
+                            <a href="{{ route('formats.show', [$product->id, $productFormat->id])}}" class="btn btn-info">{{__('navigation.show')}}</a>
                         @endcan
                         </td>
                         <td>
-                        @can('update', App\TimeBlock::class)
-                            <a href="{{ route('schedule.edit', $timeBlock->id)}}" class="btn btn-primary">{{__('navigation.edit')}}</a>
+                        @can('update', App\ProductFormat::class)
+                            <a href="{{ route('formats.edit', [$product->id, $productFormat->id])}}" class="btn btn-primary">{{__('navigation.edit')}}</a>
                         @endcan
                         </td>
                         <td>
-                        @can('delete', App\TimeBlock::class)
-                            <form action="{{ route('schedule.destroy', $timeBlock->id)}}" method="post">
+                        @can('delete', App\ProductFormat::class)
+                            <form action="{{ route('formats.destroy', [$product->id, $productFormat->id])}}" method="post">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-danger delete" data-confirm="{{__('navigation.confirm_deletion')}}" type="submit">{{__('navigation.delete')}}</button>
@@ -58,7 +60,7 @@
                 </tbody>
             </table>
 
-            {!! $timeBlocks->links() !!}
+            {!! $productFormats->links() !!}
         </div>
     </div>
 </div>

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Http\Requests\FilterRequest;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class Order extends Model
 {
@@ -19,14 +20,26 @@ class Order extends Model
 
     const WHOLESALER_PRICE = 100000;
     
-    protected $guarded = ['amount'];
+    protected $guarded = [];
 
     public function products() {
         return $this->belongsToMany('App\Product')->withPivot('quantity', 'product_format_id')->withTimestamps();
     }
 
+    public function format() {
+        return ProductFormat::find($this->product()->pivot->product_format_id);
+    }
+
     public function product() {
         return $this->products()->first();
+    }
+
+    public function getFormatAttribute() {
+        return $this->format();
+    }
+
+    public function getProductAttribute() {
+        return $this->product();
     }
 
     public function address() {
@@ -38,20 +51,27 @@ class Order extends Model
     }
 
     public function delivery_blocks() {
-        return $this->belongsToMany('App\TimeBlock')->withTimestamps();;
+        return $this->belongsToMany('App\TimeBlock')->withTimestamps();
     }
 
     public function calculateAmount() {
-        $product = $this->products[0];
-        $productPrice = $product->price;
+        $product = $this->product;
+        if($this->client->wholesaler) {
+            $productPrice = $product->wholesaler_price;
+        } else {
+            $productPrice = $product->price;
+        }
         $quantity = $product->pivot->quantity;
         $price = $productPrice * $quantity;
 
-        foreach ($product->discounts as $discount) {
-            if($quantity >= $discount->min_quantity && $quantity <= $discount->max_quantity) {
-                $price -= ($quantity * $product->liters_per_unit) * $discount->discount_per_liter;
-                break;
-            }
+        $productFormat = $this->format;
+        if(!is_null($productFormat) && $productFormat->capacity > 0) {
+            $price += ($quantity / $productFormat->capacity) * $productFormat->added_price;
+        }
+
+        $discount = $product->discounts()->where('min_quantity', '<=', $quantity)->orderBy('min_quantity', 'desc')->first();
+        if(!is_null($discount) && !$this->client->wholesaler) {
+            $price -= $quantity * $discount->discount_per_liter;
         }
 
         $this->amount = $price;
@@ -103,8 +123,16 @@ class Order extends Model
         return $this->getPaymentStatuses()[$this->payment_status];
     }
 
+    public function productNameFormat() {
+        if(!is_null($this->format)) {
+            return $this->product->name . ' (' . $this->format->name . ')';
+        }
+        return $this->product->name;
+    }
+
     public static function createFromForm($validatedOrderRequest) {
         $product_id = $validatedOrderRequest['product'];
+        $product_format_id = $validatedOrderRequest['format'];
         $quantity = $validatedOrderRequest['quantity'];
         $delivery_status = $validatedOrderRequest['delivery_status'];
         $payment_status = $validatedOrderRequest['payment_status'];
@@ -112,19 +140,40 @@ class Order extends Model
         $delivery_time = $validatedOrderRequest['delivery_time'];
         $rut = $validatedOrderRequest['rut'];
         $name = $validatedOrderRequest['name'];
+        $email = $validatedOrderRequest['email'];
+        $phone = $validatedOrderRequest['phone'];
+        $wholesaler = $validatedOrderRequest['wholesaler'];
         $town = Town::where('id', $validatedOrderRequest['town'])->first();
         $input_address = $validatedOrderRequest['address'];
 
-        $client = Client::whereRutEquals($rut)->first();
-        if(is_null($client)) {
-            $client = Client::create([
-                'rut' => Client::normalizeRut($rut),
+        if (!is_null($rut)) {
+            $client = Client::whereRutEquals($rut)->first();
+            if (is_null($client)) {
+                $client = Client::make([
+                    'rut' => Client::normalizeRut($rut),
+                    'name' => $name,
+                    'email' => $email,
+                    'phone' => $phone,
+                    'wholesaler' => $wholesaler,
+                    'password' => Hash::make(str_random(20)),
+                ]);
+            }
+        } else {
+            $client = Client::make([
+                'rut' => $rut,
                 'name' => $name,
+                'email' => $email,
+                'phone' => $phone,
+                'wholesaler' => $wholesaler,
+                'password' => Hash::make(str_random(20)),
             ]);
         }
+        
 
-        $address = Address::where(DB::raw('LOWER(address)'), 'like', '%' . strtolower( $input_address) . '%')->first();
+        $address = Address::where(DB::raw('LOWER(address)'), 'like', '%' . strtolower($input_address) . '%')->first();
         if(is_null($address)) {
+            $client->save();
+
             $address = Address::create([
                 'client_id' => $client->id,
                 'town_id' => $town->id,
@@ -141,7 +190,7 @@ class Order extends Model
             'amount' => 0,
         ]);
 
-        $order->products()->sync([$product_id => ['quantity' => $quantity]]);
+        $order->products()->sync([$product_id => ['quantity' => $quantity, 'product_format_id' => $product_format_id]]);
         $order->delivery_blocks()->sync(array_values($delivery_time));
         $order->calculateAmount();
         $order->save();

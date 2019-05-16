@@ -43,15 +43,26 @@
                         <!-- Authentication Links -->
                         @guest
                         @else
+                            @can('view', App\Order::class)
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('orders.index') }}">{{ __('navigation.orders.index') }}</a>
                             </li>
+                            @endcan
+                            @can('view', App\Product::class)
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('products.index') }}">{{ __('navigation.products.index') }}</a>
                             </li>
+                            @endcan
+                            @can('view', App\TimeBlock::class)
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('schedule.index') }}">{{ __('navigation.schedule.index') }}</a>
                             </li>
+                            @endcan
+                            @can('view', App\User::class)
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('users.index') }}">{{ __('navigation.users.index') }}</a>
+                            </li>
+                            @endcan
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>
@@ -61,7 +72,7 @@
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                        {{ __('Salir') }}
                                     </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

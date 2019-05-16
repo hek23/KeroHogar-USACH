@@ -41,4 +41,8 @@ class Product extends Model
     public function discountsPaginated() {
         return $this->discounts()->orderBy('min_quantity','asc')->paginate(ProductDiscount::ITEMS_PER_PAGE);
     }
+
+    public function formatsPaginated() {
+        return $this->formats()->orderBy('id','asc')->paginate(ProductFormat::ITEMS_PER_PAGE);
+    }
 }

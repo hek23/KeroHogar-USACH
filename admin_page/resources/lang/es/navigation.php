@@ -25,10 +25,14 @@ return [
         // Attributes localization
         'rut' => 'Rut',
         'name' => 'Nombre',
+        'email' => 'Correo',
+        'phone' => 'Teléfono',
+        'wholesaler' => '¿Cliente distribuidor?',
         'town' => 'Comuna',
         'alias' => 'Alias dirección',
         'address' => 'Dirección',
         'product' => 'Nombre del producto',
+        'format' => 'Nombre del formato de producto',
         'amount' => 'Monto pagado',
         'quantity' => 'Cantidad comprada',
         'delivery_status' => 'Estado de entrega',
@@ -49,11 +53,26 @@ return [
 
         // Attributes localization
         'name' => 'Nombre del producto',
-        'unit' => 'Unidad del producto',
-        'plural' => 'Pluralización de la unidad',
         'price' => 'Precio del producto',
-        'liters_per_unit' => 'Litros por unidad',
-        'minimum_amount' => 'Cantidad mínima de compra',
+        'wholesaler_price' => 'Precio para distribuidores del producto',
+        'is_compounded' => 'Producto se vende en varios formatos'
+    ],
+
+    'formats' => [
+        // CRUD navigation localization
+        'index' => 'Formatos',
+        'create' => 'Crear nuevo formato del producto',
+        'store' => 'Guardar formato del producto',
+        'show' => 'Detalles del formato del producto',
+        'edit' => 'Editar formato del producto',
+        'update' => 'Actualizar formato del producto',
+        'destroy' => 'Eliminar formato del producto',
+
+        // Attributes localization
+        'name' => 'Nombre de este formato de venta',
+        'added_price' => 'Precio añadido del producto (por capacidad vendida, ejemplo: por bidón)',
+        'capacity' => 'Capacidad del contenedor/bidón (en caso de vender de a litro, la capacidad es 0)',
+        'minimum_quantity' => 'Cantidad mínima de compra',
     ],
 
     'schedule' =>[
@@ -69,6 +88,7 @@ return [
         // Attributes localization
         'start' => 'Inicio del bloque horario',
         'end' => 'Fin del bloque horario',
+        'max_orders' => 'Cantidad máxima de entregas realizables en este bloque horario'
     ],
 
     'discounts' =>[
@@ -85,5 +105,22 @@ return [
         'discount_per_liter' => 'Descuento por litro comprado',
         'min_quantity' => 'Cantidad mínima para habilitar este descuento',
         'max_quantity' => 'Cantidad máxima en la que es efectivo este descuento',
+    ],
+
+    'users' =>[
+        // CRUD navigation localization
+        'index' => 'Personal',
+        'create' => 'Agregar nueva cuenta',
+        'store' => 'Guardar cuenta',
+        'show' => 'Detalles del usuario',
+        'edit' => 'Editar cuenta',
+        'update' => 'Actualizar cuenta',
+        'destroy' => 'Eliminar cuenta',
+
+        // Attributes localization
+        'name' => 'Nombre del usuario',
+        'role' => 'Rol del usuario',
+        'email' => 'Correo del usuario (lo utiliza para iniciar sesión)',
+        'password' => 'Contraseña del usuario',
     ],
 ];

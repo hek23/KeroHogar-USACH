@@ -60,9 +60,11 @@
                     </div>
                 </form>
             </div>
+            @can('create', App\Order::class)
             <div class="float-right mr-3 mt-2">
                 <a class="btn btn-success" href="{{ route('orders.create') }}"> {{__('navigation.orders.create')}} </a>
             </div>
+            @endcan
         </div>
     </div>
     @include('partials.session_success')
@@ -88,7 +90,7 @@
                     <tr>
                         <td>{{ ++$rowItem }}</td>
                         <td>{{ $order->client->rutFormat() }}</td>
-                        <td>{{ $order->products[0]->name }}</td>
+                        <td>{{ $order->productNameFormat() }}</td>
                         <td>{{ $order->deliveryStatusFormat() }}</td>
                         <td>{{ $order->paymentStatusFormat() }}</td>
                         <td>{{ $order->amount }}</td>
@@ -99,29 +101,39 @@
                                 {{ $timeBlock->start . " - " . $timeBlock->end }}<br>
                             @endforeach
                         </td>
-                        <td><a href="{{ route('orders.show', $order->id)}}" class="btn btn-info">{{__('navigation.show')}}</a></td>
                         <td>
+                            @can('view', App\Order::class)
+                            <a href="{{ route('orders.show', $order->id)}}" class="btn btn-info">{{__('navigation.show')}}</a>
+                            @endcan
+                        </td>
+                        <td>
+                            @can('deliver', App\Order::class)
                             @if($order->delivery_status !== App\Order::DELIVERED)
                             <form action="{{ route('orders.delivered', $order->id)}}" method="post">
                                 @csrf
                                 <button class="btn btn-primary delete" data-confirm="{{__('navigation.confirm_delivered')}}" type="submit">{{__('navigation.delivered')}}</button>
                             </form>
                             @endif
+                            @endcan
                         </td>
                         <td>
+                            @can('payment', App\Order::class)
                             @if($order->payment_status !== App\Order::PAID)
                             <form action="{{ route('orders.paid', $order->id)}}" method="post">
                                 @csrf
                                 <button class="btn btn-primary delete" data-confirm="{{__('navigation.confirm_paid')}}" type="submit">{{__('navigation.paid')}}</button>
                             </form>
                             @endif
+                            @endcan
                         </td>
                         <td>
+                            @can('delete', App\Order::class)
                             <form action="{{ route('orders.destroy', $order->id)}}" method="post">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-danger delete" data-confirm="{{__('navigation.confirm_deletion')}}" type="submit">{{__('navigation.delete')}}</button>
                             </form>
+                            @endcan
                         </td>
                     </tr>
                     @endforeach

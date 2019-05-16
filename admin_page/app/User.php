@@ -9,6 +9,7 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    const ITEMS_PER_PAGE = 10;
     // roles
     const ADMIN = 1;
     const DRIVER = 2;
@@ -19,7 +20,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'role',
     ];
 
     /**
@@ -43,6 +44,10 @@ class User extends Authenticatable
             return $role === $this->role;
         }
         return false;
+    }
+
+    public function roleFormat() {
+        return self::getRoles()[$this->role];
     }
 
     public static function getRoles()

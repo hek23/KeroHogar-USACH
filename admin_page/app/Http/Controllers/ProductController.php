@@ -14,6 +14,8 @@ class ProductController extends Controller
      */
     public function index()
     {
+        $this->authorize('view', Product::class);
+
         $products = Product::allPaginated();
         return view('products.index', compact('products'))
             ->with('rowItem', $this->rowNumber(request()->input('page', 1), Product::ITEMS_PER_PAGE));
@@ -26,6 +28,8 @@ class ProductController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Product::class);
+
         return view('products.create');
     }
 
@@ -37,6 +41,8 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request)
     {
+        $this->authorize('create', Product::class);
+
         Product::create($request->validated());
 
         return redirect()->route('products.index')
@@ -51,6 +57,8 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
+        $this->authorize('view', Product::class);
+
         return view('products.show', compact('product'));
     }
 
@@ -62,6 +70,8 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
+        $this->authorize('update', Product::class);
+
         return view('products.edit', compact('product'));
     }
 
@@ -74,6 +84,8 @@ class ProductController extends Controller
      */
     public function update(ProductRequest $request, Product $product)
     {
+        $this->authorize('update', Product::class);
+
         $product->update($request->validated());
 
         return redirect()->route('products.index')
@@ -88,6 +100,8 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        $this->authorize('delete', Product::class);
+
         $product->delete();
 
         return redirect()->route('products.index')

@@ -9,9 +9,10 @@
                     {{__('navigation.orders.show')}}
                 </div>
                 <div class="card-body">
-                    <p><strong>{{ __('navigation.orders.product') }}</strong>: <a href="{{route('products.show', $order->products[0]->id)}}">{{$order->products[0]->name}}</a></p>
+                    <p><strong>{{ __('navigation.orders.product') }}</strong>: <a href="{{route('products.show', $order->product->id)}}">{{$order->product->name}}</a></p>
+                    @if(!is_null($order->format))<p><strong>{{ __('navigation.orders.format') }}</strong>: <a href="{{ route('formats.show', [$order->product->id, $order->format->id])}}">{{$order->format->name}}</a></p>@endif
                     <p><strong>{{ __('navigation.orders.amount') }}</strong>: {{$order->amount}}</p>
-                    <p><strong>{{ __('navigation.orders.quantity') }}</strong>: {{$order->products[0]->pivot->quantity . ' ' . $order->products[0]->plural}}</p>
+                    <p><strong>{{ __('navigation.orders.quantity') }}</strong>: {{$order->product->pivot->quantity}}</p>
                     <p><strong>{{ __('navigation.orders.delivery_status') }}</strong>: {{$order->deliveryStatusFormat()}}</p>
                     <p><strong>{{ __('navigation.orders.payment_status') }}</strong>: {{$order->paymentStatusFormat()}}</p>
                     <p><strong>{{ __('navigation.orders.delivery_date') }}</strong>: {{$order->delivery_date}}</p>
@@ -32,6 +33,9 @@
                 <div class="card-body">
                     <p><strong>{{ __('navigation.orders.rut') }}</strong>: {{$order->client->rutFormat()}}</a></p>
                     <p><strong>{{ __('navigation.orders.name') }}</strong>: {{$order->client->name}}</a></p>
+                    <p><strong>{{ __('navigation.orders.email') }}</strong>: {{$order->client->email}}</a></p>
+                    <p><strong>{{ __('navigation.orders.phone') }}</strong>: {{$order->client->phone}}</a></p>
+                    <p><strong>{{ __('navigation.orders.wholesaler') }}</strong>: {{$order->client->wholesaler == 1 ? 'Si' : 'No'}}</a></p>
                     <p><strong>{{ __('navigation.orders.alias') }}</strong>: {{$order->address->alias}}</p>
                     <p><strong>{{ __('navigation.orders.town') }}</strong>: {{$order->address->town->name}}</p>
                     <p><strong>{{ __('navigation.orders.address') }}</strong>: {{$order->address->address}}</p>

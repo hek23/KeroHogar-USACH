@@ -18,7 +18,10 @@ class Client extends Model
 
     public function rutFormat()
     {
-        return Rut::parse($this->rut)->format();
+        if(!is_null($this->rut)) {
+            return Rut::parse($this->rut)->format();
+        }
+        return '';
     }
 
     public function scopeWhereRutEquals($query, $rut) {
