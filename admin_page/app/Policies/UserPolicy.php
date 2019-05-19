@@ -17,7 +17,7 @@ class UserPolicy
      */
     public function view(User $user)
     {
-        return $user->hasRole('admin');
+        return $user->hasRole('admin') || $user->hasRole('driver');
     }
 
     /**
@@ -37,9 +37,17 @@ class UserPolicy
      * @param  \App\User  $user
      * @return mixed
      */
-    public function update(User $user)
+    public function update(User $user, User $model)
     {
-        return $user->hasRole('admin');
+        // If they have the same role, he can't change anything of the other user.
+        if($user->hasRole('admin')) {
+            if($model->hasRole('admin')) {
+                return $user->id === $model->id;
+            }
+            return $model->hasRole('driver');
+        } else {
+            return $user->id === $model->id;
+        }
     }
 
     /**
@@ -48,8 +56,8 @@ class UserPolicy
      * @param  \App\User  $user
      * @return mixed
      */
-    public function delete(User $user)
+    public function delete(User $user, User $model)
     {
-        return $user->hasRole('admin');
+        return $user->hasRole('admin') && $user->id !== $model->id;
     }
 }

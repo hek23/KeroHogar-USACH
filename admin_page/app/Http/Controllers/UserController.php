@@ -17,7 +17,12 @@ class UserController extends Controller
     {
         $this->authorize('view', User::class);
 
-        $users = User::orderBy('role', 'asc')->paginate(User::ITEMS_PER_PAGE);
+        $users = User::orderBy('role', 'asc');
+        if(auth()->user()->hasRole('driver')) {
+            $users = $users->where('id', auth()->id());
+        }
+
+        $users = $users->paginate(User::ITEMS_PER_PAGE);
         return view('users.index', compact('users'))
             ->with('rowItem', $this->rowNumber(request()->input('page', 1), User::ITEMS_PER_PAGE));
     }
@@ -65,7 +70,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        $this->authorize('view', User::class);
+        $this->authorize('update', $user);
 
         return view('users.show', compact('user'));
     }
@@ -78,7 +83,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $this->authorize('update', User::class);
+        $this->authorize('update', $user);
 
         $roles = User::getRoles();
 
@@ -94,7 +99,7 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, User $user)
     {
-        $this->authorize('update', User::class);
+        $this->authorize('update', $user);
 
         $user->update([
             'name' => $request->validated()['name'],
@@ -115,7 +120,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $this->authorize('delete', User::class);
+        $this->authorize('delete', $user);
 
         if(auth()->id() == $user->id) {
             return redirect()->back()->setStatusCode(403);

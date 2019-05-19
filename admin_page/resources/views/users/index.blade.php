@@ -40,12 +40,12 @@
                         @endcan
                         </td>
                         <td>
-                        @can('update', App\User::class)
+                        @can('update', $user)
                             <a href="{{ route('users.edit', $user->id)}}" class="btn btn-primary">{{__('navigation.edit')}}</a>
                         @endcan
                         </td>
                         <td>
-                        @can('delete', App\User::class)
+                        @can('delete', $user)
                             <form action="{{ route('users.destroy', $user->id)}}" method="post">
                                 @csrf
                                 @method('DELETE')
