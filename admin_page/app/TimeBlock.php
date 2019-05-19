@@ -44,23 +44,27 @@ class TimeBlock extends Model
     public static function getAvailableBlocks($day) {
         $maxOrdersPerDay = TimeBlock::sum('max_orders');
 
-        $orders = Order::where('delivery_date', $day)->get();
+        $orders = Order::where('delivery_date', Carbon::parse($day))->get();
 
         if($orders->count() >= $maxOrdersPerDay) {
             return collect([]);
         }
 
         $tbs = TimeBlock::orderBy('id')->get();
+        foreach ($tbs as $tb) {
+            $tb->orders_left = $tb->max_orders;
+        }
 
         foreach ($orders as $order) {
-            $orderBlocks = $order->delivery_blocks()->orderBy('id')->get();
+            $orderBlocks = $order->delivery_blocks()->orderBy('start')->get();
             foreach ($orderBlocks as $orderBlock) {
-                $tbs[$orderBlock->id - 1]->max_orders -= 1;
+                $tbs[$orderBlock->id - 1]->orders_left -= 1;
+                break;
             }
         }
 
         foreach ($tbs as $key => $tb) {
-            if($tb->max_orders <= 0) $tbs->forget($key);
+            if($tb->orders_left <= 0) $tbs->forget($key);
         }
 
         /*

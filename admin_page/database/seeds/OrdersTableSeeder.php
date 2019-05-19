@@ -5,6 +5,7 @@ use App\Order;
 use App\Product;
 use App\TimeBlock;
 use App\ProductFormat;
+use Illuminate\Support\Carbon;
 
 class OrdersTableSeeder extends Seeder
 {
@@ -15,7 +16,9 @@ class OrdersTableSeeder extends Seeder
      */
     public function run()
     {
-        $orders = factory(Order::class, 100)->create();
+        factory(Order::class, 500)->create();
+
+        $orders = Order::all();
 
         foreach ($orders as $order) {
             $product = Product::inRandomOrder()->first();
@@ -30,10 +33,15 @@ class OrdersTableSeeder extends Seeder
             }
 
             $timeBlocksSelected = rand(1, 4);
-            $timeBlocks = TimeBlock::inRandomOrder()->take($timeBlocksSelected)->pluck('id');
-            $order->delivery_blocks()->sync($timeBlocks);
-            $order->calculateAmount();
-            $order->save();
+            $timeBlocks = TimeBlock::getAvailableBlocks($order->delivery_date)->shuffle()->slice(0, $timeBlocksSelected)->pluck('id');
+            //$timeBlocks = TimeBlock::inRandomOrder()->take($timeBlocksSelected)->pluck('id');
+            if($timeBlocks->isEmpty()) {
+                $order->delete();
+            } else {
+                $order->delivery_blocks()->sync($timeBlocks);
+                $order->calculateAmount();
+                $order->save();
+            }
         }
     }
 }
