@@ -51,7 +51,7 @@ class Order extends Model
     }
 
     public function delivery_blocks() {
-        return $this->belongsToMany('App\TimeBlock')->withTimestamps();
+        return $this->belongsToMany('App\TimeBlock')->withTimestamps()->orderBy('start');
     }
 
     public function calculateAmount() {
@@ -88,31 +88,65 @@ class Order extends Model
     }
 
     public function scopeSearch($query, FilterRequest $request) {
-        if($request->has('client_type') && $request->query('client_type') !== 0) {
-            if($request->query('client_type') == Client::PARTICULAR) {
-                $query->where('amount', '<', self::WHOLESALER_PRICE);
-            } elseif ($request->query('client_type') == Client::WHOLESALER) {
-                $query->where('amount', '>=', self::WHOLESALER_PRICE);
-            }
-        }
-        if($request->has('time_interval_start') && $request->query('time_interval_start') !== null) {
-            $query->where('delivery_date', '>=', Carbon::parse($request->query('time_interval_start')));
-        }
-        if($request->has('time_interval_end') && $request->query('time_interval_end') !== null) {
-            $query->where('delivery_date', '<=', Carbon::parse($request->query('time_interval_end')));
-        }
-        if($request->has('town_id') && $request->query('town_id') != 0) {
-            $query->whereHas('address', function ($innerQuery) use ($request) {
-                $innerQuery->where('town_id', $request->town_id);
+        $query->filterByClientType($request->query('client_type', null));
+        $query->filterByIntervalStartDate($request->query('time_interval_start', null));
+        $query->filterByIntervalEndDate($request->query('time_interval_end', null));
+        $query->filterByTown($request->query('town_id', null));
+        $query->filterByTimeBlock($request->query('time_block_id', null));
+        $query->filterByDeliveryStatus($request->query('delivery_status', null));
+        $query->filterByPaymentStatus($request->query('payment_status', null));
+
+        return $query->latest();
+    }
+
+    public function scopeFilterByClientType($query, $client_type) {
+        if(!is_null($client_type) && $client_type > 0) {
+            $query->whereHas('address', function ($addressQuery) use ($client_type) {
+                $addressQuery->whereHas('client', function ($innerQuery) use ($client_type) {
+                    $innerQuery->where('wholesaler', Client::WHOLESALER == $client_type);
+                });
             });
         }
-        if($request->has('delivery_status') && $request->query('delivery_status') != 0) {
-            $query->where('delivery_status', $request->delivery_status);
+    }
+
+    public function scopeFilterByIntervalStartDate($query, $time_interval_start) {
+        if(!is_null($time_interval_start)) {
+            $query->where('delivery_date', '>=', Carbon::parse($time_interval_start));
         }
-        if($request->has('payment_status') && $request->query('payment_status') != 0) {
-            $query->where('payment_status', $request->payment_status);
+    }
+
+    public function scopeFilterByIntervalEndDate($query, $time_interval_end) {
+        if(!is_null($time_interval_end)) {
+            $query->where('delivery_date', '<=', Carbon::parse($time_interval_end));
         }
-        return $query->latest();
+    }
+
+    public function scopeFilterByTown($query, $town_id) {
+        if(!is_null($town_id) && $town_id > 0) {
+            $query->whereHas('address', function ($innerQuery) use ($town_id) {
+                $innerQuery->where('town_id', $town_id);
+            });
+        }
+    }
+
+    public function scopeFilterByTimeBlock($query, $time_block_id) {
+        if(!is_null($time_block_id) && $time_block_id > 0) {
+            $query->whereHas('delivery_blocks', function ($innerQuery) use ($time_block_id) {
+                $innerQuery->where('time_block_id', $time_block_id);
+            });
+        }
+    }
+
+    public function scopeFilterByDeliveryStatus($query, $delivery_status) {
+        if(!is_null($delivery_status) && $delivery_status > 0) {
+            $query->where('delivery_status', $delivery_status);
+        }
+    }
+
+    public function scopeFilterByPaymentStatus($query, $payment_status) {
+        if(!is_null($payment_status) && $payment_status > 0) {
+            $query->where('payment_status', $payment_status);
+        }
     }
 
     public function deliveryStatusFormat() {

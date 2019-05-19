@@ -27,6 +27,7 @@ class OrderController extends Controller
         $time_interval_start = $request->query('time_interval_start');
         $time_interval_end = $request->query('time_interval_end');
         $town_id = $request->query('town_id');
+        $time_block_id = $request->query('time_block_id');
         $delivery_status = $request->query('delivery_status');
         $payment_status = $request->query('payment_status');
 
@@ -34,11 +35,13 @@ class OrderController extends Controller
         session(['time_interval_start' => $time_interval_start]);
         session(['time_interval_end' => $time_interval_end]);
         session(['town_id' => $town_id]);
+        session(['time_block_id' => $time_block_id]);
         session(['delivery_status' => $delivery_status]);
         session(['payment_status' => $payment_status]);
 
         $orders = Order::search($request);
         $towns = Town::pluck('name', 'id');
+        $timeBlocks = TimeBlock::orderBy('start')->get();
         $deliveryStatuses = Order::getDeliveryStatuses();
         $paymentStatuses = Order::getPaymentStatuses();
         $clientTypes = Client::getClientTypes();
@@ -48,7 +51,7 @@ class OrderController extends Controller
         }
         $orders = $orders->paginate(Order::ITEMS_PER_PAGE);
 
-        return view('orders.index', compact('orders', 'towns', 'deliveryStatuses', 'paymentStatuses', 'clientTypes', 'client_type', 'time_interval_start', 'time_interval_end', 'town_id', 'delivery_status', 'payment_status'))
+        return view('orders.index', compact('orders', 'towns', 'timeBlocks', 'deliveryStatuses', 'paymentStatuses', 'clientTypes', 'client_type', 'time_interval_start', 'time_interval_end', 'town_id', 'time_block_id', 'delivery_status', 'payment_status'))
             ->with('rowItem', $this->rowNumber(request()->input('page', 1), Order::ITEMS_PER_PAGE) );
     }
 
@@ -147,6 +150,7 @@ class OrderController extends Controller
                 'time_interval_start' => session('time_interval_start'),
                 'time_interval_end' => session('time_interval_end'),
                 'town_id' => session('town_id'),
+                'time_block_id' => session('time_block_id'),
                 'delivery_status' => session('delivery_status'),
                 'payment_status' => session('payment_status'),
             ])->with('success', 'Pedido eliminado exitosamente');
@@ -163,6 +167,7 @@ class OrderController extends Controller
                 'time_interval_start' => session('time_interval_start'),
                 'time_interval_end' => session('time_interval_end'),
                 'town_id' => session('town_id'),
+                'time_block_id' => session('time_block_id'),
                 'delivery_status' => session('delivery_status'),
                 'payment_status' => session('payment_status'),
             ])->with('success', 'Estado cambiado exitosamente');
@@ -179,6 +184,7 @@ class OrderController extends Controller
                 'time_interval_start' => session('time_interval_start'),
                 'time_interval_end' => session('time_interval_end'),
                 'town_id' => session('town_id'),
+                'time_block_id' => session('time_block_id'),
                 'delivery_status' => session('delivery_status'),
                 'payment_status' => session('payment_status'),
             ])->with('success', 'Estado cambiado exitosamente');

@@ -22,11 +22,20 @@
                         </div>
                         <div class="form-group" style="flex-flow:column;">
                             <label for="time_interval_start">Comienzo de intervalo:</label>
-                            <input type="date" class="form-control mx-2" name="time_interval_start" id="time_interval_start" value="{{$time_interval_start}}" />
+                            <input type="date" class="form-control mx-2" name="time_interval_start" id="time_interval_start" value="{{$time_interval_start}}" style="max-width:165px;" />
                         </div>
                         <div class="form-group" style="flex-flow:column;">
                             <label for="time_interval_end">Fin de intervalo:</label>
-                            <input type="date" class="form-control mx-2" name="time_interval_end" id="time_interval_end" value="{{$time_interval_end}}" />
+                            <input type="date" class="form-control mx-2" name="time_interval_end" id="time_interval_end" value="{{$time_interval_end}}" style="max-width:165px;" />
+                        </div>
+                        <div class="form-group" style="flex-flow:column;">
+                            <label for="time_block_id">Bloque:</label>
+                            <select class="custom-select form-control mx-2" name="time_block_id" id="time_block_id" >
+                                <option value="0">{{ __('navigation.default_option') }}</option>
+                                @foreach($timeBlocks as $timeBlock)
+                                    <option value="{{$timeBlock->id}}" @if($time_block_id == $timeBlock->id) {{'selected'}} @endif>{{$timeBlock->format()}}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="form-group" style="flex-flow:column;">
                             <label for="town_id">Comuna:</label>
@@ -140,7 +149,15 @@
                 </tbody>
             </table>
 
-            {!! $orders->links() !!}
+            {!! $orders->appends([
+                'client_type' => $client_type,
+                'time_interval_start' => $time_interval_start,
+                'time_interval_end' => $time_interval_end,
+                'town_id' => $town_id,
+                'time_block_id' => $time_block_id,
+                'delivery_status' => $delivery_status,
+                'payment_status' => $payment_status,
+            ])->links() !!}
         </div>
     </div>
 </div>
