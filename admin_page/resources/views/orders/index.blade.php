@@ -83,7 +83,7 @@
                 <thead>
                     <tr>
                         <td>N°</td>
-                        <td>Cliente</td>
+                        <td width="8%">Cliente</td>
                         <td>Pedido</td>
                         <td>E. Entrega</td>
                         <td>E. Pago</td>
@@ -98,7 +98,7 @@
                     @foreach($orders as $order)
                     <tr>
                         <td>{{ ++$rowItem }}</td>
-                        <td>{{ $order->client->rutFormat() }}</td>
+                        <td>{{ (!is_null($order->client->rut)) ? $order->client->rutFormat() : $order->client->name }}</td>
                         <td>{{ $order->productNameFormat() }}</td>
                         <td>{{ $order->deliveryStatusFormat() }}</td>
                         <td>{{ $order->paymentStatusFormat() }}</td>
@@ -163,6 +163,6 @@
 </div>
 @endsection
 
-@section('script')
+@section('js')
 <script src="{{ asset('js/confirm_deletion.js') }}" defer></script>
 @endsection

@@ -64,6 +64,6 @@
 </div>
 @endsection
 
-@section('script')
+@section('js')
 <script src="{{ asset('js/confirm_deletion.js') }}" defer></script>
 @endsection

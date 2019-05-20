@@ -90,6 +90,6 @@
             @yield('content')
         </main>
     </div>
-    @yield('script')
+    @yield('js')
 </body>
 </html>

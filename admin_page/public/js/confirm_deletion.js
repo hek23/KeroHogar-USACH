@@ -101,7 +101,6 @@ for (var i = 0; i < deleteLinks.length; i++) {
     var choice = confirm(this.getAttribute('data-confirm'));
 
     if (choice) {
-      console.log(this);
       this.form.submit();
     }
   });

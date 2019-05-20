@@ -32,13 +32,13 @@ return [
         'alias' => 'Alias dirección',
         'address' => 'Dirección',
         'product' => 'Nombre del producto',
-        'format' => 'Nombre del formato de producto',
+        'format' => 'Formato del producto',
         'amount' => 'Monto pagado',
         'quantity' => 'Cantidad comprada',
         'delivery_status' => 'Estado de entrega',
         'payment_status' => 'Estado de pago',
         'delivery_date' => 'Dia de entrega escogido',
-        'delivery_time' => 'Bloques horarios de entrega elegidos',
+        'delivery_time' => 'Bloques horarios de entrega disponibles',
     ],
 
     'products' => [

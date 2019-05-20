@@ -11,6 +11,8 @@ use App\Exports\OrdersExport;
 use App\Product;
 use App\TimeBlock;
 use App\ProductFormat;
+use Illuminate\Support\Carbon;
+use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
@@ -156,6 +158,12 @@ class OrderController extends Controller
             ])->with('success', 'Pedido eliminado exitosamente');
     }
 
+    /**
+     * Change order delivery_status to delivered.
+     *
+     * @param  \App\Order  $order
+     * @return \Illuminate\Http\Response
+     */
     public function delivered(Order $order)
     {
         $this->authorize('deliver', Order::class);
@@ -173,6 +181,12 @@ class OrderController extends Controller
             ])->with('success', 'Estado cambiado exitosamente');
     }
 
+    /**
+     * Change order payment_status to paid.
+     *
+     * @param  \App\Order  $order
+     * @return \Illuminate\Http\Response
+     */
     public function paid(Order $order)
     {
         $this->authorize('payment', Order::class);
@@ -188,5 +202,26 @@ class OrderController extends Controller
                 'delivery_status' => session('delivery_status'),
                 'payment_status' => session('payment_status'),
             ])->with('success', 'Estado cambiado exitosamente');
+    }
+
+    // Functions used in ajax calls to make the order creation dynamic
+    /*
+     * Get the formats of the related product.
+     */
+    public function productFormats(Request $request) {
+        if(is_numeric((int)$request->query('id'))) {
+            return ProductFormat::where('product_id', $request->id)->pluck('name', 'id');
+        }
+        return [];
+    }
+
+    /*
+     * Get the available time blocks of given date.
+     */
+    public function availableTimeBlocks(Request $request) {
+        if($request->has('delivery_date')) {
+            return TimeBlock::getAvailableBlocks(Carbon::parse($request->delivery_date))->map->only(['id', 'start', 'end']);
+        }
+        return [];
     }
 }

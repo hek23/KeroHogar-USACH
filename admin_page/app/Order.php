@@ -66,7 +66,7 @@ class Order extends Model
 
         $productFormat = $this->format;
         if(!is_null($productFormat) && $productFormat->capacity > 0) {
-            $price += ($quantity / $productFormat->capacity) * $productFormat->added_price;
+            $price += ceil(($quantity / $productFormat->capacity)) * $productFormat->added_price;
         }
 
         $discount = $product->discounts()->where('min_quantity', '<=', $quantity)->orderBy('min_quantity', 'desc')->first();
