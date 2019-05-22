@@ -13,6 +13,7 @@ return [
     'default_option' => 'Todos',
 
     'orders' =>[
+        'empty' => 'No hay pedidos para mostrar con los filtros utilizados.',
         // CRUD navigation localization
         'index' => 'Pedidos',
         'create' => 'Crear nuevo pedido',

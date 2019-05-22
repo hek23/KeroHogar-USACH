@@ -17,7 +17,14 @@ $factory->define(Order::class, function (Faker $faker) {
     }
 
     return [
-        'address_id' => Address::inRandomOrder()->first()->id,
+        'address_id' => function(){
+            $address = Address::inRandomOrder()->first();
+            if($address === null) {
+                return factory(Address::class)->create()->id;
+            } else {
+                return $address->id;
+            }
+        },
         'delivery_status' => $delivery_status,
         'payment_status' => $payment_status,
         'amount' => $faker->numberBetween(10000, 100000),

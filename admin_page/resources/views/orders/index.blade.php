@@ -148,6 +148,9 @@
                     @endforeach
                 </tbody>
             </table>
+            @if($orders->count() === 0)
+            <p>{{__('navigation.orders.empty')}}</p>
+            @endif
 
             {!! $orders->appends([
                 'client_type' => $client_type,
