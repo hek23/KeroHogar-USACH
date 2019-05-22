@@ -3,12 +3,14 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Maatwebsite\Excel\Facades\Excel;
 use App\User;
 use App\Order;
 use App\Address;
 use App\Town;
+use App\Client;
+use App\Exports\OrdersExport;
 
 class FilterTest extends TestCase
 {
@@ -65,6 +67,7 @@ class FilterTest extends TestCase
         $response->assertSeeInOrder($orders->toArray());
     }
 
+
     /** @test */
     function empty_filter_by_town()
     {
@@ -115,6 +118,7 @@ class FilterTest extends TestCase
         $response->assertSeeInOrder($orders->toArray());
     }
 
+
     /** @test */
     function empty_filter_by_delivery_status_is_pending()
     {
@@ -157,7 +161,6 @@ class FilterTest extends TestCase
         $response->assertSee(__('navigation.orders.empty'));
     }
 
-
     /** @test */
     function view_orders_in_filter_by_delivery_status_is_delivered()
     {
@@ -175,6 +178,7 @@ class FilterTest extends TestCase
         $response->assertStatus(200);
         $response->assertSeeInOrder($orders->toArray());
     }
+
 
     /** @test */
     function empty_filter_by_payment_status_is_pending()
@@ -218,7 +222,6 @@ class FilterTest extends TestCase
         $response->assertSee(__('navigation.orders.empty'));
     }
 
-
     /** @test */
     function view_orders_in_filter_by_payment_status_is_paid()
     {
@@ -237,6 +240,117 @@ class FilterTest extends TestCase
         $response->assertSeeInOrder($orders->toArray());
     }
 
+
+    /** @test */
+    function empty_filter_by_client_type_is_particular()
+    {
+        $this->signIn($cristian = create(User::class));
+
+        $response = $this->get($this->buildSearchUrl([
+            'client_type' => Client::PARTICULAR,
+        ]));
+        $response->assertStatus(200);
+        $response->assertSee(__('navigation.orders.empty'));
+    }
+
+    /** @test */
+    function view_orders_in_filter_by_client_type_is_particular()
+    {
+        $this->signIn($cristian = create(User::class));
+        $client = create(Client::class, [
+            'wholesaler' => false,
+        ]);
+        factory(Order::class, Order::ITEMS_PER_PAGE)->create([
+            'address_id' => create(Address::class,[
+                'client_id' => $client->id,
+            ]),
+        ]);
+        create_product_for_orders();
+        
+        $orders = Order::all()->map(function($order) {return $order->productNameFormat();});
+
+        $response = $this->get($this->buildSearchUrl([
+            'client_type' => Client::PARTICULAR,
+        ]));
+        $response->assertStatus(200);
+        $response->assertSeeInOrder($orders->toArray());
+    }
+
+    /** @test */
+    function empty_filter_by_client_type_is_wholesaler()
+    {
+        $this->signIn($cristian = create(User::class));
+
+        $response = $this->get($this->buildSearchUrl([
+            'client_type' => Client::WHOLESALER,
+        ]));
+        $response->assertStatus(200);
+        $response->assertSee(__('navigation.orders.empty'));
+    }
+
+    /** @test */
+    function view_orders_in_filter_by_client_type_is_wholesaler()
+    {
+        $this->signIn($cristian = create(User::class));
+        $client = create(Client::class, [
+            'wholesaler' => true,
+        ]);
+        factory(Order::class, Order::ITEMS_PER_PAGE)->create([
+            'address_id' => create(Address::class, [
+                'client_id' => $client->id,
+            ]),
+        ]);
+        create_product_for_orders();
+        
+        $orders = Order::all()->map(function($order) {return $order->productNameFormat();});
+
+        $response = $this->get($this->buildSearchUrl([
+            'client_type' => Client::WHOLESALER,
+        ]));
+        $response->assertStatus(200);
+        $response->assertSeeInOrder($orders->toArray());
+    }
+
+
+    /** @test */
+    function downloads_generated_excel_when_there_are_orders_in_filter()
+    {
+        Excel::fake();
+        $this->signIn($cristian = create(User::class));
+        factory(Order::class, Order::ITEMS_PER_PAGE)->create();
+        create_product_for_orders();
+
+        $orders = Order::all()->map(function ($order) {
+            return $order->productNameFormat();
+        });
+
+        $response = $this->get($this->buildSearchUrl(['generate_excel' => 1]));
+        $response->assertStatus(200);
+
+        Excel::assertDownloaded('export.xlsx', function (OrdersExport $export) use ($orders) {
+            $collection = $export->collection();
+            $containsOrders = true;
+            foreach ($orders as $order) {
+                $containsOrders = $containsOrders && $collection->contains('Pedido', $order);
+            }
+            return $containsOrders;
+        });
+    }
+
+    /** @test */
+    function downloads_empty_generated_excel_when_there_are_orders_in_filter()
+    {
+        Excel::fake();
+        $this->signIn($cristian = create(User::class));
+
+        $response = $this->get($this->buildSearchUrl(['generate_excel' => 1]));
+        $response->assertStatus(200);
+
+        Excel::assertDownloaded('export.xlsx', function (OrdersExport $export) {
+            return $export->collection()->isEmpty();
+        });
+    }
+
     protected function buildSearchUrl($overrides = [])
     {
         $attributes = array_merge([
@@ -247,6 +361,7 @@ class FilterTest extends TestCase
             'town_id' => '0',
             'delivery_status' => '0',
             'payment_status' => '0',
+            'generate_excel' => '0',
         ], $overrides);
 
         return self::FILTER_URI . 'client_type=' . $attributes['client_type'] . 
@@ -256,6 +371,7 @@ class FilterTest extends TestCase
             '&town_id=' . $attributes['town_id'] .
             '&delivery_status=' . $attributes['delivery_status'] .
             '&payment_status=' . $attributes['payment_status']. 
+            '&generate_excel=' . $attributes['generate_excel']. 
             '&page=1';
     }
 }

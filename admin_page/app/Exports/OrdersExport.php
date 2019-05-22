@@ -25,7 +25,7 @@ class OrdersExport implements FromCollection, WithHeadings
             $orders_array[$i]['Nombre'] = $order->client->name;
             $orders_array[$i]['Comuna'] = $order->address->town->name;
             $orders_array[$i]['Dirección'] = $order->address->address;
-            $orders_array[$i]['Pedido'] = $product->name;
+            $orders_array[$i]['Pedido'] = $order->productNameFormat();
             $orders_array[$i]['Cantidad'] = $product->pivot->quantity;
             $orders_array[$i]['Litros'] = $product->liters_per_unit * $product->pivot->quantity;
             $orders_array[$i]['Monto pagado'] = $order->amount;
@@ -51,7 +51,7 @@ class OrdersExport implements FromCollection, WithHeadings
     */
     public function collection()
     {
-        return collect([$this->data]);
+        return collect($this->data);
     }
 
     public function headings(): array
