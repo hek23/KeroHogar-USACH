@@ -16,7 +16,7 @@ $factory->define(ProductFormat::class, function (Faker $faker) {
                 return $product->id;
             }
         },
-        'name' => $faker->name,
+        'name' => $faker->sentence(3),
         'added_price' => $faker->numberBetween(0, 500),
         'capacity' => $faker->numberBetween(0, 100),
         'minimum_quantity' => $faker->numberBetween(10, 100),

@@ -19,9 +19,99 @@ class FilterTest extends TestCase
     const FILTER_URI = '/pedidos?';
 
     /** @test */
+    function empty_with_no_filter_given_when_user_role_is_admin()
+    {
+        $this->signIn(create(User::class, [
+            'role' => User::ADMIN,
+        ]));
+
+        $response = $this->get('/pedidos');
+        $response->assertStatus(200);
+        $response->assertSee(__('navigation.orders.empty'));
+    }
+
+    /** @test */
+    function pagination_with_no_filter_given_when_user_role_is_admin()
+    {
+        $this->signIn(create(User::class, [
+            'role' => User::ADMIN,
+        ]));
+        factory(Order::class, 2 * Order::ITEMS_PER_PAGE)->create();
+        create_product_for_orders();
+
+        $response = $this->get('/pedidos');
+        $response->assertStatus(200);
+        $response->assertSeeInOrder(['&lsaquo;', '1', '2', '>&rsaquo;']);
+    }
+
+    /** @test */
+    function view_orders_with_no_filter_given_when_user_role_is_admin()
+    {
+        $this->signIn(create(User::class, [
+            'role' => User::ADMIN,
+        ]));
+        factory(Order::class, Order::ITEMS_PER_PAGE)->create();
+        create_product_for_orders();
+
+        $orders = Order::all()->map(function ($order) {
+            return $order->productNameFormat();
+        });
+
+        $response = $this->get('/pedidos');
+        $response->assertStatus(200);
+        $response->assertSeeInOrder($orders->toArray());
+    }
+    
+
+    /** @test */
+    function empty_with_no_filter_given_when_user_role_is_driver()
+    {
+        $this->signIn(create(User::class, [
+            'role' => User::DRIVER,
+        ]));
+
+        $response = $this->get('/pedidos');
+        $response->assertStatus(200);
+        $response->assertSee(__('navigation.orders.empty'));
+    }
+
+    /** @test */
+    function pagination_with_no_filter_given_when_user_role_is_driver()
+    {
+        $this->signIn(create(User::class, [
+            'role' => User::DRIVER,
+        ]));
+        factory(Order::class, 2 * Order::ITEMS_PER_PAGE)->create();
+        create_product_for_orders();
+
+        $response = $this->get('/pedidos');
+        $response->assertStatus(200);
+        $response->assertSeeInOrder(['&lsaquo;', '1', '2', '>&rsaquo;']);
+    }
+
+    /** @test */
+    function view_orders_with_no_filter_given_when_user_role_is_driver()
+    {
+        $this->signIn(create(User::class, [
+            'role' => User::DRIVER,
+        ]));
+        factory(Order::class, Order::ITEMS_PER_PAGE)->create();
+        create_product_for_orders();
+
+        $orders = Order::all()->map(function ($order) {
+            return $order->productNameFormat();
+        });
+
+        $response = $this->get('/pedidos');
+        $response->assertStatus(200);
+        $response->assertSeeInOrder($orders->toArray());
+    }
+
+
+    /** @test */
     function empty_filter_by_time_interval()
     {
-        $this->signIn($cristian = create(User::class));
+        $this->signIn(create(User::class));
 
         $response = $this->get($this->buildSearchUrl([
             'time_interval_start' => '2019-05-05',
@@ -34,7 +124,7 @@ class FilterTest extends TestCase
     /** @test */
     function pagination_in_filter_by_time_interval()
     {
-        $this->signIn($cristian = create(User::class));
+        $this->signIn(create(User::class));
         factory(Order::class, 2 * Order::ITEMS_PER_PAGE)->create([
             'delivery_date' => '2019-05-08',
         ]);
@@ -51,7 +141,7 @@ class FilterTest extends TestCase
     /** @test */
     function view_orders_in_filter_by_time_interval()
     {
-        $this->signIn($cristian = create(User::class));
+        $this->signIn(create(User::class));
         factory(Order::class, Order::ITEMS_PER_PAGE)->create([
             'delivery_date' => '2019-05-08',
         ]);
@@ -71,7 +161,7 @@ class FilterTest extends TestCase
     /** @test */
     function empty_filter_by_town()
     {
-        $this->signIn($cristian = create(User::class));
+        $this->signIn(create(User::class));
 
         $response = $this->get($this->buildSearchUrl([
             'town_id' => Town::first()->id,
@@ -83,7 +173,7 @@ class FilterTest extends TestCase
     /** @test */
     function pagination_in_filter_by_town()
     {
-        $this->signIn($cristian = create(User::class));
+        $this->signIn(create(User::class));
         factory(Order::class, 2 * Order::ITEMS_PER_PAGE)->create([
             'address_id' => create(Address::class, [
                 'town_id' => Town::first()->id,
@@ -101,7 +191,7 @@ class FilterTest extends TestCase
     /** @test */
     function view_orders_in_filter_by_town()
     {
-        $this->signIn($cristian = create(User::class));
+        $this->signIn(create(User::class));
         factory(Order::class, Order::ITEMS_PER_PAGE)->create([
             'address_id' => create(Address::class, [
                 'town_id' => Town::first()->id,
@@ -122,7 +212,7 @@ class FilterTest extends TestCase
     /** @test */
     function empty_filter_by_delivery_status_is_pending()
     {
-        $this->signIn($cristian = create(User::class));
+        $this->signIn(create(User::class));
 
         $response = $this->get($this->buildSearchUrl([
             'delivery_status' => Order::PENDING_DELIVERY,
@@ -134,7 +224,7 @@ class FilterTest extends TestCase
     /** @test */
     function view_orders_in_filter_by_delivery_status_is_pending()
     {
-        $this->signIn($cristian = create(User::class));
+        $this->signIn(create(User::class));
         factory(Order::class, Order::ITEMS_PER_PAGE)->create([
             'delivery_status' => Order::PENDING_DELIVERY,
         ]);
@@ -152,7 +242,7 @@ class FilterTest extends TestCase
     /** @test */
     function empty_filter_by_delivery_status_is_delivered()
     {
-        $this->signIn($cristian = create(User::class));
+        $this->signIn(create(User::class));
 
         $response = $this->get($this->buildSearchUrl([
             'delivery_status' => Order::DELIVERED,
@@ -164,7 +254,7 @@ class FilterTest extends TestCase
     /** @test */
     function view_orders_in_filter_by_delivery_status_is_delivered()
     {
-        $this->signIn($cristian = create(User::class));
+        $this->signIn(create(User::class));
         factory(Order::class, Order::ITEMS_PER_PAGE)->create([
             'delivery_status' => Order::DELIVERED,
         ]);
@@ -183,7 +273,7 @@ class FilterTest extends TestCase
     /** @test */
     function empty_filter_by_payment_status_is_pending()
     {
-        $this->signIn($cristian = create(User::class));
+        $this->signIn(create(User::class));
 
         $response = $this->get($this->buildSearchUrl([
             'payment_status' => Order::PENDING_PAYMENT,
@@ -195,7 +285,7 @@ class FilterTest extends TestCase
     /** @test */
     function view_orders_in_filter_by_payment_status_is_pending()
     {
-        $this->signIn($cristian = create(User::class));
+        $this->signIn(create(User::class));
         factory(Order::class, Order::ITEMS_PER_PAGE)->create([
             'payment_status' => Order::PENDING_PAYMENT,
         ]);
@@ -213,7 +303,7 @@ class FilterTest extends TestCase
     /** @test */
     function empty_filter_by_payment_status_is_paid()
     {
-        $this->signIn($cristian = create(User::class));
+        $this->signIn(create(User::class));
 
         $response = $this->get($this->buildSearchUrl([
             'payment_status' => Order::PAID,
@@ -225,7 +315,7 @@ class FilterTest extends TestCase
     /** @test */
     function view_orders_in_filter_by_payment_status_is_paid()
     {
-        $this->signIn($cristian = create(User::class));
+        $this->signIn(create(User::class));
         factory(Order::class, Order::ITEMS_PER_PAGE)->create([
             'payment_status' => Order::PAID,
         ]);
@@ -244,7 +334,7 @@ class FilterTest extends TestCase
     /** @test */
     function empty_filter_by_client_type_is_particular()
     {
-        $this->signIn($cristian = create(User::class));
+        $this->signIn(create(User::class));
 
         $response = $this->get($this->buildSearchUrl([
             'client_type' => Client::PARTICULAR,
@@ -256,7 +346,7 @@ class FilterTest extends TestCase
     /** @test */
     function view_orders_in_filter_by_client_type_is_particular()
     {
-        $this->signIn($cristian = create(User::class));
+        $this->signIn(create(User::class));
         $client = create(Client::class, [
             'wholesaler' => false,
         ]);
@@ -279,7 +369,7 @@ class FilterTest extends TestCase
     /** @test */
     function empty_filter_by_client_type_is_wholesaler()
     {
-        $this->signIn($cristian = create(User::class));
+        $this->signIn(create(User::class));
 
         $response = $this->get($this->buildSearchUrl([
             'client_type' => Client::WHOLESALER,
@@ -291,7 +381,7 @@ class FilterTest extends TestCase
     /** @test */
     function view_orders_in_filter_by_client_type_is_wholesaler()
     {
-        $this->signIn($cristian = create(User::class));
+        $this->signIn(create(User::class));
         $client = create(Client::class, [
             'wholesaler' => true,
         ]);
@@ -316,7 +406,7 @@ class FilterTest extends TestCase
     function downloads_generated_excel_when_there_are_orders_in_filter()
     {
         Excel::fake();
-        $this->signIn($cristian = create(User::class));
+        $this->signIn(create(User::class));
         factory(Order::class, Order::ITEMS_PER_PAGE)->create();
         create_product_for_orders();
 
@@ -341,7 +431,7 @@ class FilterTest extends TestCase
     function downloads_empty_generated_excel_when_there_are_orders_in_filter()
     {
         Excel::fake();
-        $this->signIn($cristian = create(User::class));
+        $this->signIn(create(User::class));
 
         $response = $this->get($this->buildSearchUrl(['generate_excel' => 1]));
         $response->assertStatus(200);
