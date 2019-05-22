@@ -36,8 +36,8 @@ class ProductPricingTest extends TestCase
 
         $response = $this->get('productos');
         $response->assertStatus(200);
-        $response->assertDontSee($newPrice);
-        $response->assertSee($oldPrice);
+        $response->assertDontSee('$' . $newPrice);
+        $response->assertSee('$' . $oldPrice);
 
         $response = $this->patch('productos/' . $product->id, [
             'name' => 'Parafina',
@@ -49,8 +49,8 @@ class ProductPricingTest extends TestCase
         
         $response = $this->get('productos');
         $response->assertStatus(200);
-        $response->assertSee($newPrice);
-        $response->assertDontSee($oldPrice);
+        $response->assertSee('$' . $newPrice);
+        $response->assertDontSee('$' . $oldPrice);
 
     }
 
@@ -78,8 +78,8 @@ class ProductPricingTest extends TestCase
 
         $response = $this->get('productos/' . $product->id . '/descuentos');
         $response->assertStatus(200);
-        $response->assertDontSee($newDiscount);
-        $response->assertSee($oldDiscount);
+        $response->assertDontSee('$' . $newDiscount);
+        $response->assertSee('$' . $oldDiscount);
 
         $response = $this->patch('productos/' . $product->id . '/descuentos/' . $discount->id, [
             'product_id' => $product->id,
@@ -91,8 +91,8 @@ class ProductPricingTest extends TestCase
 
         $response = $this->get('productos/' . $product->id . '/descuentos');
         $response->assertStatus(200);
-        $response->assertSee($newDiscount);
-        $response->assertDontSee($oldDiscount);
+        $response->assertSee('$' . $newDiscount);
+        $response->assertDontSee('$' . $oldDiscount);
     }
 
     /** @test */

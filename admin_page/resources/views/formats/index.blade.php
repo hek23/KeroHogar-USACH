@@ -59,6 +59,9 @@
                     @endforeach
                 </tbody>
             </table>
+            @if($productFormats->isEmpty())
+            <p>{{__('navigation.formats.empty')}}</p>
+            @endif
 
             {!! $productFormats->links() !!}
         </div>

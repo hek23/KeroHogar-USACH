@@ -60,6 +60,7 @@ return [
     ],
 
     'formats' => [
+        'empty' => 'Aún no has definido formatos de venta para este producto.',
         // CRUD navigation localization
         'index' => 'Formatos',
         'create' => 'Crear nuevo formato del producto',
