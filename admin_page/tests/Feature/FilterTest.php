@@ -115,6 +115,128 @@ class FilterTest extends TestCase
         $response->assertSeeInOrder($orders->toArray());
     }
 
+    /** @test */
+    function empty_filter_by_delivery_status_is_pending()
+    {
+        $this->signIn($cristian = create(User::class));
+
+        $response = $this->get($this->buildSearchUrl([
+            'delivery_status' => Order::PENDING_DELIVERY,
+        ]));
+        $response->assertStatus(200);
+        $response->assertSee(__('navigation.orders.empty'));
+    }
+
+    /** @test */
+    function view_orders_in_filter_by_delivery_status_is_pending()
+    {
+        $this->signIn($cristian = create(User::class));
+        factory(Order::class, Order::ITEMS_PER_PAGE)->create([
+            'delivery_status' => Order::PENDING_DELIVERY,
+        ]);
+        create_product_for_orders();
+        
+        $orders = Order::all()->map(function($order) {return $order->productNameFormat();});
+
+        $response = $this->get($this->buildSearchUrl([
+            'delivery_status' => Order::PENDING_DELIVERY,
+        ]));
+        $response->assertStatus(200);
+        $response->assertSeeInOrder($orders->toArray());
+    }
+
+    /** @test */
+    function empty_filter_by_delivery_status_is_delivered()
+    {
+        $this->signIn($cristian = create(User::class));
+
+        $response = $this->get($this->buildSearchUrl([
+            'delivery_status' => Order::DELIVERED,
+        ]));
+        $response->assertStatus(200);
+        $response->assertSee(__('navigation.orders.empty'));
+    }
+
+
+    /** @test */
+    function view_orders_in_filter_by_delivery_status_is_delivered()
+    {
+        $this->signIn($cristian = create(User::class));
+        factory(Order::class, Order::ITEMS_PER_PAGE)->create([
+            'delivery_status' => Order::DELIVERED,
+        ]);
+        create_product_for_orders();
+        
+        $orders = Order::all()->map(function($order) {return $order->productNameFormat();});
+
+        $response = $this->get($this->buildSearchUrl([
+            'delivery_status' => Order::DELIVERED,
+        ]));
+        $response->assertStatus(200);
+        $response->assertSeeInOrder($orders->toArray());
+    }
+
+    /** @test */
+    function empty_filter_by_payment_status_is_pending()
+    {
+        $this->signIn($cristian = create(User::class));
+
+        $response = $this->get($this->buildSearchUrl([
+            'payment_status' => Order::PENDING_PAYMENT,
+        ]));
+        $response->assertStatus(200);
+        $response->assertSee(__('navigation.orders.empty'));
+    }
+
+    /** @test */
+    function view_orders_in_filter_by_payment_status_is_pending()
+    {
+        $this->signIn($cristian = create(User::class));
+        factory(Order::class, Order::ITEMS_PER_PAGE)->create([
+            'payment_status' => Order::PENDING_PAYMENT,
+        ]);
+        create_product_for_orders();
+        
+        $orders = Order::all()->map(function($order) {return $order->productNameFormat();});
+
+        $response = $this->get($this->buildSearchUrl([
+            'payment_status' => Order::PENDING_PAYMENT,
+        ]));
+        $response->assertStatus(200);
+        $response->assertSeeInOrder($orders->toArray());
+    }
+
+    /** @test */
+    function empty_filter_by_payment_status_is_paid()
+    {
+        $this->signIn($cristian = create(User::class));
+
+        $response = $this->get($this->buildSearchUrl([
+            'payment_status' => Order::PAID,
+        ]));
+        $response->assertStatus(200);
+        $response->assertSee(__('navigation.orders.empty'));
+    }
+
+
+    /** @test */
+    function view_orders_in_filter_by_payment_status_is_paid()
+    {
+        $this->signIn($cristian = create(User::class));
+        factory(Order::class, Order::ITEMS_PER_PAGE)->create([
+            'payment_status' => Order::PAID,
+        ]);
+        create_product_for_orders();
+        
+        $orders = Order::all()->map(function($order) {return $order->productNameFormat();});
+
+        $response = $this->get($this->buildSearchUrl([
+            'payment_status' => Order::PAID,
+        ]));
+        $response->assertStatus(200);
+        $response->assertSeeInOrder($orders->toArray());
+    }
+
     protected function buildSearchUrl($overrides = [])
     {
         $attributes = array_merge([
