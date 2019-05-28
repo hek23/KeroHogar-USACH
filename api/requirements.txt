@@ -1,0 +1,11 @@
+#Convert documentation to HTML (API Landing)
+markdown==2.6.11
+#API Microframework
+flask==1.0.2
+#Flask extension for MYSQL Support
+flask-mysql==1.4.0
+#Evaluation...
+requests==2.18.1
+bson
+Flask-Login
+Flask-RESTful
