@@ -29,7 +29,7 @@ class Client:
         cursor = mysqlConnector.get_db().cursor()
         query = "SELECT * FROM Clients where rut =\'{}\'"
         cursor.execute(query.format(rut))
-        mysqlConnector.get_db().commit()
+        #mysqlConnector.get_db().commit()
         result = cursor.fetchone()
         cursor.close()
         #return Client()
