@@ -7,6 +7,10 @@ class Product:
         cursor = mysqlConnector.get_db().cursor()
         cursor.execute(productQuery)
         result = cursor.fetchAll()
+        #result as list of list
+        
+        for product in result:
+
         cursor.close()
 
 
