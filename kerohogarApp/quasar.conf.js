@@ -36,7 +36,11 @@ module.exports = function (ctx) {
         'QList',
         'QItem',
         'QItemSection',
-        'QItemLabel'
+        'QItemLabel',
+
+        'QInput',
+        'QForm',
+        'QSelect'
       ],
 
       directives: [
@@ -45,7 +49,8 @@ module.exports = function (ctx) {
 
       // Quasar plugins
       plugins: [
-        'Notify'
+        'Notify',
+        'Dialog'
       ]
 
       // iconSet: 'ionicons-v4'
