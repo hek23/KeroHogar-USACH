@@ -368,7 +368,8 @@ Resultado: ```HTTP 201 CREATED```
 
 
 ### Bloques de tiempo
-Obtener los bloques de tiempo disponibles
+
+#### Obtener los bloques de tiempo disponibles
 
 > Parámetro: Estado (available en la ruta)
 > Método: GET
@@ -379,6 +380,7 @@ Resultado:
 ```javascript
 [
     {
+    "id":2,
     "start":"9:00",
     "end": "10:00"
     }
@@ -386,4 +388,55 @@ Resultado:
 
 ```
 
+### Usuario/Cliente
 
+#### Crear nuevo usuario
+
+> Parámetro: información para crear nuevo usuario (body)
+> Método: POST
+> Ruta: ```HOST/version/user```
+
+Body: 
+```javascript
+{
+    "rut":"1-9",
+    "name":"Maria Les Papas",
+    "pass": "NoPondreDatos",
+    "email": "malepapa@pericos.cl",
+    "phone": "+5696212342",
+    "wholesaler": 1
+}
+```
+
+Resultado:
+```javascript
+{
+    "id": 1
+}
+```
+
+#### Editar usuario
+
+> Parámetro: información para editar nuevo usuario (body) e id de Usuario (URL)
+> Método: PUT
+> Ruta: ```HOST/version/user/idUser```
+
+Body: 
+```javascript
+{
+    "rut":"1-9",
+    "name":"Maria Les Papas",
+    "pass": "NoPondreDatos",
+    "email": "malepapa@pericos.cl",
+    "phone": "+5696212342",
+    "wholesaler": 1
+}
+```
+
+Resultado:
+```HTTP 200 OK```
+
+
+#### Ingresar (login)
+
+TBD
