@@ -8,7 +8,7 @@ class ProductDiscount extends Model
 {
     const ITEMS_PER_PAGE = 10;
     
-    public $guarded = [];
+    protected $guarded = [];
 
     public function product() {
         return $this->belongsTo('App\Product');
@@ -24,5 +24,11 @@ class ProductDiscount extends Model
 
     public function formatMaxQuantity() {
         return $this->max_quantity . ' ' . $this->product->plural;
+    }
+
+    public function scopeIntersecting($query, $min_quantity, $max_quantity)
+    {
+        return $query->where('max_quantity', '>=', $min_quantity)
+            ->where('min_quantity', '<=', $max_quantity);
     }
 }

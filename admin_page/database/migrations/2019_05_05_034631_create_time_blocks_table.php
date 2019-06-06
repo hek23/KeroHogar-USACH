@@ -15,6 +15,7 @@ class CreateTimeBlocksTable extends Migration
     {
         Schema::create('time_blocks', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('max_orders');
             $table->time('start');
             $table->time('end');
             $table->timestamps();

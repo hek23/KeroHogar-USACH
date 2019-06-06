@@ -17,6 +17,7 @@ class CreateOrderProductTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('order_id');
             $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('product_format_id')->nullable();
             $table->integer('quantity');
             $table->timestamps();
 
@@ -25,6 +26,9 @@ class CreateOrderProductTable extends Migration
                 ->onDelete('cascade');
             $table->foreign('product_id')
                 ->references('id')->on('products')
+                ->onDelete('cascade');
+            $table->foreign('product_format_id')
+                ->references('id')->on('product_formats')
                 ->onDelete('cascade');
         });
     }

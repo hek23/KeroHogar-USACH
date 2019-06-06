@@ -13,7 +13,7 @@ class FilterRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth()->user()->hasRole('admin') || auth()->user()->hasRole('driver');
     }
 
     /**

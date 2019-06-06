@@ -16,10 +16,19 @@ Route::get('/', function () {
     return redirect()->to(route('login'));
 });
 
-Auth::routes();
+Auth::routes([
+    'register' => false,
+    'reset' => false,
+    'verify' => false
+]);
 
 Route::middleware('auth')->group( function() {
     Route::post('pedidos/{order}/entregado', 'OrderController@delivered')->name('orders.delivered');
+    Route::post('pedidos/{order}/pagado', 'OrderController@paid')->name('orders.paid');
+    
+    
+    Route::post('pedidos/formatos', 'OrderController@productFormats')->name('orders.formats');
+    Route::post('pedidos/bloques_disponibles', 'OrderController@availableTimeBlocks')->name('orders.available_blocks');
 
     Route::resource('pedidos', 'OrderController')->names([
         'index' => 'orders.index',
@@ -43,6 +52,18 @@ Route::middleware('auth')->group( function() {
         'destroy' => 'products.destroy',
     ])->parameters([
         'productos' => 'product',
+    ]);
+
+    Route::resource('productos/{product}/formatos', 'ProductFormatController')->names([
+        'index' => 'formats.index',
+        'create' => 'formats.create',
+        'store' => 'formats.store',
+        'show' => 'formats.show',
+        'edit' => 'formats.edit',
+        'update' => 'formats.update',
+        'destroy' => 'formats.destroy',
+    ])->parameters([
+        'formatos' => 'productFormat',
     ]);
     
     Route::resource('productos/{product}/descuentos', 'ProductDiscountController')->names([
@@ -68,5 +89,7 @@ Route::middleware('auth')->group( function() {
     ])->parameters([
         'horario' => 'timeBlock',
     ]);
+
+    Route::resource('users', 'UserController');
     
 });

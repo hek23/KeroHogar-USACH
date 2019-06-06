@@ -11,6 +11,7 @@
                 <div class="card-body">
                     <p><strong>{{ __('navigation.schedule.start') }}</strong>: {{$timeBlock->start}}</p>
                     <p><strong>{{ __('navigation.schedule.end') }}</strong>: {{$timeBlock->end}}</p>
+                    <p><strong>{{ __('navigation.schedule.max_orders') }}</strong>: {{$timeBlock->max_orders}}</p>
                 </div>
             </div>
         </div>

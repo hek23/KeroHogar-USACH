@@ -5,6 +5,7 @@
 
 @section('content')
 <div class="container-fluid">
+    @can('create', App\TimeBlock::class)
     <div class="row">
         <div class="col-md-12">
             <div class="float-right mr-3 mb-2">
@@ -12,6 +13,7 @@
             </div>
         </div>
     </div>
+    @endcan
     @include('partials.session_success')
     <div class="row px-3">
         <div class="col-md-12">
@@ -21,6 +23,7 @@
                         <td>N°</td>
                         <td>Inicio</td>
                         <td>Fin</td>
+                        <td>Máx. pedidos/entregas</td>
                         <td colspan="3" width="20%">Acciones</td>
                     </tr>
                 </thead>
@@ -30,14 +33,25 @@
                         <td>{{ ++$rowItem }}</td>
                         <td>{{ $timeBlock->start }}</td>
                         <td>{{ $timeBlock->end }}</td>
-                        <td><a href="{{ route('schedule.show', $timeBlock->id)}}" class="btn btn-info">{{__('navigation.show')}}</a></td>
-                        <td><a href="{{ route('schedule.edit', $timeBlock->id)}}" class="btn btn-primary">{{__('navigation.edit')}}</a></td>
+                        <td>{{ $timeBlock->max_orders }}</td>
                         <td>
+                        @can('view', App\TimeBlock::class)
+                            <a href="{{ route('schedule.show', $timeBlock->id)}}" class="btn btn-info">{{__('navigation.show')}}</a>
+                        @endcan
+                        </td>
+                        <td>
+                        @can('update', App\TimeBlock::class)
+                            <a href="{{ route('schedule.edit', $timeBlock->id)}}" class="btn btn-primary">{{__('navigation.edit')}}</a>
+                        @endcan
+                        </td>
+                        <td>
+                        @can('delete', App\TimeBlock::class)
                             <form action="{{ route('schedule.destroy', $timeBlock->id)}}" method="post">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-danger delete" data-confirm="{{__('navigation.confirm_deletion')}}" type="submit">{{__('navigation.delete')}}</button>
                             </form>
+                        @endcan
                         </td>
                     </tr>
                     @endforeach
@@ -50,6 +64,6 @@
 </div>
 @endsection
 
-@section('script')
+@section('js')
 <script src="{{ asset('js/confirm_deletion.js') }}" defer></script>
 @endsection

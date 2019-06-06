@@ -5,6 +5,7 @@
 
 @section('content')
 <div class="container-fluid">
+    @can('create', App\ProductDiscount::class)
     <div class="row">
         <div class="col-md-12">
             <div class="float-right mr-3 mb-2">
@@ -12,6 +13,7 @@
             </div>
         </div>
     </div>
+    @endcan
     @include('partials.session_success')
     <div class="row px-3">
         <div class="col-md-12">
@@ -32,14 +34,24 @@
                         <td>{{ $productDiscount->formatDiscount() }}</td>
                         <td>{{ $productDiscount->formatMinQuantity() }}</td>
                         <td>{{ $productDiscount->formatMaxQuantity() }}</td>
-                        <td><a href="{{ route('discounts.show', [$product->id, $productDiscount->id]) }}" class="btn btn-info">{{__('navigation.show')}}</a></td>
-                        <td><a href="{{ route('discounts.edit', [$product->id, $productDiscount->id]) }}" class="btn btn-primary">{{__('navigation.edit')}}</a></td>
                         <td>
+                        @can('view', App\ProductDiscount::class)
+                            <a href="{{ route('discounts.show', [$product->id, $productDiscount->id]) }}" class="btn btn-info">{{__('navigation.show')}}</a>
+                        @endcan
+                        </td>
+                        <td>
+                        @can('update', App\ProductDiscount::class)
+                            <a href="{{ route('discounts.edit', [$product->id, $productDiscount->id]) }}" class="btn btn-primary">{{__('navigation.edit')}}</a>
+                        @endcan
+                        </td>
+                        <td>
+                        @can('delete', App\ProductDiscount::class)
                             <form action="{{ route('discounts.destroy', [$product->id, $productDiscount->id]) }}" method="post">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-danger delete" data-confirm="{{__('navigation.confirm_deletion')}}" type="submit">{{__('navigation.delete')}}</button>
                             </form>
+                        @endcan
                         </td>
                     </tr>
                     @endforeach
@@ -52,6 +64,6 @@
 </div>
 @endsection
 
-@section('script')
+@section('js')
 <script src="{{ asset('js/confirm_deletion.js') }}" defer></script>
 @endsection

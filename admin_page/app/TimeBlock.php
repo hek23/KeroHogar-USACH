@@ -9,7 +9,7 @@ class TimeBlock extends Model
 {
     const ITEMS_PER_PAGE = 10;
     
-    public $guarded = [];
+    protected $guarded = [];
 
     protected $dates = [
         'created_at',
@@ -24,6 +24,11 @@ class TimeBlock extends Model
         return $query->orderBy('start', 'asc')->paginate(self::ITEMS_PER_PAGE);
     }
 
+    public function scopeIntersecting($query, $start, $end) {
+        return $query->where('end', '>', $start)
+                ->where('start', '<', $end);
+    }
+
     public function format() {
         return $this->start . ' - ' . $this->end;
     }
@@ -34,5 +39,43 @@ class TimeBlock extends Model
 
     public function getEndAttribute($time) {
         return Carbon::parse($time)->format('H:i');
+    }
+
+    public static function getAvailableBlocks($day) {
+        $maxOrdersPerDay = TimeBlock::sum('max_orders');
+
+        $orders = Order::where('delivery_date', Carbon::parse($day))->get();
+
+        if($orders->count() >= $maxOrdersPerDay) {
+            return collect([]);
+        }
+
+        $tbs = TimeBlock::orderBy('id')->get();
+        foreach ($tbs as $tb) {
+            $tb->orders_left = $tb->max_orders;
+        }
+
+        foreach ($orders as $order) {
+            $orderBlocks = $order->delivery_blocks()->orderBy('start')->get();
+            foreach ($orderBlocks as $orderBlock) {
+                $tbs[$orderBlock->id - 1]->orders_left -= 1;
+                break;
+            }
+        }
+
+        foreach ($tbs as $key => $tb) {
+            if($tb->orders_left <= 0) $tbs->forget($key);
+        }
+
+        /*
+        For selecting only one block per order
+        $tbs = TimeBlock::all();
+        foreach ($tbs as $key => $tb) {
+            $tb->orders_count = $tb->orders()->where('delivery_date', $day)->count();
+            if ($tb->orders_count >= $tb->max_orders) $tbs->forget($key);
+        }
+        */
+
+        return $tbs;
     }
 }
