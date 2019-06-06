@@ -1,4 +1,4 @@
-# API Calls
+# API
 
 ## Formato
 
@@ -6,7 +6,7 @@ Las llamadas de API contienen el formato estandard de REST, siendo de siguiente 
 
 ```HOST/version/ENTIDAD/IDRECURSO ``` 
 
-Siendo ENTIDAD el nombre del modelo o elemento solicitado EN INGLES y en singular (ej: client, product). En el caso de necesitar un registro en particular, se usa IDRECURSO, que es el id del recurso a minupular.
+Siendo ENTIDAD el nombre del modelo o elemento solicitado EN INGLES y en PLURAL (ej: clients, products). En el caso de necesitar un registro en particular, se usa IDRECURSO, que es el id del recurso a minupular.
 
 El método de solicitud (GET, POST, PUT, etc) dependerá de la acción. Se establecen las acciones en la siguiente lista:
 
@@ -21,6 +21,18 @@ El método de solicitud (GET, POST, PUT, etc) dependerá de la acción. Se estab
  - POST: NO PERMITIDO
  - PUT: Edita la entidad especificada
  - DELETE: Elimina la entidad especificada
+
+### Llamadas a Atributos de Entidad (```HOST/version/ENTIDAD/IDRECURSO/NOMBREATTR```)
+ - GET: Obtiene todas los atributos posibles de tipo NOMBREATTR de la entidad IDRECURSO
+ - POST: Crea un nuevo objeto de la entidad requerida de tipo NOMBREATTR
+ - PUT: NO PERMITIDO
+ - DELETE: Borrar todos los atributos tipo NOMBREATTR de la entidad IDRECURSO
+
+### Llamadas a atributos específicos de Instancia (```HOST/version/ENTIDAD/IDRECURSO/NOMBRE_ATTR/IDATTR```)
+ - GET: Obtiene el valor del atributo IDATTR de tipo NOMBRE_ATTR en la entidad especificada con IDRECURSO
+ - POST: NO PERMITIDO
+ - PUT: Edita el atributo especificado (IDATTR) de la entidad especificada (IDRECURSO)
+ - DELETE: Elimina el atributo especificado (IDATTR) de la entidad especificada (IDRECURSO)
  
 ## Casos borde y retornos generalizados
 
@@ -30,130 +42,348 @@ En el caso de que la solicitud esté dirigida a una entidad que no tenga sentido
 ## Esqueletos de Solicitud
 
 ### Producto
-Dillinger requires [Node.js](https://nodejs.org/) v4+ to run.
 
-Install the dependencies and devDependencies and start the server.
+#### Obtener todos los productos:
 
-```sh
-$ cd dillinger
-$ npm install -d
-$ node app
+> Parámetro: Ninguno
+> Método: GET
+> Ruta: ```HOST/version/products/```
+
+Resultado: 
+```javascript
+[
+    {
+        id: 1,
+        name: "Producto",
+        price: 321,
+        has_formats: true
+    },
+    {
+        id: 2,
+        name: "Producto 2",
+        price: 123,
+        has_formats: false
+    }
+]
 ```
 
-For production environments...
+#### Obtener cierto producto:
 
-```sh
-$ npm install --production
-$ NODE_ENV=production node app
+> Parámetro: id de producto 
+> Ruta: ```HOST/version/products/ID```
+> Método: GET
+
+Resultado: 
+```javascript
+{
+    name: "Producto",
+    price: "Precio",
+    has_formats: true/false
+}
 ```
 
-### Plugins
+### Formatos
 
-Dillinger is currently extended with the following plugins. Instructions on how to use them in your own application are linked below.
+#### Obtener todos los formatos para cierto producto:
 
-| Plugin | README |
-| ------ | ------ |
-| Dropbox | [plugins/dropbox/README.md][PlDb] |
-| Github | [plugins/github/README.md][PlGh] |
-| Google Drive | [plugins/googledrive/README.md][PlGd] |
-| OneDrive | [plugins/onedrive/README.md][PlOd] |
-| Medium | [plugins/medium/README.md][PlMe] |
-| Google Analytics | [plugins/googleanalytics/README.md][PlGa] |
+> Parámetro: id del producto
+> Ruta: ```HOST/version/products/ID/formats``` (ejemplo producto 1)
+> Método: GET
 
-
-### Development
-
-Want to contribute? Great!
-
-Dillinger uses Gulp + Webpack for fast developing.
-Make a change in your file and instantanously see your updates!
-
-Open your favorite Terminal and run these commands.
-
-First Tab:
-```sh
-$ node app
+Resultado: 
+```javascript
+[
+    {
+        id: 1,
+        name: "bidon chico",
+        capacity: 10,
+        added_price: 2,
+        minimum_quantity: 10
+    },
+    {
+        id: 5,
+        name: "bidon grande",
+        capacity: 50,
+        added_price: 7,
+        minimum_quantity: 30
+    }
+]
 ```
 
-Second Tab:
-```sh
-$ gulp watch
+##### Obtener cierto formato de cierto producto:
+
+> Parámetro: ID de producto e ID formato
+> Ruta: ```HOST/version/product/ID/formats/IDFORMAT```
+> Método: GET
+
+Resultado: 
+```javascript
+{
+    name: "Producto",
+    price: "Precio"
+    has_formats: true/false
+}
 ```
 
-(optional) Third:
-```sh
-$ karma test
-```
-#### Building for source
-For production release:
-```sh
-$ gulp build --prod
-```
-Generating pre-built zip archives for distribution:
-```sh
-$ gulp build dist --prod
-```
-### Docker
-Dillinger is very easy to install and deploy in a Docker container.
+#### Obtener descuentos de cierto producto:
 
-By default, the Docker will expose port 8080, so change this within the Dockerfile if necessary. When ready, simply use the Dockerfile to build the image.
+> Parámetro: ID de producto (URL)
+> Ruta: ```HOST/version/product/ID/discounts```
+> Método: GET
 
-```sh
-cd dillinger
-docker build -t joemccann/dillinger:${package.json.version} .
-```
-This will create the dillinger image and pull in the necessary dependencies. Be sure to swap out `${package.json.version}` with the actual version of Dillinger.
-
-Once done, run the Docker image and map the port to whatever you wish on your host. In this example, we simply map port 8000 of the host to port 8080 of the Docker (or whatever port was exposed in the Dockerfile):
-
-```sh
-docker run -d -p 8000:8080 --restart="always" <youruser>/dillinger:${package.json.version}
+Resultado: 
+```javascript
+[
+    {
+        id: 1,
+        discount_per_liter: 3,
+        min_qty: 2,
+        max_qty: 4,
+    },
+    {
+        id: 2,
+        discount_per_liter: 4,
+        min_qty: 6,
+        max_qty: 12,
+    }
+]
 ```
 
-Verify the deployment by navigating to your server address in your preferred browser.
+### Direcciones (VER EXPLICACIÓN!)
 
-```sh
-127.0.0.1:8000
+Explicación: La idea es verificar esto usando el token de sesión. Como no está implementado, se aceptará el consultar como el resto de las entidades sin verificación. Si la autentificación no corresponde, se retornará un estado ```401 Unauthorized```
+
+#### Obtener todas lss direcciones de cierto usuario:
+
+> Parámetro: ID USUARIO
+> Método: GET
+> Ruta: ```HOST/version/users/IDUSER/addresses```
+
+
+Resultado: 
+```javascript
+[
+    {
+        id: 1,
+        town: "Vitacura",
+        addr: "Av. Siempre Muerta 54362",
+        alias: "Casa vieja"
+    },
+    {
+        id: 6,
+        town: "Las Condes",
+        addr: "Malta 762",
+        alias: "Casa Mamá"
+    }
+]
 ```
 
-#### Kubernetes + Google Cloud
+#### Crear nueva dirección relacionada con el usuario:
 
-See [KUBERNETES.md](https://github.com/joemccann/dillinger/blob/master/KUBERNETES.md)
+> Parámetro: ID USUARIO (URL) y datos de la dirección (Body)
+> Método: POST
+> Ruta: ```HOST/version/users/IDUSER/addresses```
+
+Body: 
+```javascript
+{
+    townID: 1
+    addr: "Av. Pol McCarne 1212",
+    alias: "Estudio"
+}
+```
+
+Resultado: ```HTTP 201 CREATED```
+
+#### Editar nueva dirección relacionada con el usuario:
+
+> Parámetro: ID USUARIO (URL), ID de dirección (URL) y datos de la dirección (Body)
+> Método: PUT
+> Ruta: ```HOST/version/users/IDUSER/addresses/ADDRID```
+
+Resultado: 
+```javascript
+{
+    townID: 3
+    addr: "Av. Veganos 421",
+    alias: "Estudio fotográfico"
+}
+```
+
+Resultado: ```HTTP 200 OK```
 
 
-### Todos
+#### Borrar una dirección relacionada con el usuario:
 
- - Write MORE Tests
- - Add Night Mode
+> Parámetro: ID USUARIO (URL), ID de dirección (URL)
+> Método: DELETE
+> Ruta: ```HOST/version/users/IDUSER/addresses/ADDRID```
 
-License
-----
+Resultado: ```HTTP 200 OK```
 
-MIT
+### Descuentos
+
+#### Obtener todos los descuentos
+
+> Parámetro: Ninguno
+> Método: GET
+> Ruta: ```HOST/version/discounts/```
+
+Resultado:
+
+```javascript
+[
+    {
+        id: 1,
+        discount_per_liter: 3,
+        min_qty: 2,
+        max_qty: 4,
+        product_id: 2
+    },
+    {
+        id: 2,
+        discount_per_liter: 4,
+        min_qty: 6,
+        max_qty: 12,
+        product_id: 1
+    }
+]
+```
+
+#### Obtener a que productos se aplica cierto descuento
+
+> Parámetro: Id Descuento (URL)
+> Método: GET
+> Ruta: ```HOST/version/discounts/IDDESCUENTO```
+
+Resultado:
+
+```javascript
+[
+    {
+        id: 1,
+        name: "Producto",
+        price: 321,
+        has_formats: true
+    }
+]
+```
+
+### Pedido/Orden
+
+#### Obtener todos los pedidos de un usuario
+> Parámetro: Ninguno
+> Método: GET
+> Ruta: ```HOST/version/clients/IDClient/orders```
+
+Resultado:
+
+```javascript
+[
+   {
+        id: 1,
+        delivery_status: 1,
+        payment_status: 2,
+        amount: 14230,
+        delivery_date: 2019-07-29,
+   },
+   {
+        id: 4
+        delivery_status: 1,
+        payment_status: 2,
+        amount: 14230,
+        delivery_date: 2019-07-29,
+   }
+]
+```
+
+#### Obtener detalle de una orden específica
+> Parámetro: IDCliente (URL) y IDOrden (URL)
+> Método: GET
+> Ruta: ```HOST/version/clients/IDClient/orders/IDOrden```
+
+Resultado:
+```javascript
+ {
+    id: 1,
+    address:{
+        id: 1,
+        town: "Vitacura",
+        addr: "Av. Siempre Muerta 54362",
+        alias: "Casa vieja"
+    },
+    delivery_status: 1,
+    payment_status: 2,
+    amount: 14230,
+    delivery_date: 2019-07-29,
+    products:[
+        {
+            id: 1,
+            qty: 23,
+            formatID: 1
+        }
+    ],
+    time_blocks:[
+    {
+        start: "10:00",
+        end: "11:00"
+    },
+    {
+        start: "14:00",
+        end: "16:00"
+    }
+    ]
+}
+```
+
+#### Crear/Ingresar nueva orden
+
+> Parámetro: IDCliente (URL) e información de pedido (Body)
+> Método: POST
+> Ruta: ```HOST/version/clients/IDClient/orders```
+
+Body:
+```javascript
+{
+    addressID: 1,
+    amount: 12391,
+    delivery_date: 2018-12-28,
+    time_block:[
+    {
+        id: 3
+    },
+    {
+        id:2
+    }],
+    products:[
+    {
+        id:1,
+        format:2,
+        quantity:32
+    }]
+}
+```
+
+Resultado: ```HTTP 201 CREATED```
 
 
-**Free Software, Hell Yeah!**
+### Bloques de tiempo
+Obtener los bloques de tiempo disponibles
 
-[//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
+> Parámetro: Estado (available en la ruta)
+> Método: GET
+> Ruta: ```HOST/version/timeblocks/available```
 
 
-   [dill]: <https://github.com/joemccann/dillinger>
-   [git-repo-url]: <https://github.com/joemccann/dillinger.git>
-   [john gruber]: <http://daringfireball.net>
-   [df1]: <http://daringfireball.net/projects/markdown/>
-   [markdown-it]: <https://github.com/markdown-it/markdown-it>
-   [Ace Editor]: <http://ace.ajax.org>
-   [node.js]: <http://nodejs.org>
-   [Twitter Bootstrap]: <http://twitter.github.com/bootstrap/>
-   [jQuery]: <http://jquery.com>
-   [@tjholowaychuk]: <http://twitter.com/tjholowaychuk>
-   [express]: <http://expressjs.com>
-   [AngularJS]: <http://angularjs.org>
-   [Gulp]: <http://gulpjs.com>
+Resultado:
+```javascript
+[
+    {
+    "start":"9:00",
+    "end": "10:00"
+    }
+]
 
-   [PlDb]: <https://github.com/joemccann/dillinger/tree/master/plugins/dropbox/README.md>
-   [PlGh]: <https://github.com/joemccann/dillinger/tree/master/plugins/github/README.md>
-   [PlGd]: <https://github.com/joemccann/dillinger/tree/master/plugins/googledrive/README.md>
-   [PlOd]: <https://github.com/joemccann/dillinger/tree/master/plugins/onedrive/README.md>
-   [PlMe]: <https://github.com/joemccann/dillinger/tree/master/plugins/medium/README.md>
-   [PlGa]: <https://github.com/RahulHP/dillinger/blob/master/plugins/googleanalytics/README.md>
+```
+
+
