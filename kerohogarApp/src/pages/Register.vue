@@ -1,70 +1,75 @@
 <template>
-  <div class="absolute-center" style="max-width: 400px">
+  <q-page padding>
+    <div class="q-col-gutter-md column-inline items-start">
+      <div class="row-4" style="max-width: 400px">
 
-    <q-form
-      @submit="onSubmit"
-      @reset="onReset"
-      class="q-gutter-md"
-    >
-   <q-input
-        filled
-        v-model="rut"
-        label="Rut(*)"
-        hint="ej:11222333-4"
-        lazy-rules
-        :rules="[ val => val && val.length > 0 || 'Por favor ingresa tu Rut']"
-      />
+        <q-form
+          @submit="onSubmit"
+          @reset="onReset"
+          class="q-gutter-md"
+        >
+          <q-input
+            filled
+            v-model="rut"
+            label="Rut(*)"
+            hint="ej:11222333-4"
+            lazy-rules
+            :rules="[ val => val && val.length > 0 || 'Por favor ingresa tu Rut']"
+          />
 
-      <q-input
-        filled
-        v-model="name"
-        label="Nombre(*)"
-        hint="ej: Jose Pablo"
-        lazy-rules
-        :rules="[ val => val && val.length > 0 || 'Por favor ingresa tu nombre']"
-      />
+          <q-input
+            filled
+            v-model="name"
+            label="Nombre(*)"
+            hint="ej: Jose Pablo"
+            lazy-rules
+            :rules="[ val => val && val.length > 0 || 'Por favor ingresa tu nombre']"
+          />
 
-      <q-input
-        filled
-        v-model="lastName"
-        label="Apellido(*)"
-        hint="ej: Vicuña"
-        lazy-rules
-        :rules="[ val => val && val.length > 0 || 'Por favor ingresa tu apellido']"
-      />
+          <q-input
+            filled
+            v-model="lastName"
+            label="Apellido(*)"
+            hint="ej: Vicuña"
+            lazy-rules
+            :rules="[ val => val && val.length > 0 || 'Por favor ingresa tu apellido']"
+          />
 
-      <q-input
-        filled
-        v-model="contact"
-        label="Teléfono(*)"
-        hint="ej: 911122332"
-        lazy-rules
-        :rules="[ val => val && val.length > 0 || 'Por favor ingresa tu apellido']"
-      />
+          <q-input
+            filled
+            v-model="contact"
+            label="Teléfono(*)"
+            hint="ej: 911122332"
+            lazy-rules
+            :rules="[ val => val && val.length > 0 || 'Por favor ingresa tu apellido']"
+          />
 
-      <q-select 
-      filled
-      v-model="comuna" 
-      :options="options" 
-      label="Comuna"/>
+          <q-select 
+          filled
+          v-model="comuna" 
+          :options="options" 
+          label="Comuna"/>
 
-      <q-input
-        filled
-        v-model="streetNumber"
-        label="Calle y numero(*)"
-        hint="ej: Acacia 213"
-        lazy-rules
-        :rules="[ val => val && val.length > 0 || 'Por favor ingresa tu apellido']"
-      />
+          <q-input
+            filled
+            v-model="streetNumber"
+            label="Calle y numero(*)"
+            hint="ej: Acacia 213"
+            lazy-rules
+            :rules="[ val => val && val.length > 0 || 'Por favor ingresa tu apellido']"
+          />
 
-      <div>
-        <q-btn label="Registrarse" type="submit" color="primary"/>
-        <!--Este boton luego se cambiara por un "atrás-->
-        <q-btn label="Borrar campos" type="reset" color="primary" flat class="q-ml-sm" />
+          <div class="row-4">
+            <q-btn label="Registrarse" type="submit" color="primary"/>
+          </div>
+          <div class="row-4">
+            <!--Este boton luego se cambiara por un "atrás-->
+            <q-btn label="Borrar campos" type="reset" color="secondary"/>
+          </div>
+        </q-form>
       </div>
-    </q-form>
-
-  </div>
+    </div>
+  </q-page>
 </template>
 
 <script>
