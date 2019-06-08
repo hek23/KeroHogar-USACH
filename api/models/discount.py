@@ -5,5 +5,6 @@ class Discount:
     def getAll():
         pass
 
-    def getByProduct():
+    def getByProduct(productID):
         pass    
+        
