@@ -20,3 +20,16 @@ def getAllProducts():
 		})
 	return Response(json.dumps(products),  mimetype='application/json')
 
+@current_app.route('/v1/products/<Id>', methods=['GET'])
+def getProductByID(Id):
+	sqlQuery= "SELECT name, price FROM kerhogar.products where id={};"
+	cursor = mysqlConnector.get_db().cursor()
+	cursor.execute(sqlQuery.format(Id))
+	result = cursor.fetchone()
+	cursor.execute("SELECT COUNT(*) FROM kerhogar.product_formats where product_id={};".format(Id))
+	product = {
+		"name": result[0],
+		"price": result[1],
+		"has_formats": cursor.fetchone()[0] > 0
+	}
+	return Response(json.dumps(product),  mimetype='application/json')
