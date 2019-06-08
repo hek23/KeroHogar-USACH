@@ -2,7 +2,7 @@
   <q-page padding>
     <div class="absolute-center">
       <div class="column" style="height: 250px">
-        <div class="col">¿Que opción deseas?</div>
+        <div class="col">¿Que opción deseas?</div>       
         <div class="col">
           <q-btn 
           align="around" 
