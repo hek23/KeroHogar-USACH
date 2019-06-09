@@ -122,11 +122,14 @@ Resultado:
 Resultado: 
 ```javascript
 {
-    name: "Producto",
-    price: "Precio"
-    has_formats: true/false
+    name: "bidon grande",
+    capacity: 50,
+    added_price: 7,
+    minimum_quantity: 30
 }
 ```
+
+### Descuentos
 
 #### Obtener descuentos de cierto producto:
 
