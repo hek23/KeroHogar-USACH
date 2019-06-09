@@ -16,6 +16,21 @@
             :rules="[ val => val && val.length > 0 || 'Por favor ingresa tu Rut']"
           />
 
+          <q-input filled v-model="password" :type="isPwd ? 'password' : 'text'" 
+            label="Contraseña*" 
+            hint="ej: Tsga53KH"
+            lazy-rules
+            :rules="[ val => val && val.length >= 6 || 'Ingrese al menos 6 caracteres']"
+            >
+            <template v-slot:append>
+              <q-icon
+                :name="isPwd ? 'visibility_off' : 'visibility'"
+                class="cursor-pointer"
+                @click="isPwd = !isPwd"
+              />
+            </template>
+          </q-input>
+
           <q-input
             filled
             v-model="name"
@@ -80,9 +95,11 @@
 export default {
   data () {
     return {
+      isPwd: true,
       //field
       name: null,
       rut: null,
+      password: '',
       lastName: null,
       contact: null,
       streetNumber:null,

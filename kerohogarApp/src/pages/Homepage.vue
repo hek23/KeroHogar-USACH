@@ -10,32 +10,35 @@
         />
       </div>
 
-      <form @submit.prevent="ingresar">
-        <div class="row">
-          <div class="col-12">
-            <q-input
-              filled
-              v-model="rut"
-              label="Ingrese su rut"
-              hint="Ej: 11222333-4"
+      <form @submit.prevent="ingresar" class="q-gutter-y-md" style="max-width:600px; margin: 0 auto;">
+        <q-input
+          filled
+          v-model="rut"
+          label="Ingrese su rut"
+          hint="Ej: 11222333-4"
+        />
+        <q-input filled v-model="password" class="q-mb-sm" :type="isPwd ? 'password' : 'text'" label="Ingrese su contraseña">
+          <template v-slot:append>
+            <q-icon
+              :name="isPwd ? 'visibility_off' : 'visibility'"
+              class="cursor-pointer"
+              @click="isPwd = !isPwd"
             />
-          </div>
-        </div>
+          </template>
+        </q-input>
 
-        <div class="row">
-          <q-btn rounded
-            color="secondary" 
-            class="full-width q-mt-md"
-            icon-right="done_outline" 
-            label="Iniciar sesión"
-            :loading="logging_in"
-            @click="ingresar"
-          >
-            <template v-slot:loading>
-              <q-spinner-facebook />
-            </template>
-          </q-btn>
-        </div>
+        <q-btn rounded
+          color="secondary" 
+          class="full-width"
+          icon-right="done_outline" 
+          label="Iniciar sesión"
+          :loading="logging_in"
+          @click="ingresar"
+        >
+          <template v-slot:loading>
+            <q-spinner-facebook />
+          </template>
+        </q-btn>
       </form>
       
       <div class="row justify-center">
@@ -56,6 +59,8 @@ export default {
     data(){
        return{
         rut: '',
+        password: '',
+        isPwd: true,
         logging_in: false
       }
     },
