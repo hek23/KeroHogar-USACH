@@ -4,11 +4,11 @@ import json
 
 @current_app.route('/v1/products/<ProdID>/discounts', methods=['GET'])
 def getAllProductDiscounts(ProdID):
-    sqlQuery = "SELECT id, discount_per_liter, min_quantity, max_quantity FROM kerohogar.product_discounts where id={}"
-    cursor = mysqlConnector.get_db().cursor()
-	cursor.execute(sqlQuery)
+	sqlQuery = "SELECT id, discount_per_liter, min_quantity, max_quantity FROM kerohogar.product_discounts where id={}"
+	cursor = mysqlConnector.get_db().cursor()
+	cursor.execute(sqlQuery.format(ProdID))
 	result = cursor.fetchall()
-    if(result is None):
+	if(result is None):
 		cursor.close()
 		return Response(json.dumps({}), mimetype='application/json')
 	discounts = []
@@ -20,4 +20,4 @@ def getAllProductDiscounts(ProdID):
 						"max_qty": discount[3]
 		})
 	cursor.close()
-    return Response(json.dumps(discounts),  mimetype='application/json')
+  return Response(json.dumps(discounts),  mimetype='application/json')
