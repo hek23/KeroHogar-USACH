@@ -1,44 +1,51 @@
 <template>
-  <div class="items-start q-gutter-md q-mt-xs full-width">
-    
-    <q-card
-      class="my-card text-white"
-      style="background: radial-gradient(circle, #33D543 0%, green 100%)"
-      >
-      <q-card-section>
-        <div class="text-h6">Relleno de estanque</div>
-      </q-card-section>
-      <q-card-section>
-        {{relleno_estanque}}
-      </q-card-section>
-    </q-card>
-
-
+  <q-page padding>
+    <div class="row justify-center items-start q-gutter-md q-mt-xs full-width">
+      
       <q-card
-      class="my-card text-white"
-      style="background: radial-gradient(circle, #33D543 0%, green 100%)"
-      >
-      <q-card-section>
-        <div class="text-h6">Intercambio de bidones</div>
-      </q-card-section>
-      <q-card-section>
-        {{intercambio_bidones}}
-      </q-card-section>
-    </q-card>
+        class="my-card text-white"
+        style="background: radial-gradient(circle, #A0CE4E 0%, #4B853E 100%)"
+        >
+        <q-card-section>
+          <div class="text-h6">Relleno de estanque</div>
+        </q-card-section>
+        <q-card-section>
+          {{relleno_estanque}}
+        </q-card-section>
+      </q-card>
 
-      <q-card
-      class="my-card text-white"
-      style="background: radial-gradient(circle, #33D543 0%, green 100%)"
-      >
-      <q-card-section>
-        <div class="text-h6">Bidón con parafina</div>
-      </q-card-section>
-      <q-card-section>
-        {{bidon_parafina}}
-      </q-card-section>
-    </q-card>
+
+        <q-card
+        class="my-card text-white"
+        style="background: radial-gradient(circle, #A0CE4E 0%, #4B853E 100%)"
+        >
+        <q-card-section>
+          <div class="text-h6">Intercambio de bidones</div>
+        </q-card-section>
+        <q-card-section>
+          {{intercambio_bidones}}
+        </q-card-section>
+      </q-card>
+
+        <q-card
+        class="my-card text-white"
+        style="background: radial-gradient(circle, #A0CE4E 0%, #4B853E 100%)"
+        >
+        <q-card-section>
+          <div class="text-h6">Bidón con parafina</div>
+        </q-card-section>
+        <q-card-section>
+          {{bidon_parafina}}
+        </q-card-section>
+      </q-card>
+
+      <div class = "row justify-center">
+        <q-btn label="Atrás" color="secondary" class="q-ml-sm"/>
+      </div>
+      
+    </div>
     
-  </div>
+  </q-page>
 </template>
 
 <script>

@@ -19,7 +19,23 @@ const routes = [
       {
         path:'/info',
         component: () => import('pages/Info.vue')
-      }
+      },
+      {
+        path:'/bidon',
+        component: () => import('pages/Buy_Bidon.vue')
+      },
+      {
+        path:'/estanque',
+        component: () => import('pages/Buy_estanque.vue')
+      },
+      {
+        path:'/intercambio',
+        component: () => import('pages/Buy_intercambio.vue')
+      },
+      {
+        path:'/checkout',
+        component: () => import('pages/Checkout.vue')
+      },
     ]
   }
 ]
