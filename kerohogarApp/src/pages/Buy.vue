@@ -1,17 +1,17 @@
 <template>
   <q-page padding>
     <div class="q-col-gutter-md column-inline items-start">
-      <div class="row-4">
+      <div class="row q-mt-sm justify-center">
         <q-img
-          src="https://parafinadomicilio.cl/wp-content/uploads/2018/04/parafina-kerohogar-logo.png?fbclid=IwAR1BbSlZEKpowmsO8HCU_yVkFX2tcFBKiia3SitRckMq0l-3uxldPP_A_2Q"
-          :ratio="30/9"
+          src="/assets/parafina-kerohogar-logo.png"
+          style="max-width:700px;"
         />
       </div>
-      <div class="row-4">
+      <div class="row justify-center">
         <h5>¿Qué opción deseas?</h5>
       </div>
 
-      <div class="row-4">
+      <div class="row justify-center">
         <q-btn 
           align="around" 
           class="btn-fixed-width" 
@@ -21,7 +21,7 @@
           style = "width: 250px"/>
       </div>
       
-      <div class="row-4">
+      <div class="row justify-center">
         <q-btn 
           align="around" 
           class="btn-fixed-width" 
@@ -31,7 +31,7 @@
           style = "width: 250px"/>
       </div>
 
-      <div class="row-4">
+      <div class="row justify-center">
         <q-btn 
           align="around" 
           class="btn-fixed-width" 
@@ -41,7 +41,7 @@
           style = "width: 250px"/>
       </div>
 
-      <div class="row-4">
+      <div class="row justify-center">
         <q-btn 
           align="around" 
           class="btn-fixed-width" 

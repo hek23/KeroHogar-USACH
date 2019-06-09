@@ -44,7 +44,9 @@ module.exports = function (ctx) {
         'QCard',
         'QCardSection',
         'QCardActions',
-        'QImg'
+        'QImg',
+        
+        'QSpinnerFacebook',
       ],
 
       directives: [

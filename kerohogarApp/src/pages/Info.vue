@@ -1,7 +1,6 @@
 <template>
-  <div class="absolute-center row items-start q-gutter-md">
+  <div class="items-start q-gutter-md q-mt-xs full-width">
     
-
     <q-card
       class="my-card text-white"
       style="background: radial-gradient(circle, #33D543 0%, green 100%)"
