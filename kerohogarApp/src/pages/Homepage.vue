@@ -32,8 +32,8 @@
           class="full-width"
           icon-right="done_outline" 
           label="Iniciar sesión"
+          type="submit"
           :loading="logging_in"
-          @click="ingresar"
         >
           <template v-slot:loading>
             <q-spinner-facebook />
