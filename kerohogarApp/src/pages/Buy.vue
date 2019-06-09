@@ -8,7 +8,7 @@
         />
       </div>
       <div class="row justify-center">
-        <h5>¿Qué opción deseas?</h5>
+        <p class="text-h5">¿Qué opción deseas?</p>
       </div>
 
       <div class="row justify-center">

@@ -5,6 +5,7 @@ module.exports = function (ctx) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     boot: [
+      'fake-backend.js',
     ],
 
     css: [
@@ -72,6 +73,7 @@ module.exports = function (ctx) {
       // gzip: true,
       // analyze: true,
       // extractCSS: false,
+      apiUrl: 'http://localhost:4000',
       extendWebpack (cfg) {
       }
     },

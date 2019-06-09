@@ -22,5 +22,20 @@ export default function (/* { store, ssrContext } */) {
     base: process.env.VUE_ROUTER_BASE
   })
 
+  Router.beforeEach((to, from, next) => {
+    // redirect to login page if not logged in and trying to access a restricted page
+    const publicPages = ['/', '/register'];
+    const authRequired = !publicPages.includes(to.path);
+    const loggedIn = localStorage.getItem('user');
+
+    if (authRequired && !loggedIn) {
+      return next('/');
+    } else if(loggedIn && to.path == '/register') {
+      return next('/buy');
+    }
+
+    next();
+  })
+
   return Router
 }

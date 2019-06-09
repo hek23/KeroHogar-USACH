@@ -64,11 +64,28 @@ export default {
         logging_in: false
       }
     },
+    computed: {
+        loggingIn () {
+            return this.$store.state.authentication.status.loggingIn;
+        }
+    },
+    created () {
+        // reset login status
+        this.$store.dispatch('authentication/logout');
+    },
 
     methods:{
-      ingresar () {
-        this.logging_in = true
+      ingresar (e) {
+        this.logging_in = true;
 
+        const { rut, password } = this;
+        const { dispatch } = this.$store;
+        if (rut && password) {
+            dispatch('authentication/login', { rut, password });
+            this.logging_in = false;
+        }
+
+        /*
         // Simulating a delay here.
         // When we are done, we reset "logging_in"
         // Boolean to false to restore the
@@ -76,7 +93,7 @@ export default {
         setTimeout(() => {
           // delay simulated, we are done,
           // now restoring submit to its initial state
-          this.logging_in = false
+          
         }, 3000)
 
         this.$q.dialog({
@@ -88,7 +105,7 @@ export default {
           console.log('Ingresa')
         }).onCancel(() => {
           console.log('Rut no registrado')
-        })
+        })*/
       }
     }
   }
