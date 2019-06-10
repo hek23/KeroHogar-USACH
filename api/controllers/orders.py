@@ -8,8 +8,8 @@ from helpers.Authenticator import requires_auth
 def ordersByClient (ID):
     query = "SELECT id, delivery_status, payment_status, amount, delivery_date FROM kerhogar.clients WHERE client_id={}"
     cursor = mysqlConnector.get_db().cursor()
-	cursor.execute(query.format(ID))
-	result = cursor.fetchall()
+    cursor.execute(query.format(ID))
+    result = cursor.fetchall()
     orders = []
     for order in result:
         orders.append({
