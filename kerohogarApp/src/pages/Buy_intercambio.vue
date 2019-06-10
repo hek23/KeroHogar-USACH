@@ -8,37 +8,53 @@
         <q-input
           filled
           class="q-mb-xs"
-          v-model="cantidad"
+          v-model="order.quantity"
           label="Número de bidones para intercambio"
           mask="##"
           lazy-rules
-          :rules="[ val => val && val <= 50 || 'Máximo 50 bidones']"
+          :rules="[ val => !!val || 'Falta cantidad de compra',
+                    val => val && val <= 50 || 'Máximo 50 bidones']"
         />
 
-        <q-select 
-          filled
-          class="q-mb-lg"
-          v-model="dia" 
-          :options="dias"
-          @input="val => { getHorarios() }"
-          label="Dia de entrega"
-        />
+        <q-input 
+          filled 
+          v-model="order.date" 
+          mask="date" 
+          :rules="['date', val => val && val >= minDate || 'No puedes escoger una fecha del pasado']" 
+          label="Dia de entrega" 
+          class="q-mb-sm"
+        >
+          <template v-slot:append>
+            <q-icon name="event" class="cursor-pointer">
+              <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
+                <q-date 
+                  v-model="order.date" 
+                  @input="() => { $refs.qDateProxy.hide(), getHorarios() }" 
+                  :today-btn=true 
+                  :options="date => date >= minDate"
+                />
+              </q-popup-proxy>
+            </q-icon>
+          </template>
+        </q-input>
 
         <q-select
           filled
+          multiple
           class="q-mb-lg"
-          v-model="horas"
+          v-model="order.blocks"
           label = "Selecciona horario"
           :options="horarios"
           option-value="id"
           option-label="block"
+          :rules="[val => !!val || 'Debes elegir al menos un horario']"
         />
 
         <q-separator />
         <p class="text-center text-weight-bold text-body1 q-mt-md">Detalles de su compra</p>
-        <p class="text-body1">Precio unitario: {{precio_unitario}}</p>
-        <p class="text-body1">Litros totales: {{cantidad * capacity}} litros</p>
-        <p class="text-body1">Subtotal: {{cantidad*precio_unitario}}</p>
+        <p class="text-body1">Precio unitario: {{product.price}}</p>
+        <p class="text-body1">Litros totales: {{order.quantity * product.capacity}} litros</p>
+        <p class="text-body1">Subtotal: {{order.quantity*product.price}}</p>
         <q-separator />
       
 
@@ -58,21 +74,40 @@
 export default {
   data () {
     return {
-      cantidad: null,
-      dia: null,
-      horas: null,
-      precio_unitario: 300,
-      capacity: 20,
-      dias: [
-          'Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'
-      ],
-
-
+      order: {
+        quantity: null,
+        date: null,
+        blocks: null,
+      },
+      product: {
+        id: null,
+        price: 300,
+        capacity: 20,
+        compounded: true,
+        format: {
+          id: null,
+          added_price: 0,
+        }
+      },
       horarios: null
     }
   },
   mounted () {
     this.$emit('title', "Intercambio de bidones");
+  },
+  computed: {
+    minDate: function() {
+      let date = new Date();
+      let year = '' + date.getFullYear();
+      let month = '' + (date.getMonth() + 1);
+      let day = '' + date.getDate();
+      
+      if (month.length === 1) month = '0' + month;
+      if (day.length === 1) day = '0' + day;
+
+      let dateString = year + '/' + month + '/' + day;
+      return dateString;
+    }
   },
 
   methods: {
@@ -96,7 +131,7 @@ export default {
     },
     //Para hacer la peticion al backend
     getHorarios(){
-        if(this.dia == null){
+        if(this.order.date == null){
             this.$q.notify({
                 textColor: 'white',
                 color: 'red-5',
