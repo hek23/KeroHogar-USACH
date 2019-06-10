@@ -382,9 +382,9 @@ Resultado: ```HTTP 201 CREATED```
 
 #### Obtener los bloques de tiempo disponibles
 
-> Parámetro: Estado (available en la ruta)
+> Parámetro: Fecha (YYYY-MM-DD)
 > Método: GET
-> Ruta: ```HOST/version/timeblocks/available```
+> Ruta: ```HOST/version/timeblocks/available/DATE```
 
 
 Resultado:
