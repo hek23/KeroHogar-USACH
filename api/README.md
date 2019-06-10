@@ -449,7 +449,27 @@ Resultado:
 
 #### Ingresar (login)
 
-TBD
+Dado que practicamente todas las funcionalidades anteriores requieren autetificación, esta se implementó de forma primitiva, esperando que los headers de las solicitudes existan dos elementos 'user' y 'pass'. Estos son verificados en cada consulta (que no sea registrar usuario), de modo que solo puedan acceder a la API los usuarios autentificados. Por tanto no es necesario tener un endpoint 'login' como tal, aunque se proveerá uno que verificará si los datos son correctos
+
+> Parámetro: nombre de usuario y contraseña (Body)
+> Método: POST
+> Ruta: ```HOST/version/user/login```
+
+Body: 
+```javascript
+{ "user": "1-9", "pass":"NoPondreDatos"}
+
+```
+
+Resultado:
+```HTTP 200 OK```con body 
+
+```javascript
+{ "id": "1"}
+
+```
+
+ o ``` HTTP 401 UNAUTHORIZED```
 
 ## Instalación y requisitos
 
