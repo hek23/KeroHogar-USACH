@@ -33,6 +33,10 @@ const routes = [
         component: () => import('pages/Buy_intercambio.vue')
       },
       {
+        path:'/blockselect',
+        component: () => import('pages/Block_select.vue')
+      },
+      {
         path:'/checkout',
         component: () => import('pages/Checkout.vue')
       },

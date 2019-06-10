@@ -46,6 +46,7 @@ module.exports = function (ctx) {
         'QCardSection',
         'QCardActions',
         'QImg',
+        'QOptionGroup',
         
         'QSpinnerFacebook',
       ],

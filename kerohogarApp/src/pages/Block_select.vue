@@ -27,13 +27,6 @@
           @click="getHorarios()"
           />
 
-        <div class="q-pa-lg">
-            <q-option-group
-            v-model="hora"
-            :options="options"
-            color="primary"
-            />
-        </div>
 
       
 
@@ -72,24 +65,6 @@ export default {
             end: '13:00'
             }
         ],
-
-        group: null,
-
-        options: [
-            {
-            label: 'Option 1',
-            value: 'op1'
-            },
-            {
-            label: 'Option 2',
-            value: 'op2'
-            },
-            {
-            label: 'Option 3',
-            value: 'op3'
-            }
-        ]
-    
     }
   },
 
@@ -112,6 +87,7 @@ export default {
         })
       }
     },
+    //Para hacer la peticion al backend
     getHorarios(){
         if(this.dia == null){
             this.$q.notify({
