@@ -1,11 +1,5 @@
 <template>
   <q-page padding>
-    <div class="row justify-center">
-     <q-img
-        src="/assets/parafina-kerohogar-logo.png"
-        style="max-width: 700px;"
-       />
-    </div>
     <div class="q-pa-md" style="max-width:1000px;margin:0 auto;">
 
       <p class = "text-h6 justify-center">Selecciona el dia y horario de entrega</p>
@@ -18,13 +12,8 @@
           filled
           v-model="dia" 
           :options="dias" 
+          @input="val => { getHorarios() }"
           label="Dia de entrega*"/>
-
-          <q-btn 
-          label="Ver Horarios Disponibles" 
-          color="primary"
-          @click="getHorarios()"
-          />
 
         <q-select
             filled
@@ -33,9 +22,6 @@
             :options="horarios"
             option-value="id"
             option-label="block"
-            emit-value
-            map-options
-            style="min-width: 250px; max-width: 300px"
         />
 
 
@@ -43,7 +29,7 @@
 
         <div>
           <q-btn label="Pagar" type="submit" color="primary"/>
-          <q-btn label="Atrás" color="secondary" class="q-ml-sm"/>
+          <q-btn label="Atrás" color="secondary" class="q-ml-sm" to="/buy"/>
         </div>
       </q-form>
 

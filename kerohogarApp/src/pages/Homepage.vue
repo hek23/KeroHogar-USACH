@@ -6,7 +6,7 @@
       <div class="row justify-center">
         <q-img
           src="/assets/parafina-kerohogar-logo.png"
-          style="max-width: 700px;"
+          style="max-width: 500px;"
         />
       </div>
 
@@ -63,6 +63,9 @@ export default {
         isPwd: true,
         logging_in: false
       }
+    },
+    mounted () {
+      this.$emit('title', "Ingreso de usuarios");
     },
     computed: {
         loggingIn () {

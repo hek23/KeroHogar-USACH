@@ -4,9 +4,33 @@
 
         <q-form
           @submit="onSubmit"
-          @reset="onReset"
           class="q-gutter-y-md full-width"
         >
+          <div class="row">
+            <div class="col-6">
+              <q-input
+                filled
+                class="q-mr-xs"
+                v-model="name"
+                label="Nombre*"
+                hint="ej: Jose Pablo"
+                lazy-rules
+                :rules="[ val => val && val.length > 0 || 'Por favor ingresa tu nombre']"
+              />
+            </div>
+            <div class="col-6">
+              <q-input
+                filled
+                class="q-ml-xs"
+                v-model="lastName"
+                label="Apellido*"
+                hint="ej: Vicuña"
+                lazy-rules
+                :rules="[ val => val && val.length > 0 || 'Por favor ingresa tu apellido']"
+              />
+            </div>
+          </div>
+
           <q-input
             filled
             v-model="rut"
@@ -31,24 +55,7 @@
             </template>
           </q-input>
 
-          <q-input
-            filled
-            v-model="name"
-            label="Nombre*"
-            hint="ej: Jose Pablo"
-            lazy-rules
-            :rules="[ val => val && val.length > 0 || 'Por favor ingresa tu nombre']"
-          />
-
-          <q-input
-            filled
-            v-model="lastName"
-            label="Apellido*"
-            hint="ej: Vicuña"
-            lazy-rules
-            :rules="[ val => val && val.length > 0 || 'Por favor ingresa tu apellido']"
-          />
-
+          <q-separator />
           <q-input
             filled
             v-model="contact"
@@ -79,12 +86,12 @@
             </div>
           </div>
 
+          <q-separator />
           <div class="float-left">
             <q-btn label="Registrarse" type="submit" color="primary"/>
           </div>
           <div class="float-right">
-            <!--Este boton luego se cambiara por un "atrás-->
-            <q-btn label="Borrar campos" type="reset" color="secondary"/>
+            <q-btn label="Cancelar" color="grey" to="/" />
           </div>
         </q-form>
     </div>
@@ -112,6 +119,9 @@ export default {
       accept: false
     }
   },
+  mounted () {
+    this.$emit('title', "Cree su cuenta");
+  },
 
   methods: {
     onSubmit () {
@@ -131,17 +141,6 @@ export default {
           message: 'Registrado con éxito'
         })
       }
-    },
-
-    onReset () {
-      this.name = null
-      this.rut = null
-      this.lastName = null,
-      this.contact = null,
-      this.streetNumber = null,
-      //Select
-      this.comuna = null
-
     }
   }
 }

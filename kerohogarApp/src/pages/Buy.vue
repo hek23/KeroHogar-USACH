@@ -4,7 +4,7 @@
       <div class="row q-mt-sm justify-center">
         <q-img
           src="/assets/parafina-kerohogar-logo.png"
-          style="max-width:700px;"
+          style="max-width: 500px;"
         />
       </div>
       <div class="row justify-center">
@@ -18,7 +18,8 @@
           color="green" 
           label="Relleno de estanque" 
           icon= "local_gas_station"
-          style = "width: 250px"/>
+          style = "width: 250px"
+          to="/estanque" />
       </div>
       
       <div class="row justify-center">
@@ -28,7 +29,8 @@
           color="green" 
           label="Intercambio de bidones" 
           icon="swap_horiz"
-          style = "width: 250px"/>
+          style = "width: 250px"
+          to="/intercambio" />
       </div>
 
       <div class="row justify-center">
@@ -38,7 +40,8 @@
           color="green" 
           label="Bidón con parafina" 
           icon="unarchive"
-          style = "width: 250px"/>
+          style = "width: 250px"
+          to="/bidon" />
       </div>
 
       <div class="row justify-center">
@@ -47,7 +50,8 @@
           class="btn-fixed-width" 
           color="brown" 
           label="¿Ayuda con los formatos de compra?" 
-          style = "width: 250px"/>
+          style = "width: 250px"
+          to="/info" />
       </div>
 
     </div>
@@ -58,7 +62,10 @@
 <script>
 
 export default {
+  mounted () {
+    this.$emit('title', "Kerohogar App");
   }
+}
 </script>
 
 <style>

@@ -3,7 +3,7 @@
     <div class="row justify-center">
       <q-img
         src="/assets/parafina-kerohogar-logo.png"
-        style="max-width: 700px;"
+        style="max-width: 500px;"
         />
     </div>
   <p class = "text-h6">Sube tu comprobante de pago</p>

@@ -49,6 +49,7 @@ module.exports = function (ctx) {
         'QOptionGroup',
         
         'QSpinnerFacebook',
+        'QSeparator',
       ],
 
       directives: [

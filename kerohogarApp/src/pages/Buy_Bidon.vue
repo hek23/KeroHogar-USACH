@@ -1,35 +1,27 @@
 <template>
   <q-page padding>
-    <div class="row justify-center">
-     <q-img
-        src="/assets/parafina-kerohogar-logo.png"
-        style="max-width: 700px;"
-       />
-    </div>
     <div class="q-pa-md" style="max-width:1000px;margin:0 auto;">
-
-      <p class = "text-h6 justify-center">Compra de bidones</p>
+      <p class = "text-h6 justify-center"></p>
       <q-form
         @submit="onSubmit"
-        @reset="onReset"
         class="q-gutter-md"
       >
-      <q-input
-        filled
-        v-model="cantidad"
-        label="Número de bidones"
-        mask="##"
-        lazy-rules
-        :rules="[ val => val && val <= 50 || 'Máximo 50 bidones']"
-      />
-      <p class = "text-h6 justify-center">Precio unitario: {{precio_unitario}}</p>
-      <p class = "text-h6">Litros totales: {{cantidad*20}} Litros</p>
-      <p class = "text-h6">Subtotal: {{cantidad*precio_unitario}}</p>
+        <q-input
+          filled
+          v-model="cantidad"
+          label="Número de bidones"
+          mask="##"
+          lazy-rules
+          :rules="[ val => val && val <= 50 || 'Máximo 50 bidones']"
+        />
+        <p class = "text-h6 justify-center">Precio unitario: {{precio_unitario}}</p>
+        <p class = "text-h6">Litros totales: {{cantidad*20}} Litros</p>
+        <p class = "text-h6">Subtotal: {{cantidad*precio_unitario}}</p>
       
 
         <div>
           <q-btn label="Pagar" type="submit" color="primary"/>
-          <q-btn label="Atrás" color="secondary" class="q-ml-sm"/>
+          <q-btn label="Atrás" color="secondary" class="q-ml-sm" to="/buy"/>
         </div>
       </q-form>
 
@@ -47,7 +39,9 @@ export default {
       precio_unitario: 300,
     }
   },
-
+  mounted () {
+    this.$emit('title', "Compra de bidones");
+  },
   methods: {
     onSubmit () {
       if (this.accept !== true) {
