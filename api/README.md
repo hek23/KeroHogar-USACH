@@ -156,6 +156,29 @@ Resultado:
 ]
 ```
 
+### Ciudades
+
+#### Obtener todas las ciudades
+
+> Parámetro: Ninguno
+> Método: GET
+> Ruta: ```HOST/version/towns```
+
+Resultado: 
+```javascript
+[
+    {
+        id: 1,
+        name: "Providencia"
+    },
+    {
+        id: 2,
+        name: "Vitacura"
+    }
+]
+```
+
+
 ### Direcciones (VER EXPLICACIÓN!)
 
 Explicación: La idea es verificar esto usando el token de sesión. Como no está implementado, se aceptará el consultar como el resto de las entidades sin verificación. Si la autentificación no corresponde, se retornará un estado ```401 Unauthorized```
@@ -253,25 +276,6 @@ Resultado:
         min_qty: 6,
         max_qty: 12,
         product_id: 1
-    }
-]
-```
-
-#### Obtener a que productos se aplica cierto descuento
-
-> Parámetro: Id Descuento (URL)
-> Método: GET
-> Ruta: ```HOST/version/discounts/IDDESCUENTO```
-
-Resultado:
-
-```javascript
-[
-    {
-        id: 1,
-        name: "Producto",
-        price: 321,
-        has_formats: true
     }
 ]
 ```

@@ -8,8 +8,8 @@ def getFormatsByProduct(Id):
 	cursor = mysqlConnector.get_db().cursor()
 	cursor.execute(sqlQuery.format(Id))
 	result = cursor.fetchall()
-    if (result is None):
-        return Response(json.dumps({}),mimetype='application/json')
+	if (result is None):
+		return Response(json.dumps({}),mimetype='application/json')
 	cursor.close()
 	formats = []
 	for row in result:
