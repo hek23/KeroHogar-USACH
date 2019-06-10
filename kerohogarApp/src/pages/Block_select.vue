@@ -11,7 +11,6 @@
       <p class = "text-h6 justify-center">Selecciona el dia y horario de entrega</p>
       <q-form
         @submit="onSubmit"
-        @reset="onReset"
         class="q-gutter-md"
       >
 
@@ -26,6 +25,18 @@
           color="primary"
           @click="getHorarios()"
           />
+
+        <q-select
+            filled
+            v-model="hora"
+            label = "Selecciona horario"
+            :options="horarios"
+            option-value="id"
+            option-label="block"
+            emit-value
+            map-options
+            style="min-width: 250px; max-width: 300px"
+        />
 
 
       
@@ -51,20 +62,7 @@ export default {
 
         hora: null,
 
-        horarios:[
-            {
-            start:'9:00',
-            end: '10:00'
-            },
-            {
-            start:'11:00',
-            end: '12:00'
-            },
-            {
-            start:'12:00',
-            end: '13:00'
-            }
-        ],
+        horarios: null
     }
   },
 
@@ -92,11 +90,38 @@ export default {
         if(this.dia == null){
             this.$q.notify({
                 textColor: 'white',
+                color: 'red-5',
                 icon: 'fas fa-exclamation-triangle',
                 message: 'Debe seleccionar dia'           
             })
         }
         else{
+
+            this.$q.notify({
+                textColor: 'white',
+                color: 'green',
+                icon: 'fas fa-exclamation-triangle',
+                message: 'Selecciona un horario'           
+            })
+
+            this.horarios = [
+                {
+                 id:2,
+                 block:"9:00-10:00",
+                },
+                {
+                 id:3,
+                 block:"10:00-11:00",
+                },
+                {
+                 id:4,
+                 block:"11:00-12:00",
+                },
+                {
+                 id:5,
+                 block:"12:00-13:00",
+                }
+            ]
             
         }
     }
