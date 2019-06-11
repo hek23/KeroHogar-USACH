@@ -376,6 +376,14 @@ Body:
 ```
 
 Resultado: ```HTTP 201 CREATED```
+Body:
+```javascript
+{
+    "id":1
+}
+```
+
+
 
 
 ### Bloques de tiempo

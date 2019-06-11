@@ -43,9 +43,10 @@ def createOrder(ID):
     for product in orderDetails['products']:
         cursor.execute(orderProductQuery.format(orderID,product['id'],product['format'],product['quantity']))
     mysqlConnector.get_db().commit()
-    return Response(status=200, response=json.dumps({"id":orderID}), mimetype="application/json")
+    return Response(status=201, response=json.dumps({"id":orderID}), mimetype="application/json")
 
 @current_app.route('/v1/clients/<ID>/orders/<orderID>', methods=['POST'])
 @requires_auth
 def getOrderDetails(ID, orderID):
+    orderQuery = "SELECT "
     pass
