@@ -84,7 +84,6 @@
               map-options
             />
             </div>
-            <p>{{this.comuna}}</p>
             <div class="col-7">
               <q-input
                 filled
@@ -194,7 +193,8 @@ export default {
         wholesaler: 0
       })
       .then(function(response){
-        //La idea es llamarla aqui
+        //_________La idea es llamarla aqui___________
+        // Se le pasa el id del usuario
         //this.registerAddress(response.data.id)
       })
       .catch(function(error){
