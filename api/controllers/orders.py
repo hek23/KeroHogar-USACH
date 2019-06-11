@@ -1,5 +1,5 @@
 from helpers import mysqlConnector
-from flask import current_app, g, Response
+from flask import current_app, g, Response, request
 import json
 from helpers.Authenticator import requires_auth
 
@@ -27,13 +27,25 @@ def ordersByClient (ID):
 def createOrder(ID):
     orderDetails = request.get_json()
     orderQuery = "INSERT INTO orders (address_id, delivery_status, payment_status, amount, delivery_date) VALUES ({},{},{},{},\'{}\')"
-    orderTimeBlockQuery =  "INSERT INTO order_time_block (order_id, time_block) VALUES ({}, {})"
-    orderProductQuery = "INSERT INTO order_product (order_id, product_id, product_format_id, quantity) VALUES ({},{},{},{}}"
-    getOrderID = "SELECT id FROM orders where address_id={} AND delivery_status={} payment_status={} AND amount={} AND delivery_date={})"
-    
+    orderTimeBlockQuery =  "INSERT INTO order_time_block (order_id, time_block_id) VALUES ({}, {})"
+    orderProductQuery = "INSERT INTO order_product (order_id, product_id, product_format_id, quantity) VALUES ({},{},{},{})"
+    getOrderID = "SELECT id FROM orders where (address_id={} AND delivery_status={} AND payment_status={} AND amount={} AND delivery_date=\'{}\')"
+    cursor = mysqlConnector.get_db().cursor()
+    #first insert order query
+    #Status are false by default
+    cursor.execute(orderQuery.format(orderDetails['addressID'],0,0,orderDetails['amount'],orderDetails['delivery_date']))
+    cursor.execute(getOrderID.format(orderDetails['addressID'],0,0,orderDetails['amount'],orderDetails['delivery_date']))
+    mysqlConnector.get_db().commit()
+    orderID = cursor.fetchall()[-1][0]
+    #Then orderTimeBlock
+    for time_block in orderDetails['time_block']:
+        cursor.execute(orderTimeBlockQuery.format(orderID, time_block['id']))
+    for product in orderDetails['products']:
+        cursor.execute(orderProductQuery.format(orderID,product['id'],product['format'],product['quantity']))
+    mysqlConnector.get_db().commit()
+    return Response(status=200, response=json.dumps({"id":orderID}), mimetype="application/json")
 
-
-#@current_app.route('/v1/clients/<ID>/orders/<orderID>', methods=['POST'])
-#@requires_auth
-#def getOrderDetails(ID, orderID):
-
+@current_app.route('/v1/clients/<ID>/orders/<orderID>', methods=['POST'])
+@requires_auth
+def getOrderDetails(ID, orderID):
+    pass
