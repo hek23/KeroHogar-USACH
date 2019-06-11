@@ -9,12 +9,12 @@
           filled
           class="q-mb-xs"
           v-model="order.quantity"
-          label="Número de bidones para intercambio"
+          :label="'Número de ' + productType"
           mask="##"
           lazy-rules
           :rules="[ val => !!val || 'Falta cantidad de compra',
-                    val => val && val <= 50 || 'Máximo 50 bidones',
-                    val => val && val >= minQuantity || 'Mínimo ' + minQuantity + ' bidones']"
+                    val => val && val <= maxQuantity || 'Máximo ' + maxQuantity + ' ' + productType,
+                    val => val && val >= minQuantity || 'Mínimo ' + minQuantity + ' ' + productType]"
         />
 
         <q-input 
@@ -54,7 +54,7 @@
         <q-separator />
         <p class="text-center text-weight-bold text-body1 q-mt-md">Detalles de su compra</p>
         <p class="text-body1">Precio unitario: {{product.price}}</p>
-        <p class="text-body1">Litros totales: {{order.quantity * product.format.capacity}} litros</p>
+        <p class="text-body1">Cantidad total: {{order.quantity * format.capacity}} litros</p>
         <p class="text-body1">Subtotal: {{order.quantity * product.price}}</p>
         <q-separator />
       
@@ -73,6 +73,7 @@
 
 <script>
 export default {
+  props: ['product', 'format'],
   data () {
     return {
       order: {
@@ -81,7 +82,8 @@ export default {
         delivery_date: null,
         time_block: [],
       },
-      product: {
+      /*
+      producto: {
         id: null,
         name: '',
         price: 300,
@@ -93,12 +95,24 @@ export default {
           capacity: 20,
           minimum_quantity: 40,
         }
-      },
-      horarios: null
+      },*/
+      horarios: null,
+      minQuantity: 2,
+      maxQuantity: 50,
+      productType: '',
     }
   },
   mounted () {
-    this.$emit('title', "Intercambio de bidones");
+    this.calculateMinQuantity();
+    this.calculateMaxQuantity();
+    this.calculateProductType();
+    
+    let name = (this.product.has_formats) ? this.format.name : this.product.name;
+    this.$emit('title', name);
+
+    if(this.product == null) {
+      return this.$router.push('/buy');
+    }
   },
   computed: {
     minDate: function() {
@@ -113,12 +127,43 @@ export default {
       let dateString = year + '/' + month + '/' + day;
       return dateString;
     },
-    minQuantity: function() {
-      return Math.round(this.product.format.minimum_quantity / this.product.format.capacity);
-    }
   },
 
   methods: {
+    calculateMinQuantity() {
+      if(this.product_has_formats) {
+        if(this.format.capacity > 0) {
+          this.minQuantity = Math.round(this.product.format.minimum_quantity / this.product.format.capacity);
+        } else {
+          this.minQuantity = 100;
+        }
+      } else {
+        this.minQuantity = 1;
+      }
+    },
+    calculateMaxQuantity() {
+      if(this.product_has_formats) {
+        if(this.format.capacity > 0) {
+          this.maxQuantity = Math.round(1000 / this.product.format.capacity);
+        } else {
+          this.maxQuantity = 1000;
+        }
+      } else {
+        this.maxQuantity = 100;
+      }
+    },
+    calculateProductType () {
+      if(this.product_has_formats) {
+        if(this.format.capacity > 0) {
+          this.productType = 'bidones';
+        } else {
+          this.productType = 'litros';
+        }
+      } else {
+        this.productType = 'unidad(es)';
+      }
+    },
+
     onSubmit () {
       if (this.accept !== true) {
         this.$q.notify({

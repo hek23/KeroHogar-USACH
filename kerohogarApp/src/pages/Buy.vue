@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <div class="q-col-gutter-md column-inline items-start">
+    <div class="q-col-gutter-y-md column-inline items-start">
       <div class="row q-mt-sm justify-center">
         <q-img
           src="/assets/parafina-kerohogar-logo.png"
@@ -12,26 +12,27 @@
       </div>
 
 
-       <q-item
-        class="row justify-center"
-        v-for="formato in formatos"
-        :key="formato.id"
-        v-ripple>
-        <q-item-section side top>
-        <q-btn
-          align="around" 
-          class="btn-fixed-width" 
-          color="green" 
-          icon= "local_gas_station"
-          style = "width: 250px"
-          to="/estanque">
-        <div>{{formato.name}}</div>
-        </q-btn>
-        </q-item-section>  
-         </q-item> 
+
+      <div v-if="producto!=null">
+        <q-item
+          class="justify-center"
+          v-for="formato in formatos"
+          :key="formato.id"
+          v-ripple>
+          <q-btn
+            align="around" 
+            class="btn-fixed-width" 
+            color="green" 
+            icon= "local_gas_station"
+            style = "width: 250px"
+            :to="{name:'order_product', params:{format: formato, product: producto}}">
+              <div>{{formato.name}}</div>
+          </q-btn>
+        </q-item> 
+      </div>
 
 
-      <div class="justify-center">
+      <div class="row justify-center">
         <q-btn 
           align="around" 
           class="btn-fixed-width" 
@@ -56,20 +57,29 @@ export default {
   data(){
     return{
 
-      formatos: null 
+      formatos: null,
+      producto: null,
     }
   },
   methods: {
 
-  loadData () {
-    this.$axios.get('https://keroh-api.herokuapp.com/v1/products/1/formats')  
-      .then((response) => {
-        this.formatos = response.data
-      })
-      .catch(() => {
-        console.log("error")
-      })
-  }
+    loadData () {
+      this.$axios.get('https://keroh-api.herokuapp.com/v1/products/1/formats')  
+        .then((response) => {
+          this.formatos = response.data;
+          
+        })
+        .catch(() => {
+          console.log("error")
+        })
+      this.$axios.get('https://keroh-api.herokuapp.com/v1/products/1')  
+        .then((response) => {
+          this.producto = response.data;
+        })
+        .catch(() => {
+          console.log("error")
+        })
+    }
   }
 }
 </script>

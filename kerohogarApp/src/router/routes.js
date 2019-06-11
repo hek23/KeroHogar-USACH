@@ -21,6 +21,12 @@ const routes = [
         component: () => import('pages/Info.vue')
       },
       {
+        name:'order_product',
+        path:'/order',
+        component: () => import('pages/Buy_intercambio.vue'),
+        props: true
+      },
+      {
         path:'/bidon',
         component: () => import('pages/Buy_Bidon.vue')
       },
