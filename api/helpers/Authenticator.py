@@ -23,9 +23,9 @@ def authenticate():
 def requires_auth(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        if not('user' in request.headers and 'pass' in request.headers):
-            return Response(status=400)
-        if not check_auth(request.headers.get('user'), request.headers.get('pass')):
-            return authenticate()
+        #if not('user' in request.headers and 'pass' in request.headers):
+        #    return Response(status=400)
+        #if not check_auth(request.headers.get('user'), request.headers.get('pass')):
+        #    return authenticate()
         return f(*args, **kwargs)
     return decorated
