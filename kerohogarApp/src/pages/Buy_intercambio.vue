@@ -10,7 +10,7 @@
           class="q-mb-xs"
           v-model="order.quantity"
           :label="'Número de ' + productType"
-          mask="##"
+          :mask="quantityMask"
           lazy-rules
           :rules="[ val => !!val || 'Falta cantidad de compra',
                     val => val && val <= maxQuantity || 'Máximo ' + maxQuantity + ' ' + productType,
@@ -54,8 +54,9 @@
         <q-separator />
         <p class="text-center text-weight-bold text-body1 q-mt-md">Detalles de su compra</p>
         <p class="text-body1">Precio unitario: {{product.price}}</p>
-        <p class="text-body1">Cantidad total: {{order.quantity * format.capacity}} litros</p>
-        <p class="text-body1">Subtotal: {{order.quantity * product.price}}</p>
+        <p v-if="format && format.added_price > 0" class="text-body1">Precio por bidón: {{format.added_price}}</p>
+        <p class="text-body1">Cantidad total: {{realQuantity}} litros</p>
+        <p class="text-body1">Subtotal: {{amount}}</p>
         <q-separator />
       
 
@@ -97,22 +98,28 @@ export default {
         }
       },*/
       horarios: null,
+
       minQuantity: 2,
       maxQuantity: 50,
       productType: '',
+      quantityMask: '',
+
+      discounts: []
     }
   },
-  mounted () {
-    this.calculateMinQuantity();
-    this.calculateMaxQuantity();
-    this.calculateProductType();
-    
-    let name = (this.product.has_formats) ? this.format.name : this.product.name;
-    this.$emit('title', name);
-
-    if(this.product == null) {
+  mounted () {    
+    if(this.product == null || (this.product.has_formats && this.format == null) ) {
       return this.$router.push('/buy');
     }
+
+    this.loadDiscounts();
+    this.calculateMinQuantity();
+    this.calculateMaxQuantity();
+    this.calculateProductType(); 
+    this.calculateQuantityMask();
+
+    let name = (this.product.has_formats) ? this.format.name : this.product.name;
+    this.$emit('title', name);
   },
   computed: {
     minDate: function() {
@@ -127,24 +134,48 @@ export default {
       let dateString = year + '/' + month + '/' + day;
       return dateString;
     },
+    amount: function() {
+      let unitPrice = this.product.price;
+      // Falta calcular descuento o usar precio de mayorista.
+
+
+      if(this.product.has_formats && this.format.capacity > 0) {
+        unitPrice *= this.format.capacity;
+      }
+
+      let extra_price = 0;
+      if(this.product.has_formats) {
+        extra_price = this.order.quantity * this.format.added_price
+      }
+
+      let totalPrice = unitPrice * this.order.quantity + extra_price;
+      return totalPrice ? totalPrice : 0;
+    },
+    realQuantity: function() {
+      let realQuantity = this.order.quantity;
+      if(this.product.has_formats && this.format.capacity > 0) {
+        realQuantity *= this.format.capacity;
+      }
+      return realQuantity ? realQuantity : 0;
+    }
   },
 
   methods: {
     calculateMinQuantity() {
-      if(this.product_has_formats) {
+      if(this.product.has_formats) {
         if(this.format.capacity > 0) {
-          this.minQuantity = Math.round(this.product.format.minimum_quantity / this.product.format.capacity);
+          this.minQuantity = Math.round(this.format.minimum_quantity / this.format.capacity);
         } else {
-          this.minQuantity = 100;
+          this.minQuantity = this.format.minimum_quantity;
         }
       } else {
         this.minQuantity = 1;
       }
     },
     calculateMaxQuantity() {
-      if(this.product_has_formats) {
+      if(this.product.has_formats) {
         if(this.format.capacity > 0) {
-          this.maxQuantity = Math.round(1000 / this.product.format.capacity);
+          this.maxQuantity = Math.round(1000 / this.format.capacity);
         } else {
           this.maxQuantity = 1000;
         }
@@ -152,8 +183,19 @@ export default {
         this.maxQuantity = 100;
       }
     },
+    calculateQuantityMask() {
+      if(this.product.has_formats) {
+        if(this.format.capacity > 0) {
+          this.quantityMask = '##';
+        } else {
+          this.quantityMask = '####';
+        }
+      } else {
+        this.quantityMask = '###';
+      }
+    },
     calculateProductType () {
-      if(this.product_has_formats) {
+      if(this.product.has_formats) {
         if(this.format.capacity > 0) {
           this.productType = 'bidones';
         } else {
@@ -162,6 +204,9 @@ export default {
       } else {
         this.productType = 'unidad(es)';
       }
+    },
+    loadDiscounts () {
+
     },
 
     onSubmit () {
