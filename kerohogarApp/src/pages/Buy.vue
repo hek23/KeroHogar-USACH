@@ -25,7 +25,7 @@
             color="green" 
             icon= "local_gas_station"
             style = "width: 250px"
-            :to="{name:'order_product', params:{format: formato, product: producto}}">
+            :to="{name:'order', params:{format: formato, product: producto}}">
               <div>{{formato.name}}</div>
           </q-btn>
         </q-item> 

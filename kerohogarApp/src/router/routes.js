@@ -21,26 +21,10 @@ const routes = [
         component: () => import('pages/Info.vue')
       },
       {
-        name:'order_product',
+        name:'order',
         path:'/order',
-        component: () => import('pages/Buy_intercambio.vue'),
+        component: () => import('pages/MakeOrder.vue'),
         props: true
-      },
-      {
-        path:'/bidon',
-        component: () => import('pages/Buy_Bidon.vue')
-      },
-      {
-        path:'/estanque',
-        component: () => import('pages/Buy_estanque.vue')
-      },
-      {
-        path:'/intercambio',
-        component: () => import('pages/Buy_intercambio.vue')
-      },
-      {
-        path:'/blockselect',
-        component: () => import('pages/Block_select.vue')
       },
       {
         path:'/checkout',
