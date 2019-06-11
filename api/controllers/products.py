@@ -6,7 +6,7 @@ from helpers.Authenticator import requires_auth
 @current_app.route('/v1/products', methods=['GET'])
 @requires_auth
 def getAllProducts():
-	sqlQuery= "SELECT id, name, price FROM kerhogar.products;"
+	sqlQuery= "SELECT id, name, price FROM products;"
 	cursor = mysqlConnector.get_db().cursor()
 	cursor.execute(sqlQuery)
 	result = cursor.fetchall()
@@ -15,7 +15,7 @@ def getAllProducts():
 		return Response(json.dumps({}), mimetype='application/json')
 	products = []
 	for product in result:
-		cursor.execute("SELECT COUNT(*) FROM kerhogar.product_formats where product_id={};".format(product[0]))
+		cursor.execute("SELECT COUNT(*) FROM product_formats where product_id={};".format(product[0]))
 		newResult = cursor.fetchone()
 		products.append({
 						"id": product[0],
@@ -29,14 +29,14 @@ def getAllProducts():
 @current_app.route('/v1/products/<Id>', methods=['GET'])
 @requires_auth
 def getProductByID(Id):
-	sqlQuery= "SELECT name, price FROM kerhogar.products where id={};"
+	sqlQuery= "SELECT name, price FROM products where id={};"
 	cursor = mysqlConnector.get_db().cursor()
 	cursor.execute(sqlQuery.format(Id))
 	result = cursor.fetchone()
 	if(result is None):
 		product={}
 	else:
-		cursor.execute("SELECT COUNT(*) FROM kerhogar.product_formats where product_id={};".format(Id))
+		cursor.execute("SELECT COUNT(*) FROM product_formats where product_id={};".format(Id))
 		product = {
 			"name": result[0],
 			"price": result[1],

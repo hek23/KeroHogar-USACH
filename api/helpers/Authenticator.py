@@ -8,7 +8,7 @@ def check_auth(username, password):
     password combination is valid.
     """
     cursor = mysqlConnector.get_db().cursor()
-    cursor.execute('SELECT count(*) FROM kerohogar.clients where rut = \'{0}\' and password = \'{1}\''.format(username,password))
+    cursor.execute('SELECT count(*) FROM clients where rut = \'{0}\' and password = \'{1}\''.format(username,password))
     result = cursor.fetchone()
     cursor.close()
     return result[0]>0

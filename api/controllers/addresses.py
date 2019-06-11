@@ -6,7 +6,7 @@ from helpers.Authenticator import requires_auth
 @current_app.route('/v1/users/<UserID>/addresses', methods=['GET'])
 @requires_auth
 def getAllAdresses(UserID):
-    sqlQuery = "SELECT a.id, t.name, a.address, a.alias FROM kerhogar.addresses a INNER JOIN kerhogar.towns t on t.id = a.town_id where a.client_id ={}"
+    sqlQuery = "SELECT a.id, t.name, a.address, a.alias FROM addresses a INNER JOIN towns t on t.id = a.town_id where a.client_id ={}"
     cursor = mysqlConnector.get_db().cursor()
     cursor.execute(sqlQuery.format(UserID))
     result = cursor.fetchall()
@@ -28,7 +28,7 @@ def getAllAdresses(UserID):
 @requires_auth
 def createAddress(UserID):
     addrInfo = request.get_json()
-    insertQuery = "INSERT INTO kerhogar.addresses (town_id,address, alias,client_id) VALUES ({}, \'{}\', \'{}\', {})"
+    insertQuery = "INSERT INTO addresses (town_id,address, alias,client_id) VALUES ({}, \'{}\', \'{}\', {})"
     cursor = mysqlConnector.get_db().cursor()
     cursor.execute(insertQuery.format(addrInfo['townID'], addrInfo['addr'],addrInfo ['alias'], UserID))
     mysqlConnector.get_db().commit()
@@ -39,7 +39,7 @@ def createAddress(UserID):
 @requires_auth
 def editAddress(UserID, AddrID):
     addrInfo = request.get_json()
-    query = "UPDATE kerhogar.addresses SET town_id={}, address=\'{}\',alias=\'{}\' where client_id={} AND id={};"
+    query = "UPDATE addresses SET town_id={}, address=\'{}\',alias=\'{}\' where client_id={} AND id={};"
     cursor = mysqlConnector.get_db().cursor()
     cursor.execute(query.format(addrInfo['townID'], addrInfo['addr'], addrInfo['alias'], UserID, AddrID))
     mysqlConnector.get_db().commit()
@@ -49,7 +49,7 @@ def editAddress(UserID, AddrID):
 @current_app.route('/v1/users/<UserID>/addresses/<AddrID>', methods=['DELETE'])
 @requires_auth
 def deleteAddress(UserID,AddrID):
-    query = "DELETE FROM kerhogar.addresses where id={} and client_id={}"
+    query = "DELETE FROM addresses where id={} and client_id={}"
     cursor = mysqlConnector.get_db().cursor()
     cursor.execute(query.format(AddrID,UserID))
     mysqlConnector.get_db().commit()

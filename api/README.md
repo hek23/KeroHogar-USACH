@@ -117,7 +117,7 @@ Resultado:
 ##### Obtener cierto formato de cierto producto:
 
 > Parámetro: ID de producto e ID formato
-> Ruta: ```HOST/version/product/ID/formats/IDFORMAT```
+> Ruta: ```HOST/version/products/ID/formats/IDFORMAT```
 > Método: GET
 
 Resultado: 
@@ -135,7 +135,7 @@ Resultado:
 #### Obtener descuentos de cierto producto:
 
 > Parámetro: ID de producto (URL)
-> Ruta: ```HOST/version/product/ID/discounts```
+> Ruta: ```HOST/version/products/ID/discounts```
 > Método: GET
 
 Resultado: 
@@ -404,7 +404,7 @@ Resultado:
 
 > Parámetro: información para crear nuevo usuario (body)
 > Método: POST
-> Ruta: ```HOST/version/user```
+> Ruta: ```HOST/version/users```
 
 Body: 
 ```javascript
@@ -429,7 +429,7 @@ Resultado:
 
 > Parámetro: información para editar nuevo usuario (body) e id de Usuario (URL)
 > Método: PUT
-> Ruta: ```HOST/version/user/idUser```
+> Ruta: ```HOST/version/users/idUser```
 
 Body: 
 ```javascript
@@ -452,7 +452,7 @@ Dado que practicamente todas las funcionalidades anteriores requieren autetifica
 
 > Parámetro: nombre de usuario y contraseña (Body)
 > Método: POST
-> Ruta: ```HOST/version/user/login```
+> Ruta: ```HOST/version/users/login```
 
 Body: 
 ```javascript

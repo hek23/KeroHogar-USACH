@@ -6,7 +6,7 @@ from helpers.Authenticator import requires_auth
 @current_app.route('/v1/products/<ProdID>/discounts', methods=['GET'])
 @requires_auth
 def getAllProductDiscounts(ProdID):
-	sqlQuery = "SELECT id, discount_per_liter, min_quantity, max_quantity FROM kerohogar.product_discounts where id={}"
+	sqlQuery = "SELECT id, discount_per_liter, min_quantity, max_quantity FROM product_discounts where id={}"
 	cursor = mysqlConnector.get_db().cursor()
 	cursor.execute(sqlQuery.format(ProdID))
 	result = cursor.fetchall()
@@ -28,7 +28,7 @@ def getAllProductDiscounts(ProdID):
 @current_app.route('/v1/products/discounts', methods=['GET'])
 @requires_auth
 def getAllDiscounts():
-	sqlQuery = "SELECT id, discount_per_liter, min_quantity, max_quantity. product_id FROM kerohogar.product_discounts "
+	sqlQuery = "SELECT id, discount_per_liter, min_quantity, max_quantity. product_id FROM product_discounts "
 	cursor = mysqlConnector.get_db().cursor()
 	cursor.execute(sqlQuery.format(ProdID))
 	result = cursor.fetchall()
