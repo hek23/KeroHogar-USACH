@@ -13,12 +13,13 @@
           mask="##"
           lazy-rules
           :rules="[ val => !!val || 'Falta cantidad de compra',
-                    val => val && val <= 50 || 'Máximo 50 bidones']"
+                    val => val && val <= 50 || 'Máximo 50 bidones',
+                    val => val && val >= minQuantity || 'Mínimo ' + minQuantity + ' bidones']"
         />
 
         <q-input 
           filled 
-          v-model="order.date" 
+          v-model="order.delivery_date" 
           mask="date" 
           :rules="['date', val => val && val >= minDate || 'No puedes escoger una fecha del pasado']" 
           label="Dia de entrega" 
@@ -28,7 +29,7 @@
             <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
                 <q-date 
-                  v-model="order.date" 
+                  v-model="order.delivery_date" 
                   @input="() => { $refs.qDateProxy.hide(), getHorarios() }" 
                   :today-btn=true 
                   :options="date => date >= minDate"
@@ -42,7 +43,7 @@
           filled
           multiple
           class="q-mb-lg"
-          v-model="order.blocks"
+          v-model="order.time_block"
           label = "Selecciona horario"
           :options="horarios"
           option-value="id"
@@ -53,8 +54,8 @@
         <q-separator />
         <p class="text-center text-weight-bold text-body1 q-mt-md">Detalles de su compra</p>
         <p class="text-body1">Precio unitario: {{product.price}}</p>
-        <p class="text-body1">Litros totales: {{order.quantity * product.capacity}} litros</p>
-        <p class="text-body1">Subtotal: {{order.quantity*product.price}}</p>
+        <p class="text-body1">Litros totales: {{order.quantity * product.format.capacity}} litros</p>
+        <p class="text-body1">Subtotal: {{order.quantity * product.price}}</p>
         <q-separator />
       
 
@@ -75,18 +76,22 @@ export default {
   data () {
     return {
       order: {
+        addressID: 1,
         quantity: null,
-        date: null,
-        blocks: null,
+        delivery_date: null,
+        time_block: [],
       },
       product: {
         id: null,
+        name: '',
         price: 300,
-        capacity: 20,
-        compounded: true,
+        has_formats: true,
         format: {
           id: null,
+          name: '',
           added_price: 0,
+          capacity: 20,
+          minimum_quantity: 40,
         }
       },
       horarios: null
@@ -107,6 +112,9 @@ export default {
 
       let dateString = year + '/' + month + '/' + day;
       return dateString;
+    },
+    minQuantity: function() {
+      return Math.round(this.product.format.minimum_quantity / this.product.format.capacity);
     }
   },
 
@@ -131,7 +139,7 @@ export default {
     },
     //Para hacer la peticion al backend
     getHorarios(){
-        if(this.order.date == null){
+        if(this.order.delivery_date == null){
             this.$q.notify({
                 textColor: 'white',
                 color: 'red-5',
