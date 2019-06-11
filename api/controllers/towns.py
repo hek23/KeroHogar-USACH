@@ -16,5 +16,5 @@ def getTowns():
             "name": town[1]
         })
     cursor.close()
-    return Response(jsonify(towns), mimetype='application/json')
+    return Response(json.dumps(towns), mimetype='application/json')
     

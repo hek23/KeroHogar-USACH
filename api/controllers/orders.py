@@ -31,10 +31,11 @@ def createOrder(ID):
     orderProductQuery = "INSERT INTO order_product (order_id, product_id, product_format_id, quantity) VALUES ({},{},{},{})"
     getOrderID = "SELECT id FROM orders where (address_id={} AND delivery_status={} AND payment_status={} AND amount={} AND delivery_date=\'{}\')"
     cursor = mysqlConnector.get_db().cursor()
+    #
     #first insert order query
     #Status are false by default
-    cursor.execute(orderQuery.format(orderDetails['addressID'],0,0,orderDetails['amount'],orderDetails['delivery_date']))
-    cursor.execute(getOrderID.format(orderDetails['addressID'],0,0,orderDetails['amount'],orderDetails['delivery_date']))
+    cursor.execute(orderQuery.format(orderDetails['addressID'],0,0,amount,orderDetails['delivery_date']))
+    cursor.execute(getOrderID.format(orderDetails['addressID'],0,0,amount,orderDetails['delivery_date']))
     mysqlConnector.get_db().commit()
     orderID = cursor.fetchall()[-1][0]
     #Then orderTimeBlock
@@ -45,8 +46,9 @@ def createOrder(ID):
     mysqlConnector.get_db().commit()
     return Response(status=201, response=json.dumps({"id":orderID}), mimetype="application/json")
 
-@current_app.route('/v1/clients/<ID>/orders/<orderID>', methods=['POST'])
+@current_app.route('/v1/orders/<orderID>', methods=['POST'])
 @requires_auth
 def getOrderDetails(ID, orderID):
     orderQuery = "SELECT "
     pass
+
