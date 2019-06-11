@@ -6,7 +6,7 @@ from helpers.Authenticator import requires_auth
 @current_app.route('/v1/products/<Id>/formats',methods=['GET'])
 @requires_auth
 def getFormatsByProduct(Id):
-	sqlQuery = "SELECT id, name, added_price, minimum_quantity FROM product_formats where product_id={};"
+	sqlQuery = "SELECT id, name, capacity, added_price, minimum_quantity FROM product_formats where product_id={};"
 	cursor = mysqlConnector.get_db().cursor()
 	cursor.execute(sqlQuery.format(Id))
 	result = cursor.fetchall()
@@ -18,8 +18,9 @@ def getFormatsByProduct(Id):
 		format = {
 			"id" : row[0],
 			"name" : row[1],
-			"added_price" :row[2],
-			"minimm_quantity" : row[3]
+			"capacity": row[2],
+			"added_price" :row[3],
+			"minimum_quantity" : row[4]
 		}
 		formats.append(format)
 	return Response(json.dumps(formats), mimetype='application/json')

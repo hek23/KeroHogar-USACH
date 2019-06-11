@@ -3,7 +3,7 @@ from flask import current_app, g, Response, request
 import json
 from helpers.Authenticator import requires_auth
 
-@current_app.route('/v1/users/', methods=['POST'])
+@current_app.route('/v1/users', methods=['POST'])
 def createUser():
     userData = request.get_json()
     query = "INSERT INTO clients (rut, name, password, email, phone, wholesaler) VALUES (\'{}\',\'{}\',\'{}\',\'{}\',\'{}\',{}) "
