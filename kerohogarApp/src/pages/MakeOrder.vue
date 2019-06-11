@@ -47,8 +47,8 @@
           label = "Selecciona horario"
           :options="horarios"
           option-value="id"
-          option-label="block"
-          :rules="[val => !!val || 'Debes elegir al menos un horario']"
+          :option-label="(time_block) => time_block.start + ' - ' + time_block.end"
+          :rules="[val => !!val && val != 0 || 'Debes elegir al menos un horario']"
         />
 
         <q-separator />
@@ -249,19 +249,23 @@ export default {
             this.horarios = [
                 {
                  id:2,
-                 block:"9:00-10:00",
+                 start:"9:00",
+                 end:"10:00",
                 },
                 {
                  id:3,
-                 block:"10:00-11:00",
+                 start:"10:00",
+                 end:"11:00",
                 },
                 {
                  id:4,
-                 block:"11:00-12:00",
+                 start:"11:00",
+                 end:"12:00",
                 },
                 {
                  id:5,
-                 block:"12:00-13:00",
+                 start:"12:00",
+                 end:"13:00",
                 }
             ]
             
