@@ -7,7 +7,7 @@ use Faker\Generator as Faker;
 use App\Address;
 
 $factory->define(Order::class, function (Faker $faker) {
-    $deliveryDate = $faker->dateTimeBetween('-2 days', '+6 days');
+    $deliveryDate = $faker->dateTimeBetween('-1 days', '+2 days');
     if($deliveryDate < now()) {
         $delivery_status = Order::DELIVERED;
         $payment_status = Order::PAID;
