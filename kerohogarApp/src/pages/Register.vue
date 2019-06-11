@@ -35,7 +35,10 @@
             filled
             v-model="rut"
             label="Rut*"
-            hint="ej:11222333-4"
+            mask="#-#"
+            reverse-fill-mask
+            hint="Ejemplo: 11111111-1"
+            input-class="text-left"
             lazy-rules
             :rules="[ val => val && val.length > 0 || 'Por favor ingresa tu Rut']"
           />
@@ -56,23 +59,32 @@
           </q-input>
 
           <q-separator />
+
           <q-input
             filled
             v-model="contact"
             label="Teléfono*"
-            hint="ej: 911122332"
+            mask="#########"
+            hint="ej: 911111111"
             lazy-rules
             :rules="[ val => val && val.length > 0 || 'Por favor ingresa tu número de teléfono']"
           />
 
+
+
           <div class="row">
             <div class="col-5">
-              <q-select 
+            <q-select
               filled
-              v-model="comuna" 
-              :options="options" 
-              label="Comuna*"/>
+              v-model="comuna"
+              :options="comunas"
+              option-value="id"
+              option-label="name"
+              emit-value
+              map-options
+            />
             </div>
+            <p>{{this.comuna}}</p>
             <div class="col-7">
               <q-input
                 filled
@@ -88,7 +100,7 @@
 
           <q-separator />
           <div class="float-left">
-            <q-btn label="Registrarse" type="submit" color="primary"/>
+            <q-btn label="Registrarse" type="submit" color="primary" @click="registerUser()"/>
           </div>
           <div class="float-right">
             <q-btn label="Cancelar" color="grey" to="/" />
@@ -112,15 +124,33 @@ export default {
       streetNumber:null,
       //Select
       comuna: null,
+
       options: [
         'Maipú', 'Peñalolen', 'La Reina', 'Buin', 'La Florida'
       ],
+
+
+      options2: [
+        {
+          label: 'Google',
+          value: 'goog',
+          icon: 'mail'
+        },
+        {
+          label: 'Facebook',
+          value: 'fb',
+          icon: 'bluetooth'
+        },
+      ],
+
+      comunas: [],
 
       accept: false
     }
   },
   mounted () {
     this.$emit('title', "Cree su cuenta");
+    this.getTowns();
   },
 
   methods: {
@@ -141,6 +171,48 @@ export default {
           message: 'Registrado con éxito'
         })
       }
+    },
+
+    getTowns(){
+        this.$axios.get('https://keroh-api.herokuapp.com/v1/towns')  
+        .then((response) => {
+          //this.comunas = response.data.map(opt => ({id: opt.id, label: opt.name}))
+          this.comunas = response.data
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+
+    registerUser:() => {
+      this.$axios.post('https://keroh-api.herokuapp.com/v1/users',{
+        rut: this.rut,
+        name: this.name,
+        pass: this.password,
+        email: "emaildefault",
+        phone: this.contact,
+        wholesaler: 0
+      })
+      .then(function(response){
+        //La idea es llamarla aqui
+        //this.registerAddress(response.data.id)
+      })
+      .catch(function(error){
+        console.log(error)
+      });
+    },
+    registerAddress(id_user){
+      this.$axios.post('https://keroh-api.herokuapp.com/v1/users/'+id_user.toString()+'/addresses',{
+        townID: this.comuna,
+        addr: this.streetNumber,
+        alias: "defaultAlias"
+      })
+      .then(function(response){
+        console.log(response)
+      })
+      .catch(function(error){
+        console.log(error)
+      });
     }
   }
 }
