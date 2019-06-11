@@ -11,3 +11,4 @@ Flask-Login
 Flask-RESTful
 cryptography
 gunicorn
+bcrypt==3.1.6

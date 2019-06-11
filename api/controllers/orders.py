@@ -22,15 +22,15 @@ def ordersByClient (ID):
     return Response(json.dumps(orders), status=200, mimetype='application/json')
 
 #WIP
-#@current_app.route('/v1/clients/<ID>/orders', methods=['POST'])
-#@requires_auth
-#def createOrder(ID):
-#    orderDetails = request.get_json()
-#    orderQuery = "INSERT INTO orders (address_id, delivery_status, payment_status, amount, delivery_date) VALUES ({},{},{},{},\'{}\')"
-#    orderTimeBlockQuery =  "INSERT INTO order_time_block (order_id, time_block) VALUES ({}, {})"
-#    orderProductQuery = "INSERT INTO order_product (order_id, product_id, product_format_id, quantity) VALUES ({},{},{},{}}"
-#    getOrderID = "SELECT id FROM orders where address_id={} AND delivery_status={} payment_status={} AND amount={} AND delivery_date={})"
-#    ##
+@current_app.route('/v1/clients/<ID>/orders', methods=['POST'])
+@requires_auth
+def createOrder(ID):
+    orderDetails = request.get_json()
+    orderQuery = "INSERT INTO orders (address_id, delivery_status, payment_status, amount, delivery_date) VALUES ({},{},{},{},\'{}\')"
+    orderTimeBlockQuery =  "INSERT INTO order_time_block (order_id, time_block) VALUES ({}, {})"
+    orderProductQuery = "INSERT INTO order_product (order_id, product_id, product_format_id, quantity) VALUES ({},{},{},{}}"
+    getOrderID = "SELECT id FROM orders where address_id={} AND delivery_status={} payment_status={} AND amount={} AND delivery_date={})"
+    
 
 
 #@current_app.route('/v1/clients/<ID>/orders/<orderID>', methods=['POST'])
