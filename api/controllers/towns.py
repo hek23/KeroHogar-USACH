@@ -3,7 +3,7 @@ from flask import current_app, g, Response
 import json
 from helpers.Authenticator import requires_auth
 
-@current_app.route('/v1/towns/', methods=['GET'])
+@current_app.route('/v1/towns', methods=['GET'])
 @requires_auth
 def getTowns():
     cursor = mysqlConnector.get_db().cursor()

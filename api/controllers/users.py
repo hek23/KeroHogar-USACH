@@ -4,7 +4,7 @@ import json
 from helpers.Authenticator import requires_auth
 import bcrypt
 
-@current_app.route('/v1/users/', methods=['POST'])
+@current_app.route('/v1/users', methods=['POST'])
 def createUser():
     userData = request.get_json()
     query = "INSERT INTO clients (rut, name, password, email, phone, wholesaler) VALUES (\'{}\',\'{}\',\'{}\',\'{}\',\'{}\',{}) "
