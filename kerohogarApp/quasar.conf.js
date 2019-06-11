@@ -6,6 +6,7 @@ module.exports = function (ctx) {
     // --> boot files are part of "main.js"
     boot: [
       'fake-backend.js',
+      'axios.js'
     ],
 
     css: [
