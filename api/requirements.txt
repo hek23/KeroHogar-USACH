@@ -10,3 +10,4 @@ bson
 Flask-Login
 Flask-RESTful
 cryptography
+gunicorn

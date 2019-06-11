@@ -361,16 +361,16 @@ Body:
     delivery_date: 2018-12-28,
     time_block:[
     {
-        id: 3
+        "id": 3
     },
     {
-        id:2
+        "id":2
     }],
     products:[
     {
-        id:1,
-        format:2,
-        quantity:32
+        "id":1,
+        "format":2,
+        "quantity":32
     }]
 }
 ```
@@ -502,7 +502,8 @@ Lo anterior lanzará el programa que expone la API, usando variables definidos e
 Para la ejecución correcta de la API se necesitan variables de entorno, como datos específicos. Estos son los siguientes:
 
 - DB_USERNAME : representa el nombre de usuario usado en la base de datos
-- DB_DATABASE : representa el nombre de la base de datos creada en el proceso de - DB_PASSWORD: Contraseña del usuario para su udoam
+- DB_DATABASE : representa el nombre de la base de datos creada en el proceso de inicialización del admin
+- DB_PASSWORD: Contraseña del usuario para su uso
 - DB_HOST: Puerto para el acceso a la base de datos
-- DB_PORT: Puerto para aggreder a la base de datos
+- DB_PORT: Puerto para acceder a la base de datos
 - FLASKPORT (OPCIONAL): Puerto para exponer la API

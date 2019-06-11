@@ -21,12 +21,38 @@ def ordersByClient (ID):
         })
     return Response(json.dumps(orders), status=200, mimetype='application/json')
 
-#@current_app.route('/v1/clients/<ID>/orders', methods=['POST'])
-#@requires_auth
-#def createOrder(ID):
-#    orderDetails = request.get_json()
+#WIP
+@current_app.route('/v1/clients/<ID>/orders', methods=['POST'])
+@requires_auth
+def createOrder(ID):
+    orderDetails = request.get_json()
+    orderQuery = "INSERT INTO kerhogar.orders (address_id, delivery_status, payment_status, amount, delivery_date) VALUES ({},{},{},{},\'{}\')"
+    orderTimeBlockQuery =  "INSERT INTO kerhogar.order_time_block (order_id, time_block) VALUES ({}, {})"
+    orderProductQuery = "INSERT INTO kerhogar.order_product (order_id, product_id, product_format_id, quantity) VALUES ({},{},{},{}}"
+    getOrderID = "SELECT id FROM kerhogar.orders where address_id={} AND delivery_status={} payment_status={} AND amount={} AND delivery_date={})"
+    
+
+{
+    addressID: 1,
+    amount: 12391,
+    delivery_date: 2018-12-28,
+    time_block:[
+    {
+        "id": 3
+    },
+    {
+        "id":2
+    }],
+    products:[
+    {
+        "id":1,
+        "format":2,
+        "quantity":32
+    }]
+}
 
 
 #@current_app.route('/v1/clients/<ID>/orders/<orderID>', methods=['POST'])
 #@requires_auth
 #def getOrderDetails(ID, orderID):
+
