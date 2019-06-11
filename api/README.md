@@ -311,7 +311,7 @@ Resultado:
 #### Obtener detalle de una orden específica
 > Parámetro: IDCliente (URL) y IDOrden (URL)
 > Método: GET
-> Ruta: ```HOST/version/clients/IDClient/orders/IDOrden```
+> Ruta: ```HOST/version/orders/IDOrden```
 
 Resultado:
 ```javascript
