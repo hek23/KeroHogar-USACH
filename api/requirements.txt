@@ -9,5 +9,6 @@ requests==2.18.1
 bson
 Flask-Login
 Flask-RESTful
+flask_cors
 cryptography
 gunicorn

@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 import markdown
 import os                     
 import json
@@ -6,6 +7,7 @@ import datetime
 
 #App initialization
 app = Flask(__name__)
+cors = CORS(app, resources={r"/v1/*": {"origins": "*"}})
 # MySQL configurations
 app.config['MYSQL_DATABASE_USER'] = os.getenv('DB_USERNAME','user')
 app.config['MYSQL_DATABASE_PASSWORD'] = os.getenv('DB_PASSWORD','pass')
