@@ -9,6 +9,21 @@ export const authentication = {
     namespaced: true,
     state: initialState,
     actions: {
+        register({ commit, dispatch }, formUser) {
+            commit('registerRequest', { rut });
+
+            userService.register(formUser)
+                .then(
+                    user => {
+                        commit('registerSuccess', user);
+                        dispatch('login', {name: formUser.rut, password: formUser.password});
+                    },
+                    error => {
+                        commit('registerFailure', error);
+                        dispatch('alert/error', error, { root: true });
+                    }
+                );
+        },
         login({ dispatch, commit }, { rut, password }) {
             commit('loginRequest', { rut });
 
@@ -30,6 +45,18 @@ export const authentication = {
         }
     },
     mutations: {
+        registerRequest(state, user) {
+            state.status = { registering: true };
+            state.user = user;
+        },
+        registerSuccess(state, user) {
+            state.status = { registered: true };
+            state.user = user;
+        },
+        registerFailure(state) {
+            state.status = {};
+            state.user = null;
+        },
         loginRequest(state, user) {
             state.status = { loggingIn: true };
             state.user = user;
@@ -47,4 +74,8 @@ export const authentication = {
             state.user = null;
         }
     }
+}
+
+function setAxiosHeaders(token) {
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
 }

@@ -3,7 +3,7 @@
     <div class="q-pa-md" style="max-width:1000px;margin:0 auto;">
 
         <q-form
-          @submit="onSubmit"
+          @submit="submitUser()"
           class="q-gutter-y-md full-width"
         >
           <div class="row">
@@ -78,10 +78,10 @@
               filled
               v-model="comuna"
               :options="comunas"
+              label="Comuna"
               option-value="id"
               option-label="name"
-              emit-value
-              map-options
+              :rules="[val => !!val && val != 0 || 'Por favor escoger comuna']"
             />
             </div>
             <div class="col-7">
@@ -99,7 +99,16 @@
 
           <q-separator />
           <div class="float-left">
-            <q-btn label="Registrarse" type="submit" color="primary" @click="registerUser()"/>
+            <q-btn
+              type="submit"
+              :loading="submitting"
+              label="Registrarse"
+              color="primary"
+            >
+              <template v-slot:loading>
+                <q-spinner-facebook />
+              </template>
+            </q-btn>
           </div>
           <div class="float-right">
             <q-btn label="Cancelar" color="grey" to="/" />
@@ -123,28 +132,14 @@ export default {
       streetNumber:null,
       //Select
       comuna: null,
+      submitting: false,
 
-      options: [
-        'Maipú', 'Peñalolen', 'La Reina', 'Buin', 'La Florida'
-      ],
-
-
-      options2: [
-        {
-          label: 'Google',
-          value: 'goog',
-          icon: 'mail'
-        },
-        {
-          label: 'Facebook',
-          value: 'fb',
-          icon: 'bluetooth'
-        },
-      ],
-
-      comunas: [],
-
-      accept: false
+      comunas: [{"id": 1, "name": "Las condes"}, {"id": 2, "name": "La reina"}, {"id": 3, "name": "\u00d1u\u00f1oa"}, {"id": 4, "name": "Providencia"}, {"id": 5, "name": "Vitacura"}],
+    }
+  },
+  computed: {
+    registering () {
+      return this.$store.state.authentication.status.registering;
     }
   },
   mounted () {
@@ -153,7 +148,10 @@ export default {
   },
 
   methods: {
-    onSubmit () {
+    submitUser () {
+      this.submitting = true;
+      this.registerUser();
+      /*
       if (this.comuna == null) {
         this.$q.notify({
           color: 'red-5',
@@ -169,7 +167,7 @@ export default {
           icon: 'fas fa-check-circle',
           message: 'Registrado con éxito'
         })
-      }
+      }*/
     },
 
     getTowns(){
@@ -183,7 +181,7 @@ export default {
         })
     },
 
-    registerUser:() => {
+    registerUser() {
       this.$axios.post('https://keroh-api.herokuapp.com/v1/users',{
         rut: this.rut,
         name: this.name,
@@ -192,10 +190,13 @@ export default {
         phone: this.contact,
         wholesaler: 0
       })
-      .then(function(response){
-        //_________La idea es llamarla aqui___________
-        // Se le pasa el id del usuario
-        //this.registerAddress(response.data.id)
+      .then((response) => {
+        this.registerAddress(response.data.id);
+        const { rut, password } = this;
+        const { dispatch } = this.$store;
+        if (rut && password) {
+            dispatch('authentication/login', { rut, password });
+        }
       })
       .catch(function(error){
         console.log(error)
@@ -203,12 +204,12 @@ export default {
     },
     registerAddress(id_user){
       this.$axios.post('https://keroh-api.herokuapp.com/v1/users/'+id_user.toString()+'/addresses',{
-        townID: this.comuna,
+        townID: this.comuna.id,
         addr: this.streetNumber,
-        alias: "defaultAlias"
+        alias: "Hogar"
       })
-      .then(function(response){
-        console.log(response)
+      .then((response) => {
+        this.submitting = false;
       })
       .catch(function(error){
         console.log(error)

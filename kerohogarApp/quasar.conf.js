@@ -79,7 +79,6 @@ module.exports = function (ctx) {
       // gzip: true,
       // analyze: true,
       // extractCSS: false,
-      apiUrl: 'http://localhost:4000',
       extendWebpack (cfg) {
       }
     },
