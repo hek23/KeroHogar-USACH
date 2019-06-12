@@ -1,10 +1,11 @@
 from helpers import mysqlConnector
 from flask import current_app, g, Response
 import json
-from helpers.Authenticator import requires_auth
+from flask_jwt_extended import jwt_required
+from .users import user_required
 
 @current_app.route('/v1/towns', methods=['GET'])
-@requires_auth
+@user_required
 def getTowns():
     cursor = mysqlConnector.get_db().cursor()
     cursor.execute("SELECT id, name FROM towns;")

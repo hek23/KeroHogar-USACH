@@ -1,10 +1,11 @@
 from helpers import mysqlConnector
 from flask import current_app, g, Response
 import json
-from helpers.Authenticator import requires_auth
+from flask_jwt_extended import jwt_required
+from .users import user_required
 
 @current_app.route('/v1/timeblocks/available/<date>', methods=['GET'])
-@requires_auth
+@user_required
 def getAvailableTimeBlocks(date):
     query = "SELECT otb.time_block_id, COUNT(*) FROM orders o INNER JOIN order_time_block otb on o.id=otb.order_id where o.delivery_date = \'{}\' AND o.delivery_status=1 GROUP BY o.delivery_date, otb.time_block_id ORDER BY o.delivery_date;"
     cursor = mysqlConnector.get_db().cursor()

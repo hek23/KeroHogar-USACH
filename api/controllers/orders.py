@@ -1,10 +1,11 @@
 from helpers import mysqlConnector
 from flask import current_app, g, Response, request
 import json
-from helpers.Authenticator import requires_auth
+from flask_jwt_extended import jwt_required
+from .users import user_required
 
 @current_app.route('/v1/clients/<ID>/orders', methods=['GET'])
-@requires_auth
+@user_required
 def ordersByClient (ID):
     query = "SELECT id, delivery_status, payment_status, amount, delivery_date FROM clients WHERE client_id={}"
     cursor = mysqlConnector.get_db().cursor()
@@ -23,7 +24,7 @@ def ordersByClient (ID):
 
 #WIP
 @current_app.route('/v1/clients/<ID>/orders', methods=['POST'])
-@requires_auth
+@user_required
 def createOrder(ID):
     orderDetails = request.get_json()
     orderQuery = "INSERT INTO orders (address_id, delivery_status, payment_status, amount, delivery_date) VALUES ({},{},{},{},\'{}\')"
@@ -47,7 +48,7 @@ def createOrder(ID):
     return Response(status=201, response=json.dumps({"id":orderID}), mimetype="application/json")
 
 @current_app.route('/v1/orders/<orderID>', methods=['POST'])
-@requires_auth
+@user_required
 def getOrderDetails(ID, orderID):
     orderQuery = "SELECT "
     pass

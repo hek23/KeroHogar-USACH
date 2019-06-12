@@ -1,10 +1,11 @@
 from helpers import mysqlConnector
 from flask import current_app, g, Response
 import json
-from helpers.Authenticator import requires_auth
+from flask_jwt_extended import jwt_required
+from .users import user_required
 
 @current_app.route('/v1/products/<Id>/formats',methods=['GET'])
-@requires_auth
+@user_required
 def getFormatsByProduct(Id):
 	sqlQuery = "SELECT id, name, capacity, added_price, minimum_quantity FROM product_formats where product_id={};"
 	cursor = mysqlConnector.get_db().cursor()
@@ -26,7 +27,7 @@ def getFormatsByProduct(Id):
 	return Response(json.dumps(formats), mimetype='application/json')
 
 @current_app.route('/v1/products/<ProdId>/formats/<FormId>',methods=['GET'])
-@requires_auth
+@user_required
 def getFormatByProduct(ProdId,FormId):
 	sqlQuery = "SELECT name, capacity, added_price, minimum_quantity FROM product_formats where product_id={} and id={};"
 	cursor = mysqlConnector.get_db().cursor()

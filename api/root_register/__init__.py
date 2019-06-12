@@ -4,6 +4,8 @@ import markdown
 import os                     
 import json
 import datetime
+from flask_jwt_extended import JWTManager
+
 
 #App initialization
 app = Flask(__name__)
@@ -14,6 +16,8 @@ app.config['MYSQL_DATABASE_PASSWORD'] = os.getenv('DB_PASSWORD','pass')
 app.config['MYSQL_DATABASE_DB'] = os.getenv('DB_DATABASE','db')
 app.config['MYSQL_DATABASE_HOST'] = os.getenv('DB_HOST','localhost')
 app.config['MYSQL_DATABASE_PORT'] = int(os.getenv('DB_PORT', '3306'))
+app.config['JWT_SECRET_KEY'] = 'super-secret'  # Change this!
+jwt = JWTManager(app)
 #Init DB Connections
 from helpers import mysqlConnector
 
