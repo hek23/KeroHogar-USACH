@@ -17,10 +17,10 @@ def getAllAdresses(UserID):
     addresses = []
     for addr in result:
         addresses.append({
-            id: addr[0],
-            town: addr[1],
-            addr: addr[2],
-            alias: addr[3]
+            "id": addr[0],
+            "town": addr[1],
+            "addr": addr[2],
+            "alias": addr[3]
     })
     cursor.close()
     return Response(json.dumps(addresses),  mimetype='application/json')
