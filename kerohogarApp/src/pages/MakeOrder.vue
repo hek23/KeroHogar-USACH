@@ -53,7 +53,7 @@
 
         <q-separator />
         <p class="text-center text-weight-bold text-body1 q-mt-md">Detalles de su compra</p>
-        <p class="text-body1">Precio unitario: {{product.price}}</p>
+        <p class="text-body1">Precio unitario: {{product.price}} <em v-if="discount">- {{discount}}</em> </p>
         <p v-if="format && format.added_price > 0" class="text-body1">Precio por bidón: {{format.added_price}}</p>
         <p class="text-body1">Cantidad total: {{realQuantity}} litros</p>
         <p class="text-body1">Subtotal: {{amount}}</p>
@@ -109,12 +109,17 @@ export default {
       productType: '',
       quantityMask: '',
 
-      discounts: []
+      discounts: [],
+      discount: null
     }
   },
   mounted () {    
     if(this.product == null || (this.product.has_formats && this.format == null) ) {
       return this.$router.push('/buy');
+    }
+
+    if(this.product.id == null) {
+      this.product.id = 1;
     }
 
     this.loadDiscounts();
@@ -140,20 +145,36 @@ export default {
       return dateString;
     },
     amount: function() {
+      this.discount = null;
       let unitPrice = this.product.price;
-      // Falta calcular descuento o usar precio de mayorista.
-
-
-      if(this.product.has_formats && this.format.capacity > 0) {
-        unitPrice *= this.format.capacity;
+      let actualQuantity = this.realQuantity;
+      // Falta revisar si usar precio de mayorista.
+      if(typeof this.discounts !== 'undefined' && this.discounts.length > 0) {
+        let maxDiscount = this.discounts[0];
+        for (let i = 0; i < this.discounts.length; i++) {
+          const element = this.discounts[i];
+          if(element.max_qty > maxDiscount.max_qty) {
+            maxDiscount = element;
+          }
+          if (actualQuantity >= element.min_qty && actualQuantity <= element.max_qty) {
+            unitPrice -= element.discount_per_liter;
+            this.discount = element.discount_per_liter;
+            break;
+          }
+        }
+        if(maxDiscount.max_qty < actualQuantity) {
+          unitPrice -= maxDiscount.discount_per_liter;
+          this.discount = maxDiscount.discount_per_liter;
+        }
       }
+      console.log(this.discounts);
 
       let extra_price = 0;
       if(this.product.has_formats) {
-        extra_price = this.order.quantity * this.format.added_price
+        extra_price = actualQuantity * this.format.added_price
       }
 
-      let totalPrice = unitPrice * this.order.quantity + extra_price;
+      let totalPrice = unitPrice * actualQuantity + extra_price;
       return totalPrice ? totalPrice : 0;
     },
     realQuantity: function() {
@@ -211,7 +232,28 @@ export default {
       }
     },
     loadDiscounts () {
-
+      this.$axios.get('https://keroh-api.herokuapp.com/v1/products/' + this.product.id + '/discounts')  
+        .then((response) => {
+          this.discounts = response.data
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    loadAddress () {
+      let user = localStorage.getItem('user');
+      if (user && user.id) {
+        this.$axios.get('https://keroh-api.herokuapp.com/v1/users/' + localStorage.getItem('user').id + '/addresses')  
+          .then((response) => {
+            this.order.addressID = response.data[0].id
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      } else {
+        this.order.addressID = 1;
+      }
+      
     },
 
     onSubmit () {
