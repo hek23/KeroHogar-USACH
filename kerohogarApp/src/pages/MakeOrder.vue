@@ -122,6 +122,7 @@ export default {
     }
 
     this.loadDiscounts();
+    this.loadAddress();
     this.calculateMinQuantity();
     this.calculateMaxQuantity();
     this.calculateProductType(); 
@@ -240,11 +241,12 @@ export default {
         })
     },
     loadAddress () {
-      let user = localStorage.getItem('user');
+      let user = JSON.parse(localStorage.getItem('user'));
       if (user && user.id) {
-        this.$axios.get('https://keroh-api.herokuapp.com/v1/users/' + localStorage.getItem('user').id + '/addresses')  
+        this.$axios.get('https://keroh-api.herokuapp.com/v1/users/' + user.id + '/addresses')  
           .then((response) => {
-            this.order.addressID = response.data[0].id
+            this.order.addressID = response.data[0].id;
+            console.log(this.order.addressID);
           })
           .catch((error) => {
             console.log(error)
@@ -273,14 +275,14 @@ export default {
         })
 
         
-        this.$axios.post('https://keroh-api.herokuapp.com/v1/clients/1/orders',{
+        this.$axios.post('https://keroh-api.herokuapp.com/v1/clients/' + JSON.parse(localStorage.getItem('user')).id + '/orders',{
 
           addressID: this.order.addressID,
           amount: this.amount,
           delivery_date: this.order.delivery_date.toString().replace(/\//g, "-"),
           time_block: this.order.time_block.map(opt => ({id: opt.id})),
           products: [{
-            id: 1,
+            id: this.product.id,
             format: this.format.id,
             quantity: this.order.quantity
           }]
