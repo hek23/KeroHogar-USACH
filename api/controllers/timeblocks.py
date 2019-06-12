@@ -15,15 +15,15 @@ def getAvailableTimeBlocks(date):
     bloques= []
     diaBase = []
     for hora in capacidad:
-        diaBase.append(str(hora[2]) + "-" + str(hora[3]))
+        diaBase.append({"id":hora[0], "start":str(hora[2]), "end":str(hora[3])})
 
     for bloque in capacidad:
         #Reset, dia terminado
         for ocupado in ocupacion:
             if(bloque[0] == ocupado[0]):
                 if(bloque[1] < ocupado[1]):
-                    diaBase.remove(str(bloque[2])+ "-" + str(bloque[3]))
-
+                    diaBase.remove({"id":bloque[0], "start":str(bloque[2]), "end":str(bloque[3])})
+    
     return Response(json.dumps(diaBase), mimetype = 'application/json')
 
 
