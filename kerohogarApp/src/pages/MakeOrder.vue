@@ -71,11 +71,10 @@
     <p>{{this.order.quantity}}</p>
     <p>{{this.format}}</p>
     <p>{{this.order.time_block}}</p>
+    <p>{{this.order.time_block.map(opt => ({id: opt.id}))}}</p>
     <p>{{this.order.delivery_date}}</p>
   </q-page>
 </template>
-
-
 
 <script>
 export default {
@@ -215,7 +214,7 @@ export default {
     },
 
     onSubmit () {
-      if (this.accept !== true) {
+      if (this.order.quantity == null) {
         this.$q.notify({
           color: 'red-5',
           textColor: 'white',
@@ -230,21 +229,29 @@ export default {
           icon: 'fas fa-check-circle',
           message: 'Submitted'
         })
-        /*this.$axios.post('https://keroh-api.herokuapp.com/v1/users',{
-          addressID: this.addressID,
+
+        var arr = [];
+        this.$axios.post('https://keroh-api.herokuapp.com/v1/clients/1/orders',{
+
+          addressID: this.order.addressID,
           amount: this.amount,
-          delivery_date: this.delivery_date,
-          time_block: this.time_block,
-          products: this.product
+          delivery_date: this.order.delivery_date.toString().replace(/\//g, "-"),
+          //this.comunas = response.data.map(opt => ({id: opt.id, label: opt.name}))
+
+          time_block: this.order.time_block.map(opt => ({id: opt.id})),
+          products: arr.push({
+            id: 1,
+            format: this.format.id,
+            quantity: this.order.quantity
+          })
+        
         })
         .then(function(response){
-          //_________La idea es llamarla aqui___________
-          // Se le pasa el id del usuario
-          //this.registerAddress(response.data.id)
+          console.log(error)
         })
         .catch(function(error){
           console.log(error)
-        });*/
+        });
         
 
 
