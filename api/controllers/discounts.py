@@ -7,7 +7,7 @@ from .users import user_required
 @current_app.route('/v1/products/<ProdID>/discounts', methods=['GET'])
 @user_required
 def getAllProductDiscounts(ProdID):
-	sqlQuery = "SELECT id, discount_per_liter, min_quantity, max_quantity FROM product_discounts where id={}"
+	sqlQuery = "SELECT id, discount_per_liter, min_quantity, max_quantity FROM product_discounts where product_id={}"
 	cursor = mysqlConnector.get_db().cursor()
 	cursor.execute(sqlQuery.format(ProdID))
 	result = cursor.fetchall()
@@ -29,7 +29,7 @@ def getAllProductDiscounts(ProdID):
 @current_app.route('/v1/discounts', methods=['GET'])
 @user_required
 def getAllDiscounts():
-	sqlQuery = "SELECT id, discount_per_liter, min_quantity, max_quantity. product_id FROM product_discounts"
+	sqlQuery = "SELECT id, discount_per_liter, min_quantity, max_quantity, product_id FROM product_discounts"
 	cursor = mysqlConnector.get_db().cursor()
 	cursor.execute(sqlQuery)
 	result = cursor.fetchall()
