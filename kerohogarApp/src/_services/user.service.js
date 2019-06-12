@@ -17,7 +17,7 @@ function register(user) {
 function login(rut, password) {
     return axios.post('https://keroh-api.herokuapp.com/v1/users/login', {
             name: rut,
-            password: password,
+            pass: password,
         })
         .then(function (response) {
             if (response.data.token) {
