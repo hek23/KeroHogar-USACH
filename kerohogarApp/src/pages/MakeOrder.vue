@@ -67,12 +67,6 @@
       </q-form>
 
     </div>
-    <p>{{this.product}}</p>
-    <p>{{this.order.quantity}}</p>
-    <p>{{this.format}}</p>
-    <p>{{this.order.time_block}}</p>
-    <p>{{this.order.time_block.map(opt => ({id: opt.id}))}}</p>
-    <p>{{this.order.delivery_date}}</p>
   </q-page>
 </template>
 
