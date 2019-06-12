@@ -473,7 +473,7 @@ Resultado:
 ```HTTP 200 OK```con body 
 
 ```javascript
-{"token":"$2b$12$kcQIuRVkAUk2z/g2TzzOM.7Pv5odfq61Q10ClMUhk3XsHvl0X8YrS"}
+{"id":2,"token":"$2b$12$kcQIuRVkAUk2z/g2TzzOM.7Pv5odfq61Q10ClMUhk3XsHvl0X8YrS"}
 
 ```
 

@@ -57,7 +57,7 @@ def login():
         return Response(mimetype='application/json', status = 400, response=json.dumps({"msg": "Username missing"}))
     if not userData['pass']:
         return Response(mimetype='application/json', status = 400, response=json.dumps({"msg": "Password missing"}))
-    query = "SELECT password FROM clients where rut=\'{}\'"
+    query = "SELECT password, id FROM clients where rut=\'{}\'"
     cursor = mysqlConnector.get_db().cursor()
     cursor.execute(query.format(userData['name']))
     pwd = cursor.fetchone()
@@ -67,7 +67,6 @@ def login():
     if not(bcrypt.checkpw(userData['pass'].encode('utf-8'), pwd[0].encode('utf-8'))):
         return Response (mimetype='application/json', status = 401)
     else:
-        #token = bcrypt.hashpw((userData['name']+pwd[0]).encode('utf-8') , bcrypt.gensalt(12))
-        return Response(mimetype='application/json', status = 200, response=json.dumps({"token": create_access_token(identity=(userData['name'] +"::" +pwd[0]))}))
+        return Response(mimetype='application/json', status = 200, response=json.dumps({"id":pwd[1] ,"token": create_access_token(identity=(userData['name'] +"::" +pwd[0]))}))
 
 
