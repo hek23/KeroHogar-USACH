@@ -35,8 +35,8 @@ def createOrder(ID):
     #
     #first insert order query
     #Status are false by default
-    cursor.execute(orderQuery.format(orderDetails['addressID'],0,0,amount,orderDetails['delivery_date']))
-    cursor.execute(getOrderID.format(orderDetails['addressID'],0,0,amount,orderDetails['delivery_date']))
+    cursor.execute(orderQuery.format(orderDetails['addressID'],0,0,orderDetails['amount'],orderDetails['delivery_date']))
+    cursor.execute(getOrderID.format(orderDetails['addressID'],0,0,orderDetails['amount'],orderDetails['delivery_date']))
     mysqlConnector.get_db().commit()
     orderID = cursor.fetchall()[-1][0]
     #Then orderTimeBlock
