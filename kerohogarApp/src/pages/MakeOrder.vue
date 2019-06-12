@@ -67,6 +67,11 @@
       </q-form>
 
     </div>
+    <p>{{this.product}}</p>
+    <p>{{this.order.quantity}}</p>
+    <p>{{this.format}}</p>
+    <p>{{this.order.time_block}}</p>
+    <p>{{this.order.delivery_date}}</p>
   </q-page>
 </template>
 
@@ -225,6 +230,24 @@ export default {
           icon: 'fas fa-check-circle',
           message: 'Submitted'
         })
+        /*this.$axios.post('https://keroh-api.herokuapp.com/v1/users',{
+          addressID: this.addressID,
+          amount: this.amount,
+          delivery_date: this.delivery_date,
+          time_block: this.time_block,
+          products: this.product
+        })
+        .then(function(response){
+          //_________La idea es llamarla aqui___________
+          // Se le pasa el id del usuario
+          //this.registerAddress(response.data.id)
+        })
+        .catch(function(error){
+          console.log(error)
+        });*/
+        
+
+
       }
     },
     //Para hacer la peticion al backend
@@ -246,29 +269,13 @@ export default {
                 message: 'Selecciona un horario'           
             })
 
-            this.horarios = [
-                {
-                 id:2,
-                 start:"9:00",
-                 end:"10:00",
-                },
-                {
-                 id:3,
-                 start:"10:00",
-                 end:"11:00",
-                },
-                {
-                 id:4,
-                 start:"11:00",
-                 end:"12:00",
-                },
-                {
-                 id:5,
-                 start:"12:00",
-                 end:"13:00",
-                }
-            ]
-            
+            this.$axios.get('https://keroh-api.herokuapp.com/v1/timeblocks/available/'+this.order.delivery_date.toString().replace(/\//g, "-"))  
+              .then((response) => {
+                this.horarios = response.data
+              })
+              .catch((error) => {
+                console.log(error)
+              })            
         }
     }
   }
