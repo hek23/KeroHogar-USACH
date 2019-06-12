@@ -26,12 +26,12 @@ def getAllProductDiscounts(ProdID):
 	return Response(json.dumps(discounts),  mimetype='application/json')
 
 
-@current_app.route('/v1/products/discounts', methods=['GET'])
+@current_app.route('/v1/discounts', methods=['GET'])
 @user_required
 def getAllDiscounts():
-	sqlQuery = "SELECT id, discount_per_liter, min_quantity, max_quantity. product_id FROM product_discounts "
+	sqlQuery = "SELECT id, discount_per_liter, min_quantity, max_quantity. product_id FROM product_discounts"
 	cursor = mysqlConnector.get_db().cursor()
-	cursor.execute(sqlQuery.format(ProdID))
+	cursor.execute(sqlQuery)
 	result = cursor.fetchall()
 	if(result is None):
 		cursor.close()
