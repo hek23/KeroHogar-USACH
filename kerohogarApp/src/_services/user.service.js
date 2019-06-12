@@ -28,14 +28,15 @@ function login(rut, password) {
             return response.data;
         })
         .catch(function (error) {
-            if (error.response) {
-                if (error.response.status === 401) {
+            const response = error.response;
+            if (response) {
+                if (response.status === 401) {
                     // auto logout if 401 response returned from api
                     logout();
                     location.reload(true);
                 }
-
-                const error = (data && data.message) || error.response.statusText;
+                
+                const error = 'Rut o contraseña incorrecta.';
                 return Promise.reject(error);
             }
         });
@@ -48,23 +49,4 @@ function setAxiosHeaders(token) {
 function logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('user');
-}
-
-function handleResponse(response) {
-    return (text => {
-        console.log(text);
-        const data = text;
-        if (!response.ok) {
-            if (response.status === 401) {
-                // auto logout if 401 response returned from api
-                logout();
-                location.reload(true);
-            }
-
-            const error = (data && data.message) || response.statusText;
-            return Promise.reject(error);
-        }
-
-        return data;
-    });
 }
