@@ -33,7 +33,7 @@
           icon-right="done_outline" 
           label="Iniciar sesión"
           type="submit"
-          :loading="logging_in"
+          :loading="loggingIn"
         >
           <template v-slot:loading>
             <q-spinner-facebook />
@@ -60,8 +60,7 @@ export default {
        return{
         rut: '',
         password: '',
-        isPwd: true,
-        logging_in: false
+        isPwd: true
       }
     },
     mounted () {
@@ -78,14 +77,11 @@ export default {
     },
 
     methods:{
-      ingresar (e) {
-        this.logging_in = true;
-
+      ingresar () {
         const { rut, password } = this;
         const { dispatch } = this.$store;
         if (rut && password) {
             dispatch('authentication/login', { rut, password });
-            this.logging_in = false;
         }
 
         /*

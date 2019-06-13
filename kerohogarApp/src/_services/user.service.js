@@ -1,49 +1,52 @@
 import { authHeader } from '../_helpers';
+import axios from 'axios';
 
 export const userService = {
+    register,
     login,
     logout
 };
 
+function register(user) {
+    return axios.post('https://keroh-api.herokuapp.com/v1/users/login', user)
+        .then(response => {
+            return response;
+        })
+}
+
 function login(rut, password) {
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ rut, password })
-    };
-
-    return fetch(`${process.env.apiUrl}/users/authenticate`, requestOptions)
-        .then(handleResponse)
-        .then(user => {
-            // login successful if there's a jwt token in the response
-            if (user.token) {
+    return axios.post('https://keroh-api.herokuapp.com/v1/users/login', {
+            name: rut,
+            pass: password,
+        })
+        .then(function (response) {
+            if (response.data.token) {
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
-                localStorage.setItem('user', JSON.stringify(user));
+                localStorage.setItem('user', JSON.stringify(response.data));
+                setAxiosHeaders(response.data.token)
             }
-
-            return user;
+            return response.data;
+        })
+        .catch(function (error) {
+            const response = error.response;
+            if (response) {
+                if (response.status === 401) {
+                    // auto logout if 401 response returned from api
+                    logout();
+                    location.reload(true);
+                }
+                
+                const error = 'Rut o contraseña incorrecta.';
+                return Promise.reject(error);
+            }
         });
+}
+
+function setAxiosHeaders(token) {
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
 }
 
 function logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('user');
-}
-
-function handleResponse(response) {
-    return response.text().then(text => {
-        const data = text && JSON.parse(text);
-        if (!response.ok) {
-            if (response.status === 401) {
-                // auto logout if 401 response returned from api
-                logout();
-                location.reload(true);
-            }
-
-            const error = (data && data.message) || response.statusText;
-            return Promise.reject(error);
-        }
-
-        return data;
-    });
 }
