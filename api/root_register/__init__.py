@@ -16,7 +16,7 @@ app.config['MYSQL_DATABASE_PASSWORD'] = os.getenv('DB_PASSWORD','pass')
 app.config['MYSQL_DATABASE_DB'] = os.getenv('DB_DATABASE','db')
 app.config['MYSQL_DATABASE_HOST'] = os.getenv('DB_HOST','localhost')
 app.config['MYSQL_DATABASE_PORT'] = int(os.getenv('DB_PORT', '3306'))
-app.config['JWT_SECRET_KEY'] = os.getenv('JWT_KEY', super-secret)  # Change this!
+app.config['JWT_SECRET_KEY'] = os.getenv('JWT_KEY', 'super-secret')  # Change this!
 jwt = JWTManager(app)
 #Init DB Connections
 from helpers import mysqlConnector
