@@ -150,7 +150,7 @@ export default {
           if(element.max_qty > maxDiscount.max_qty) {
             maxDiscount = element;
           }
-          if (actualQuantity >= element.min_qty && actualQuantity <= element.max_qty) {
+          if (actualQuantity >= element.min_qty && actualQuantity < element.max_qty) {
             unitPrice -= element.discount_per_liter;
             this.discount = element.discount_per_liter;
             break;
@@ -165,7 +165,7 @@ export default {
 
       let extra_price = 0;
       if(this.product.has_formats) {
-        extra_price = actualQuantity * this.format.added_price
+        extra_price = this.order.quantity * this.format.added_price
       }
 
       let totalPrice = unitPrice * actualQuantity + extra_price;
@@ -226,7 +226,7 @@ export default {
       }
     },
     loadDiscounts () {
-      this.$axios.get('https://keroh-api.herokuapp.com/v1/products/' + this.product.id + '/discounts')  
+      this.$axios.get('http://localhost:5000/v1/products/' + this.product.id + '/discounts')  
         .then((response) => {
           this.discounts = response.data
         })
@@ -237,7 +237,7 @@ export default {
     loadAddress () {
       let user = JSON.parse(localStorage.getItem('user'));
       if (user && user.id) {
-        this.$axios.get('https://keroh-api.herokuapp.com/v1/users/' + user.id + '/addresses')  
+        this.$axios.get('http://localhost:5000/v1/users/' + user.id + '/addresses')  
           .then((response) => {
             this.order.addressID = response.data[0].id;
             console.log(this.order.addressID);
@@ -269,7 +269,7 @@ export default {
         })
 
         
-        this.$axios.post('https://keroh-api.herokuapp.com/v1/clients/' + JSON.parse(localStorage.getItem('user')).id + '/orders',{
+        this.$axios.post('http://localhost:5000/v1/clients/' + JSON.parse(localStorage.getItem('user')).id + '/orders',{
 
           addressID: this.order.addressID,
           amount: this.amount,
@@ -278,7 +278,7 @@ export default {
           products: [{
             id: this.product.id,
             format: this.format.id,
-            quantity: this.order.quantity
+            quantity: this.realQuantity
           }]
         
         })
@@ -312,7 +312,7 @@ export default {
                 message: 'Selecciona un horario'           
             })
 
-            this.$axios.get('https://keroh-api.herokuapp.com/v1/timeblocks/available/'+this.order.delivery_date.toString().replace(/\//g, "-"))  
+            this.$axios.get('http://localhost:5000/v1/timeblocks/available/'+this.order.delivery_date.toString().replace(/\//g, "-"))  
               .then((response) => {
                 this.horarios = response.data
               })

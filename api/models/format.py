@@ -2,6 +2,9 @@ from helpers import mysqlConnector
 
 class Format:
 
-    def getFormatByProduct():
+    def getAll():
+        pass
+
+    def getFormatByProductID(productID):
         pass
         

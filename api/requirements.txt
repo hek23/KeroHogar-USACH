@@ -9,3 +9,8 @@ requests==2.18.1
 bson
 Flask-Login
 Flask-RESTful
+flask_cors
+cryptography
+gunicorn
+bcrypt==3.1.6
+flask-jwt-extended

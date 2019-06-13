@@ -1,5 +1,9 @@
 # API
 
+## Tabla de contenidos
+
+TBD
+
 ## Formato
 
 Las llamadas de API contienen el formato estandard de REST, siendo de siguiente manera:
@@ -113,22 +117,25 @@ Resultado:
 ##### Obtener cierto formato de cierto producto:
 
 > Parámetro: ID de producto e ID formato
-> Ruta: ```HOST/version/product/ID/formats/IDFORMAT```
+> Ruta: ```HOST/version/products/ID/formats/IDFORMAT```
 > Método: GET
 
 Resultado: 
 ```javascript
 {
-    name: "Producto",
-    price: "Precio"
-    has_formats: true/false
+    name: "bidon grande",
+    capacity: 50,
+    added_price: 7,
+    minimum_quantity: 30
 }
 ```
+
+### Descuentos
 
 #### Obtener descuentos de cierto producto:
 
 > Parámetro: ID de producto (URL)
-> Ruta: ```HOST/version/product/ID/discounts```
+> Ruta: ```HOST/version/products/ID/discounts```
 > Método: GET
 
 Resultado: 
@@ -148,6 +155,29 @@ Resultado:
     }
 ]
 ```
+
+### Ciudades
+
+#### Obtener todas las ciudades
+
+> Parámetro: Ninguno
+> Método: GET
+> Ruta: ```HOST/version/towns```
+
+Resultado: 
+```javascript
+[
+    {
+        id: 1,
+        name: "Providencia"
+    },
+    {
+        id: 2,
+        name: "Vitacura"
+    }
+]
+```
+
 
 ### Direcciones (VER EXPLICACIÓN!)
 
@@ -250,25 +280,6 @@ Resultado:
 ]
 ```
 
-#### Obtener a que productos se aplica cierto descuento
-
-> Parámetro: Id Descuento (URL)
-> Método: GET
-> Ruta: ```HOST/version/discounts/IDDESCUENTO```
-
-Resultado:
-
-```javascript
-[
-    {
-        id: 1,
-        name: "Producto",
-        price: 321,
-        has_formats: true
-    }
-]
-```
-
 ### Pedido/Orden
 
 #### Obtener todos los pedidos de un usuario
@@ -300,7 +311,7 @@ Resultado:
 #### Obtener detalle de una orden específica
 > Parámetro: IDCliente (URL) y IDOrden (URL)
 > Método: GET
-> Ruta: ```HOST/version/clients/IDClient/orders/IDOrden```
+> Ruta: ```HOST/version/orders/IDOrden```
 
 Resultado:
 ```javascript
@@ -350,40 +361,158 @@ Body:
     delivery_date: 2018-12-28,
     time_block:[
     {
-        id: 3
+        "id": 3
     },
     {
-        id:2
+        "id":2
     }],
     products:[
     {
-        id:1,
-        format:2,
-        quantity:32
+        "id":1,
+        "format":2,
+        "quantity":32
     }]
 }
 ```
 
 Resultado: ```HTTP 201 CREATED```
+Body:
+```javascript
+{
+    "id":1
+}
+```
+
+
 
 
 ### Bloques de tiempo
-Obtener los bloques de tiempo disponibles
 
-> Parámetro: Estado (available en la ruta)
+#### Obtener los bloques de tiempo disponibles
+
+> Parámetro: Fecha (YYYY-MM-DD)
 > Método: GET
-> Ruta: ```HOST/version/timeblocks/available```
+> Ruta: ```HOST/version/timeblocks/available/DATE```
 
 
 Resultado:
 ```javascript
 [
     {
+    "id":2,
     "start":"9:00",
-    "end": "10:00"
+    "end":"10:00"
     }
 ]
 
 ```
 
+### Usuario/Cliente
 
+#### Crear nuevo usuario
+
+> Parámetro: información para crear nuevo usuario (body)
+> Método: POST
+> Ruta: ```HOST/version/users```
+
+Body: 
+```javascript
+{
+    "rut":"1-9",
+    "name":"Maria Les Papas",
+    "pass": "NoPondreDatos",
+    "email": "malepapa@pericos.cl",
+    "phone": "+5696212342",
+    "wholesaler": 1
+}
+```
+
+Resultado:
+```javascript
+{
+    "id": 1
+}
+```
+
+#### Editar usuario
+
+> Parámetro: información para editar nuevo usuario (body) e id de Usuario (URL)
+> Método: PUT
+> Ruta: ```HOST/version/users/idUser```
+
+Body: 
+```javascript
+{
+    "rut":"1-9",
+    "name":"Maria Les Papas",
+    "pass": "NoPondreDatos",
+    "email": "malepapa@pericos.cl",
+    "phone": "+5696212342",
+    "wholesaler": 1
+}
+```
+
+Resultado:
+```HTTP 200 OK```
+
+#### Ingresar (login)
+
+Dado que practicamente todas las funcionalidades anteriores requieren autetificación, esta se implementó con JWT. Así en los headers se espera que venga el token con la llave "Authentification"
+
+> Parámetro: nombre de usuario y contraseña (Body)
+> Método: POST
+> Ruta: ```HOST/version/users/login```
+
+Body: 
+```javascript
+{ "user": "1-9", "pass":"NoPondreDatos"}
+
+```
+
+Resultado:
+```HTTP 200 OK```con body 
+
+```javascript
+{"id":2,"token":"$2b$12$kcQIuRVkAUk2z/g2TzzOM.7Pv5odfq61Q10ClMUhk3XsHvl0X8YrS"}
+
+```
+
+ o ``` HTTP 401 UNAUTHORIZED```
+
+## Instalación y requisitos
+
+### Requisitos
+- Base de datos MySQL 5.7 o patch version similar.
+- Python 3.7 o superior
+- Pip3
+- Configuradas las variables de entorno para "database" en admin_page
+
+### Instalación
+
+Para la instalación de la API, se deben instalar las dependencias. Esto se realiza con pip. En el caso de que se tengan dos versiones de pip y python (Ubuntu 18 por ejemplo), se utiliza de la siguiente manera:
+
+```sh
+pip3 install -r requirements.txt
+```
+
+En el caso de no tener dos versiones de python y/o pip, solo con "pip" en lugar de "pip3" es suficiente
+
+### Ejecución
+
+Para hacer correr la API, luego de instaladas las dependencias, se debe ejecutar el siguiente comando:
+
+```sh
+python3 start.py
+```
+Lo anterior lanzará el programa que expone la API, usando variables definidos en el entorno de sistema (vease el siguiente punto).
+
+### Variables de entorno necesarias
+
+Para la ejecución correcta de la API se necesitan variables de entorno, como datos específicos. Estos son los siguientes:
+
+- DB_USERNAME : representa el nombre de usuario usado en la base de datos
+- DB_DATABASE : representa el nombre de la base de datos creada en el proceso de inicialización del admin
+- DB_PASSWORD: Contraseña del usuario para su uso
+- DB_HOST: Puerto para el acceso a la base de datos
+- DB_PORT: Puerto para acceder a la base de datos
+- FLASKPORT (OPCIONAL): Puerto para exponer la API

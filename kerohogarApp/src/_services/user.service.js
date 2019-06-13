@@ -3,19 +3,20 @@ import axios from 'axios';
 
 export const userService = {
     register,
+    registerAddress,
     login,
     logout
 };
 
 function register(user) {
-    return axios.post('https://keroh-api.herokuapp.com/v1/users/login', user)
+    return axios.post('http://localhost:5000/v1/users/login', user)
         .then(response => {
             return response;
         })
 }
 
 function login(rut, password) {
-    return axios.post('https://keroh-api.herokuapp.com/v1/users/login', {
+    return axios.post('http://localhost:5000/v1/users/login', {
             name: rut,
             pass: password,
         })
@@ -40,6 +41,17 @@ function login(rut, password) {
                 return Promise.reject(error);
             }
         });
+}
+
+function registerAddress(address) {
+    let user = JSON.parse(localStorage.getItem('user'));
+    if (user && user.id) {
+        return axios.post('http://localhost:5000/v1/users/' + user.id + '/addresses', {
+            townID: address.townID,
+            addr: address.addr,
+            alias: "Hogar"
+        });
+    }
 }
 
 function setAxiosHeaders(token) {

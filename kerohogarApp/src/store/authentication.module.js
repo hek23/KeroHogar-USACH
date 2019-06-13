@@ -24,13 +24,16 @@ export const authentication = {
                     }
                 );
         },
-        login({ dispatch, commit }, { rut, password }) {
+        login({ dispatch, commit }, { rut, password, address }) {
             commit('loginRequest', { rut });
 
             userService.login(rut, password)
                 .then(
                     user => {
                         commit('loginSuccess', user);
+                        if(address) {
+                            userService.registerAddress(address);
+                        }
                         this.$router.push('/buy');
                     },
                     error => {
