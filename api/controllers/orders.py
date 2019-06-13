@@ -62,7 +62,7 @@ def createOrder(ID):
         
         #Normal price
         cursor.execute(priceQuery.format(product['id']))
-        amount = cursor.fetchone()[0] * product['quantity'] + amount
+        amount = int(cursor.fetchone()[0]) * int(product['quantity']) + amount
         #Apply Discounts
         #cursor.execute("SELECT discount_per_liter FROM product_discounts WHERE (min_quantity>{0} OR min_quantity={0}) AND (max_quantity<{0} OR min_quantity={0})".format(formatID))
         try:
