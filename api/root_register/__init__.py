@@ -1,16 +1,23 @@
 from flask import Flask
+from flask_cors import CORS
 import markdown
 import os                     
 import json
 import datetime
+from flask_jwt_extended import JWTManager
+
 
 #App initialization
 app = Flask(__name__)
+cors = CORS(app, resources={r"/v1/*": {"origins": "*"}})
 # MySQL configurations
-app.config['MYSQL_DATABASE_USER'] = os.getenv('USERDB','user')
-app.config['MYSQL_DATABASE_PASSWORD'] = os.getenv('PASSWORDDB','pass')
-app.config['MYSQL_DATABASE_DB'] = os.getenv('DBNAME','db')
-app.config['MYSQL_DATABASE_HOST'] = os.getenv('HOSTDB','localhost')
+app.config['MYSQL_DATABASE_USER'] = os.getenv('DB_USERNAME','user')
+app.config['MYSQL_DATABASE_PASSWORD'] = os.getenv('DB_PASSWORD','pass')
+app.config['MYSQL_DATABASE_DB'] = os.getenv('DB_DATABASE','db')
+app.config['MYSQL_DATABASE_HOST'] = os.getenv('DB_HOST','localhost')
+app.config['MYSQL_DATABASE_PORT'] = int(os.getenv('DB_PORT', '3306'))
+app.config['JWT_SECRET_KEY'] = os.getenv('JWT_KEY', 'super-secret')  # Change this!
+jwt = JWTManager(app)
 #Init DB Connections
 from helpers import mysqlConnector
 
@@ -23,18 +30,4 @@ with app.app_context():
 
 @app.route("/")
 def index():
-  #Dummy Insert
-  cursor = mysqlConnector.get_db().cursor()
-  query = "INSERT INTO Clients (rut, name, password, email,phone, wholesaler) values \'{}\',\'{}\',\'{}\',\'{}\',\'{}\',\'{}\';"
-  cursor.execute(query.format(self.asList()))
-  mysqlConnector.get_db().commit()
-  cursor.close()
-  #Test Select
-  cursor = mysqlConnector.get_db().cursor()
-  query = "SELECT * FROM Clients"
-  cursor.execute(query.format(rut))
-  mysqlConnector.get_db().commit()
-  result = cursor.fetchone()
-  cursor.close()
-  print(result)
-  return true
+  return "It's DAMN TRUE"

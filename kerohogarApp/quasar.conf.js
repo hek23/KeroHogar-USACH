@@ -5,6 +5,8 @@ module.exports = function (ctx) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     boot: [
+      'fake-backend.js',
+      'axios.js'
     ],
 
     css: [
@@ -41,13 +43,21 @@ module.exports = function (ctx) {
         'QInput',
         'QForm',
         'QSelect',
+        'QDate',
         'QCard',
         'QCardSection',
-        'QCardActions'
+        'QCardActions',
+        'QImg',
+        'QOptionGroup',
+        
+        'QSpinnerFacebook',
+        'QSeparator',
+        'QPopupProxy',
       ],
 
       directives: [
-        'Ripple'
+        'Ripple',
+        'ClosePopup'
       ],
 
       // Quasar plugins
