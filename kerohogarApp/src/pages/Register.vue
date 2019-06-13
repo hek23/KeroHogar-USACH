@@ -171,7 +171,7 @@ export default {
     },
 
     getTowns(){
-        this.$axios.get('https://keroh-api.herokuapp.com/v1/towns')  
+        this.$axios.get('http://localhost:5000/v1/towns')  
         .then((response) => {
           //this.comunas = response.data.map(opt => ({id: opt.id, label: opt.name}))
           this.comunas = response.data
@@ -182,7 +182,7 @@ export default {
     },
 
     registerUser() {
-      this.$axios.post('https://keroh-api.herokuapp.com/v1/users',{
+      this.$axios.post('http://localhost:5000/v1/users',{
         rut: this.rut,
         name: this.name,
         pass: this.password,
@@ -203,7 +203,7 @@ export default {
       });
     },
     registerAddress(id_user){
-      this.$axios.post('https://keroh-api.herokuapp.com/v1/users/'+id_user.toString()+'/addresses',{
+      this.$axios.post('http://localhost:5000/v1/users/'+id_user.toString()+'/addresses',{
         townID: this.comuna.id,
         addr: this.streetNumber,
         alias: "Hogar"
