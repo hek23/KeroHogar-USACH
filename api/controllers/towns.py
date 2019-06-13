@@ -5,7 +5,6 @@ from flask_jwt_extended import jwt_required
 from .users import user_required
 
 @current_app.route('/v1/towns', methods=['GET'])
-@user_required
 def getTowns():
     cursor = mysqlConnector.get_db().cursor()
     cursor.execute("SELECT id, name FROM towns;")
