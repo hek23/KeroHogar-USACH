@@ -51,6 +51,11 @@
 
 export default {
   mounted () {
+    let user = JSON.parse(localStorage.getItem('user'));
+    if (user && user.id) {
+      this.$axios.defaults.headers.common['Authorization'] = 'Bearer ' + user.token;
+    }
+    
     this.$emit('title', "Kerohogar App");
     this.loadData();
   },
