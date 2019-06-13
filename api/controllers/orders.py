@@ -42,7 +42,6 @@ def createOrder(ID):
     cursor = mysqlConnector.get_db().cursor()
     cursor.execute("SELECT id FROM clients where rut=\'{}\'".format(splited[0]))
     vari= cursor.fetchone()
-    print(int(vari[0]) == int(ID))
     #Verify if id from DB is same as id in URL
     if(int(vari[0]) != int(ID)):
         #Bad Request
@@ -59,7 +58,7 @@ def createOrder(ID):
     else:
         priceQuery = "SELECT price FROM products where id={}"
     for product in orderDetails['products']:
-        
+        print(product)
         #Normal price
         cursor.execute(priceQuery.format(product['id']))
         amount = int(cursor.fetchone()[0]) * int(product['quantity']) + amount
@@ -68,17 +67,19 @@ def createOrder(ID):
         try:
             if not isWholesaler:
                 cursor.execute("SELECT discount_per_liter FROM product_discounts WHERE min_quantity <= {} ORDER BY min_quantity DESC".format(product['quantity']))
-                amount = cursor.fetchone()[0]*-1 * product['quantity'] + amount
+                amount = -1*cursor.fetchone()[0]* int(product['quantity']) + amount
         except TypeError:
             pass
 
         try:
             #Add format price
-            cursor.execute("SELECT added_price, capacity FROM product_formats where id={} and capacity>0".format(product['format']))
+            cursor.execute("SELECT added_price, capacity FROM product_formats where id={} and capacity>0".format(int(product['format'])))
             formatInfo = cursor.fetchone()
+            
             #Apply format
-            amount=amount+(math.ceil(int(orderDetails['quantity'])/formatInfo[1])) *formatInfo[0]
-        except KeyError:
+            amount=amount+ (math.ceil(int(product['quantity'])/formatInfo[1])) *formatInfo[0]
+            print (amount)
+        except TypeError:
             pass
     #first insert order query
     #Status are false by default
