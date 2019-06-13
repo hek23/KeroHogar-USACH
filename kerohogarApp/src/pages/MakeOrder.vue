@@ -150,7 +150,7 @@ export default {
           if(element.max_qty > maxDiscount.max_qty) {
             maxDiscount = element;
           }
-          if (actualQuantity >= element.min_qty && actualQuantity <= element.max_qty) {
+          if (actualQuantity >= element.min_qty && actualQuantity < element.max_qty) {
             unitPrice -= element.discount_per_liter;
             this.discount = element.discount_per_liter;
             break;

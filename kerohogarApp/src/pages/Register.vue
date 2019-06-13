@@ -191,11 +191,11 @@ export default {
         wholesaler: 0
       })
       .then((response) => {
-        this.registerAddress(response.data.id);
+        //this.registerAddress(response.data.id);
         const { rut, password } = this;
         const { dispatch } = this.$store;
         if (rut && password) {
-            dispatch('authentication/login', { rut, password });
+            dispatch('authentication/login', { rut, password, address: {townID: this.comuna.id, addr: this.streetNumber} });
         }
       })
       .catch(function(error){
