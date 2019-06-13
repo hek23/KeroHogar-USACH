@@ -5,7 +5,7 @@ const routes = [
     component: () => import('layouts/Layout.vue'),
     children: [
       {
-        path:'/homepage',
+        path:'/',
         component: () => import('pages/Homepage.vue')
       },
       {
@@ -19,7 +19,17 @@ const routes = [
       {
         path:'/info',
         component: () => import('pages/Info.vue')
-      }
+      },
+      {
+        name:'order',
+        path:'/order',
+        component: () => import('pages/MakeOrder.vue'),
+        props: true
+      },
+      {
+        path:'/checkout',
+        component: () => import('pages/Checkout.vue')
+      },
     ]
   }
 ]
