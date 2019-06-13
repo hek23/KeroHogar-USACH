@@ -48,7 +48,7 @@ def createOrder(ID):
         #Bad Request
         return Response(status=400, response=json.dumps({"msg": "Token doesn't belongs to UserID"}), mimetype="application/json")
     #Verify if address belongs to user
-    cursor.execute("SELECT count(*) FROM addresses where id={} and client_id={}".format(orderDetails['addressID'],ID))
+    cursor.execute("SELECT count(*) FROM addresses where id={} and client_id={}".format(int(orderDetails['addressID']),ID))
     if not(cursor.fetchone()[0]):
         #Bad Request (address doesn't valid)
         return Response(status=400, response=json.dumps({"msg": "Address doesn't belong to user"}), mimetype="application/json")
@@ -62,14 +62,14 @@ def createOrder(ID):
         
         #Normal price
         cursor.execute(priceQuery.format(product['id']))
-        amount = cursor.fetchone()[0] * product['quantity'] + amount
+        amount = int(cursor.fetchone()[0]) * int(product['quantity']) + amount
         #Apply Discounts
         #cursor.execute("SELECT discount_per_liter FROM product_discounts WHERE (min_quantity>{0} OR min_quantity={0}) AND (max_quantity<{0} OR min_quantity={0})".format(formatID))
         try:
             if not isWholesaler:
                 cursor.execute("SELECT discount_per_liter FROM product_discounts WHERE min_quantity <= {} ORDER BY min_quantity DESC".format(product['quantity']))
                 amount = cursor.fetchone()[0]*-1 * product['quantity'] + amount
-        except IndexError:
+        except TypeError:
             pass
 
         try:
@@ -77,18 +77,18 @@ def createOrder(ID):
             cursor.execute("SELECT added_price, capacity FROM product_formats where id={} and capacity>0".format(product['format']))
             formatInfo = cursor.fetchone()
             #Apply format
-            amount=amount+(math.ceil(orderDetails['quantity']/formatInfo[1])) *formatInfo[0]
+            amount=amount+(math.ceil(int(orderDetails['quantity'])/formatInfo[1])) *formatInfo[0]
         except KeyError:
             pass
     #first insert order query
     #Status are false by default
-    cursor.execute(orderQuery.format(orderDetails['addressID'],1,1,amount,orderDetails['delivery_date']))
-    cursor.execute(getOrderID.format(orderDetails['addressID'],1,1,amount,orderDetails['delivery_date']))
+    cursor.execute(orderQuery.format(int(orderDetails['addressID']),1,1,amount,orderDetails['delivery_date']))
+    cursor.execute(getOrderID.format(int(orderDetails['addressID']),1,1,amount,orderDetails['delivery_date']))
     mysqlConnector.get_db().commit()
     orderID = cursor.fetchall()[-1][0]
     #Then orderTimeBlock
     for time_block in orderDetails['time_block']:
-        cursor.execute(orderTimeBlockQuery.format(orderID, time_block['id']))
+        cursor.execute(orderTimeBlockQuery.format(orderID, int(time_block['id'])))
     for product in orderDetails['products']:
         cursor.execute(orderProductQuery.format(orderID,product['id'],product['format'],product['quantity']))
     mysqlConnector.get_db().commit()
