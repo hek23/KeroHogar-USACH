@@ -278,7 +278,7 @@ export default {
           products: [{
             id: this.product.id,
             format: this.format.id,
-            quantity: this.order.quantity
+            quantity: parseInt(this.order.quantity, 10)
           }]
         
         })
