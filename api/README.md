@@ -457,7 +457,7 @@ Resultado:
 
 #### Ingresar (login)
 
-Dado que practicamente todas las funcionalidades anteriores requieren autetificación, esta se implementó con JWT. Así en los headers se espera que venga el token con la llave "Authentification"
+Dado que practicamente todas las funcionalidades anteriores requieren autetificación, esta se implementó con JWT. Así en los headers se espera que venga el token con la llave "Authentification", con valor "Bearer TOKEN"
 
 > Parámetro: nombre de usuario y contraseña (Body)
 > Método: POST
@@ -473,11 +473,31 @@ Resultado:
 ```HTTP 200 OK```con body 
 
 ```javascript
-{"id":2,"token":"$2b$12$kcQIuRVkAUk2z/g2TzzOM.7Pv5odfq61Q10ClMUhk3XsHvl0X8YrS"}
+{"id":2,"token":"$2b$12$kcQIuRVkAUk2z/g2TzzOM.7Pv5odfq61Q10ClMUhk3XsHvl0X8YrS", "refresh": "asdads123457jgfdsw"}
 
 ```
 
  o ``` HTTP 401 UNAUTHORIZED```
+
+
+#### Refrescar token
+
+Dado el uso de JWT y que estos son efímeros (vencen), se debe tener un método para poder refrescarlos y obtener un token válido en el caso de vencer.
+
+> Parámetro: Token de refresco (token)
+> Método: POST
+> Ruta: ```HOST/version/users/refresh```
+
+Body: Vacío
+Headers: Authorization, con el token de refresco (refresh), contenido como "Bearer TOKEN"
+Resultado:
+```HTTP 200 OK```con body 
+
+```javascript
+{"token":"654mblkamlvhjnlkmñv156"}
+
+```
+
 
 ## Instalación y requisitos
 

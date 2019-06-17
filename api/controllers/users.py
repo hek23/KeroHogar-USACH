@@ -2,7 +2,7 @@ from helpers import mysqlConnector
 from flask import current_app, g, Response, request
 import json
 import bcrypt
-from flask_jwt_extended import jwt_required, create_access_token, verify_jwt_in_request, get_jwt_identity
+from flask_jwt_extended import jwt_required, create_access_token, create_refresh_token, verify_jwt_in_request, get_jwt_identity,jwt_refresh_token_required
 import pymysql
 from functools import wraps
 
@@ -67,6 +67,20 @@ def login():
     if not(bcrypt.checkpw(userData['pass'].encode('utf-8'), pwd[0].encode('utf-8'))):
         return Response (mimetype='application/json', status = 401)
     else:
-        return Response(mimetype='application/json', status = 200, response=json.dumps({"id":pwd[1] ,"token": create_access_token(identity=(userData['name'] +"::" +pwd[0]))}))
+        return Response(mimetype='application/json', status = 200, response=json.dumps({"id":pwd[1] ,"token": create_access_token(identity=(userData['name'] +"::" +pwd[0])), "refresh": create_refresh_token(identity=userData['name'] +"::" +pwd[0])}))
 
-
+@current_app.route('/v1/users/refresh', methods=['POST'])
+@jwt_refresh_token_required
+def refresh():
+    userData = get_jwt_identity().split("::")
+    query = "SELECT password FROM clients where rut=\'{}\'"
+    cursor = mysqlConnector.get_db().cursor()
+    cursor.execute(query.format(userData[0]))
+    pwd = cursor.fetchone()
+    cursor.close()
+    if pwd is None:
+        return Response(status = 400, mimetype='application/json', response=json.dumps({"msg":"User doesn't exist"}))
+    if not(userData[1].encode('utf-8') == pwd[0].encode('utf-8')):
+        return Response (mimetype='application/json', status = 401, response=json.dumps({"msg":"Invalid Password"}))
+    else:
+        return Response(mimetype='application/json', status = 200, response=json.dumps({"token": create_access_token(identity=(userData[0] +"::" +pwd[0]))}))

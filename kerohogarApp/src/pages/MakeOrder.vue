@@ -172,7 +172,7 @@ export default {
       return totalPrice ? totalPrice : 0;
     },
     realQuantity: function() {
-      let realQuantity = this.order.quantity;
+      let realQuantity = parseInt(this.order.quantity);
       if(this.product.has_formats && this.format.capacity > 0) {
         realQuantity *= this.format.capacity;
       }
