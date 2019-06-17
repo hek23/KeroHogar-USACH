@@ -14,5 +14,8 @@ cryptography
 gunicorn
 bcrypt==3.1.6
 flask-jwt-extended
+#transbank-sdk
+python-tbk
 
-transbank-sdk
+#para xmlsec
+#sudo apt-get install libssl-dev libxml2-dev libxmlsec1-dev 
