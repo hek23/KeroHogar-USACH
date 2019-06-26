@@ -60,15 +60,35 @@
 
           <q-separator />
 
-          <q-input
-            filled
-            v-model="contact"
-            label="Teléfono*"
-            mask="#########"
-            hint="ej: 911111111"
-            lazy-rules
-            :rules="[ val => val && val.length > 0 || 'Por favor ingresa tu número de teléfono']"
-          />
+
+
+          <div class = "row">
+
+            <div class="col-5">
+            <q-input
+              filled
+              v-model="contact"
+              label="Teléfono*"
+              mask="#########"
+              hint="ej: 911111111"
+              lazy-rules
+              :rules="[ val => val && val.length > 0 || 'Por favor ingresa tu número de teléfono']"
+            />
+            </div>
+
+            <div class="col-7">
+              <q-input
+                filled
+                class="q-ml-xs"
+                v-model="email"
+                label="Correo"
+                hint="ej: email@email.com"
+                lazy-rules
+                :rules="[ val => val && val.length > 0 || 'Por favor ingresa tu correo']"
+              />
+            </div>
+
+          </div>
 
 
 
@@ -132,6 +152,7 @@ export default {
       streetNumber:null,
       //Select
       comuna: null,
+      email:null,
       submitting: false,
 
       comunas: [{"id": 1, "name": "Las condes"}, {"id": 2, "name": "La reina"}, {"id": 3, "name": "\u00d1u\u00f1oa"}, {"id": 4, "name": "Providencia"}, {"id": 5, "name": "Vitacura"}],
@@ -171,7 +192,7 @@ export default {
     },
 
     getTowns(){
-        this.$axios.get('http://localhost:5000/v1/towns')  
+        this.$axios.get('http://165.22.120.0:5000/v1/towns')  
         .then((response) => {
           //this.comunas = response.data.map(opt => ({id: opt.id, label: opt.name}))
           this.comunas = response.data
@@ -182,7 +203,7 @@ export default {
     },
 
     registerUser() {
-      this.$axios.post('http://localhost:5000/v1/users',{
+      this.$axios.post('http://165.22.120.0:5000/v1/users',{
         rut: this.rut,
         name: this.name,
         pass: this.password,
@@ -203,7 +224,7 @@ export default {
       });
     },
     registerAddress(id_user){
-      this.$axios.post('http://localhost:5000/v1/users/'+id_user.toString()+'/addresses',{
+      this.$axios.post('http://165.22.120.0:5000/v1/users/'+id_user.toString()+'/addresses',{
         townID: this.comuna.id,
         addr: this.streetNumber,
         alias: "Hogar"

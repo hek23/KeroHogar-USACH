@@ -69,7 +69,7 @@ export default {
   methods: {
 
     loadData () {
-      this.$axios.get('http://localhost:5000/v1/products/1/formats')  
+      this.$axios.get('http://165.22.120.0:5000/v1/products/1/formats')  
         .then((response) => {
           this.formatos = response.data;
           
@@ -77,7 +77,7 @@ export default {
         .catch(() => {
           console.log("error")
         })
-      this.$axios.get('http://localhost:5000/v1/products/1')  
+      this.$axios.get('http://165.22.120.0:5000/v1/products/1')  
         .then((response) => {
           this.producto = response.data;
         })

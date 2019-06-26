@@ -10,7 +10,8 @@
         />
       </div>
 
-      <form @submit.prevent="ingresar" class="q-gutter-y-md" style="max-width:600px; margin: 0 auto;">
+      <!--<form @submit.prevent="ingresar" class="q-gutter-y-md" style="max-width:600px; margin: 0 auto;">-->
+      <form class="q-gutter-y-md" style="max-width:600px; margin: 0 auto;">
         <q-input
           filled
           v-model="rut"
@@ -33,7 +34,7 @@
           icon-right="done_outline" 
           label="Iniciar sesión"
           type="submit"
-          :loading="loggingIn"
+          
         >
           <template v-slot:loading>
             <q-spinner-facebook />

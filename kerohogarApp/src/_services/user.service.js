@@ -9,14 +9,14 @@ export const userService = {
 };
 
 function register(user) {
-    return axios.post('http://localhost:5000/v1/users/login', user)
+    return axios.post('http://165.22.120.0:5000/v1/users/login', user)
         .then(response => {
             return response;
         })
 }
 
 function login(rut, password) {
-    return axios.post('http://localhost:5000/v1/users/login', {
+    return axios.post('http://165.22.120.0:5000/v1/users/login', {
             name: rut,
             pass: password,
         })
@@ -46,7 +46,7 @@ function login(rut, password) {
 function registerAddress(address) {
     let user = JSON.parse(localStorage.getItem('user'));
     if (user && user.id) {
-        return axios.post('http://localhost:5000/v1/users/' + user.id + '/addresses', {
+        return axios.post('http://165.22.120.0:5000/v1/users/' + user.id + '/addresses', {
             townID: address.townID,
             addr: address.addr,
             alias: "Hogar"

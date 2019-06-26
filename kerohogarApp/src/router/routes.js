@@ -30,6 +30,10 @@ const routes = [
         path:'/checkout',
         component: () => import('pages/Checkout.vue')
       },
+      {
+        path:'/address',
+        component: () => import('pages/Address.vue')
+      }
     ]
   }
 ]

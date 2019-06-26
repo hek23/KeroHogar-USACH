@@ -49,6 +49,7 @@ module.exports = function (ctx) {
         'QCardActions',
         'QImg',
         'QOptionGroup',
+        'QExpansionItem',
         
         'QSpinnerFacebook',
         'QSeparator',

@@ -226,7 +226,7 @@ export default {
       }
     },
     loadDiscounts () {
-      this.$axios.get('http://localhost:5000/v1/products/' + this.product.id + '/discounts')  
+      this.$axios.get('http://165.22.120.0:5000/v1/products/' + this.product.id + '/discounts')  
         .then((response) => {
           this.discounts = response.data
         })
@@ -236,8 +236,9 @@ export default {
     },
     loadAddress () {
       let user = JSON.parse(localStorage.getItem('user'));
+      console.log(user.id)
       if (user && user.id) {
-        this.$axios.get('http://localhost:5000/v1/users/' + user.id + '/addresses')  
+        this.$axios.get('http://165.22.120.0:5000/v1/users/2/addresses')  
           .then((response) => {
             this.order.addressID = response.data[0].id;
             console.log(this.order.addressID);
@@ -269,7 +270,7 @@ export default {
         })
 
         
-        this.$axios.post('http://localhost:5000/v1/clients/' + JSON.parse(localStorage.getItem('user')).id + '/orders',{
+        this.$axios.post('http://165.22.120.0:5000/v1/clients/' + JSON.parse(localStorage.getItem('user')).id + '/orders',{
 
           addressID: this.order.addressID,
           amount: this.amount,
@@ -312,7 +313,7 @@ export default {
                 message: 'Selecciona un horario'           
             })
 
-            this.$axios.get('http://localhost:5000/v1/timeblocks/available/'+this.order.delivery_date.toString().replace(/\//g, "-"))  
+            this.$axios.get('http://165.22.120.0:5000/v1/timeblocks/available/'+this.order.delivery_date.toString().replace(/\//g, "-"))  
               .then((response) => {
                 this.horarios = response.data
               })
