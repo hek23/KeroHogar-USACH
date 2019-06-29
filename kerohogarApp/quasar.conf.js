@@ -50,6 +50,7 @@ module.exports = function (ctx) {
         'QImg',
         'QOptionGroup',
         'QExpansionItem',
+        'QMarkupTable',
         
         'QSpinnerFacebook',
         'QSeparator',

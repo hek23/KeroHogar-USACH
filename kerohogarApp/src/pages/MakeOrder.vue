@@ -66,6 +66,13 @@
         </div>
       </q-form>
 
+    <h6>Nombre_Receptor: {{this.localStorage.getItem('user')}}</h6>
+    <h6>Producto: {{this.productType}}</h6>
+    <h6>Cantidad: {{this.order.quantity}}</h6>
+    <h6>Total: {{this.product.price*this.order.quantity*this.format.capacity}}</h6>
+    <h6>Descuento: {{this.discount*this.realQuantity}}</h6>
+    <h6>Final: {{this.amount}}</h6>
+
     </div>
   </q-page>
 </template>
@@ -280,8 +287,7 @@ export default {
             id: this.product.id,
             format: this.format.id,
             quantity: this.realQuantity
-          }]
-        
+          }]  
         })
         .then(function(response){
           console.log(response)
@@ -289,7 +295,10 @@ export default {
         .catch(function(error){
           console.log(error)
         });
-        
+
+        //this.$q.localStorage.set('amount',this.amount)
+        //this.$q.localStorage.set('discount',this.discount)
+        //this.$q.localStorage.set('')
 
 
       }

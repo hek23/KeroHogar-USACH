@@ -172,6 +172,9 @@ export default {
     submitUser () {
       this.submitting = true;
       this.registerUser();
+      //Guardar la data here
+
+
       /*
       if (this.comuna == null) {
         this.$q.notify({

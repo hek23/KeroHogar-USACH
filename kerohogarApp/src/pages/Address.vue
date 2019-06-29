@@ -60,7 +60,7 @@
                 :rules="[val => !!val && val != 0 || 'Por favor escoger Dirección']"
                 />
 
-                <q-btn label="Ir al pago" type="submit" color="primary"/>
+                <q-btn label="Continuar" type="submit" color="primary"/>
             </q-form>
           
         </div>
