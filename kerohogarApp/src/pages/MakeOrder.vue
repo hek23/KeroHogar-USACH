@@ -61,12 +61,11 @@
       
 
         <div class="row justify-center q-mt-md">
-          <q-btn label="Continuar" type="submit" color="primary"/>
+          <q-btn label="Continuar" type="submit" color="primary" to="/resume"/>
           <q-btn label="Cancelar" color="grey" class="q-ml-sm" to="/buy"/>
         </div>
       </q-form>
 
-    <h6>Nombre_Receptor: {{this.localStorage.getItem('user')}}</h6>
     <h6>Producto: {{this.productType}}</h6>
     <h6>Cantidad: {{this.order.quantity}}</h6>
     <h6>Total: {{this.product.price*this.order.quantity*this.format.capacity}}</h6>
@@ -78,6 +77,8 @@
 </template>
 
 <script>
+import { LocalStorage, SessionStorage } from 'quasar'
+
 export default {
   props: ['product', 'format'],
   data () {
@@ -276,6 +277,12 @@ export default {
           message: 'Submitted'
         })
 
+        this.$q.localStorage.set('productType',this.productType)
+        this.$q.localStorage.set('quantity',this.orde.quantity)
+        this.$q.localStorage.set('total',this.product.price*this.order.quantity*this.format.capacity)
+        this.$q.localStorage.set('discount',this.discount*this.realQuantity)
+        this.$q.localStorage.set('final',this.amount)
+
         
         this.$axios.post('http://165.22.120.0:5000/v1/clients/' + JSON.parse(localStorage.getItem('user')).id + '/orders',{
 
@@ -295,11 +302,6 @@ export default {
         .catch(function(error){
           console.log(error)
         });
-
-        //this.$q.localStorage.set('amount',this.amount)
-        //this.$q.localStorage.set('discount',this.discount)
-        //this.$q.localStorage.set('')
-
 
       }
     },

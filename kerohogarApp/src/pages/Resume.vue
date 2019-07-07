@@ -18,23 +18,23 @@
         </tr>
         <tr>
           <td class="text-left">Producto:</td>
-          <td class="text-left">Bidones de parafina</td>
+          <td class="text-left">{{this.$q.localStorage.getItem('productType')}}</td>
         </tr>
         <tr>
           <td class="text-left">Cantidad:</td>
-          <td class="text-left">10</td>
+          <td class="text-left">{{this.$q.localStorage.getItem('quantity')}}</td>
         </tr>
         <tr>
           <td class="text-left">Total:</td>
-          <td class="text-left">213000</td>
+          <td class="text-left">{{this.$q.localStorage.getItem('total')}}</td>
         </tr>
         <tr>
           <td class="text-left">Descuentos:</td>
-          <td class="text-left">1000</td>
+          <td class="text-left">{{this.$q.localStorage.getItem('discount')}}</td>
         </tr>
         <tr>
           <td class="text-left">Final:</td>
-          <td class="text-left">212000</td>
+          <td class="text-left">{{this.$q.localStorage.getItem('final')}}</td>
         </tr>
       </tbody>
     </q-markup-table>
