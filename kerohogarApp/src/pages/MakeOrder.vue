@@ -243,7 +243,7 @@ export default {
         })
     },
     loadAddress () {
-      let user = JSON.parse(localStorage.getItem('user'));
+      let user = this.$q.localStorage.getItem('user');
       console.log(user.id)
       if (user && user.id) {
         this.$axios.get('http://165.22.120.0:5000/v1/users/2/addresses')  
@@ -284,7 +284,7 @@ export default {
         this.$q.localStorage.set('final',this.amount)
 
         
-        this.$axios.post('http://165.22.120.0:5000/v1/clients/' + JSON.parse(localStorage.getItem('user')).id + '/orders',{
+        this.$axios.post('http://165.22.120.0:5000/v1/clients/' + this.$q.localStorage.getItem('user').id + '/orders',{
 
           addressID: this.order.addressID,
           amount: this.amount,

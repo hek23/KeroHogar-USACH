@@ -10,8 +10,7 @@
         />
       </div>
 
-      <!--<form @submit.prevent="ingresar" class="q-gutter-y-md" style="max-width:600px; margin: 0 auto;">-->
-      <form class="q-gutter-y-md" style="max-width:600px; margin: 0 auto;">
+      <form @submit.prevent="ingresar" class="q-gutter-y-md" style="max-width:600px; margin: 0 auto;">
         <q-input
           filled
           v-model="rut"
@@ -34,7 +33,7 @@
           icon-right="done_outline" 
           label="Iniciar sesión"
           type="submit"
-          
+          :loading="loggingIn"
         >
           <template v-slot:loading>
             <q-spinner-facebook />
@@ -55,6 +54,7 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
     data(){
@@ -68,44 +68,21 @@ export default {
       this.$emit('title', "Ingreso de usuarios");
     },
     computed: {
-        loggingIn () {
-            return this.$store.state.authentication.status.loggingIn;
-        }
+      ...mapGetters('auth', ['loggingIn'])
     },
     created () {
         // reset login status
-        this.$store.dispatch('authentication/logout');
+        //this.$store.dispatch('authentication/logout');
+        this.logout();
     },
 
     methods:{
+      ...mapActions('auth', ['login', 'logout']),
       ingresar () {
         const { rut, password } = this;
-        const { dispatch } = this.$store;
         if (rut && password) {
-            dispatch('authentication/login', { rut, password });
+            this.login({ rut, password });
         }
-
-        /*
-        // Simulating a delay here.
-        // When we are done, we reset "logging_in"
-        // Boolean to false to restore the
-        // initial state.
-        setTimeout(() => {
-          // delay simulated, we are done,
-          // now restoring submit to its initial state
-          
-        }, 3000)
-
-        this.$q.dialog({
-          title: 'Mensaje',
-          message: 'Mensaje',
-          cancel: true,
-          persistent: true
-        }).onOk(() => {
-          console.log('Ingresa')
-        }).onCancel(() => {
-          console.log('Rut no registrado')
-        })*/
       }
     }
   }

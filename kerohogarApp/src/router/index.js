@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 
 import routes from './routes'
 
+import { LocalStorage } from 'quasar'
+
 Vue.use(VueRouter)
 
 /*
@@ -26,7 +28,7 @@ export default function (/* { store, ssrContext } */) {
     // redirect to login page if not logged in and trying to access a restricted page
     const publicPages = ['/', '/register'];
     const authRequired = !publicPages.includes(to.path);
-    const loggedIn = localStorage.getItem('user');
+    const loggedIn = LocalStorage.has('user');
 
     if (authRequired && !loggedIn) {
       return next('/');

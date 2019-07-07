@@ -121,7 +121,7 @@
           <div class="float-left">
             <q-btn
               type="submit"
-              :loading="submitting"
+              :loading="creatingAccount"
               label="Registrarse"
               color="primary"
             >
@@ -131,7 +131,7 @@
             </q-btn>
           </div>
           <div class="float-right">
-            <q-btn label="Cancelar" color="grey" to="/" />
+            <q-btn label="Volver" color="grey" to="/" />
           </div>
         </q-form>
     </div>
@@ -139,6 +139,8 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+
 export default {
   data () {
     return {
@@ -159,8 +161,9 @@ export default {
     }
   },
   computed: {
-    registering () {
-      return this.$store.state.authentication.status.registering;
+    ...mapGetters('auth', ['registering', 'loggingIn']),
+    creatingAccount() {
+      return this.registering || this.loggingIn;
     }
   },
   mounted () {
@@ -169,29 +172,20 @@ export default {
   },
 
   methods: {
+    ...mapActions('auth', ['register']),
     submitUser () {
-      this.submitting = true;
-      this.registerUser();
-      //Guardar la data here
-
-
-      /*
-      if (this.comuna == null) {
-        this.$q.notify({
-          color: 'red-5',
-          textColor: 'white',
-          icon: 'fas fa-exclamation-triangle',
-          message: 'Debes seleccionar la comuna'
-        })
-      }
-      else {
-        this.$q.notify({
-          color: 'green-4',
-          textColor: 'white',
-          icon: 'fas fa-check-circle',
-          message: 'Registrado con éxito'
-        })
-      }*/
+      this.register({
+        rut: this.rut,
+        name: this.name,
+        password: this.password,
+        email: this.email,
+        phone: this.contact,
+        address: {
+          alias: 'Hogar',
+          townID: this.comuna.id, 
+          addr: this.streetNumber
+        }
+      })
     },
 
     getTowns(){
@@ -203,41 +197,6 @@ export default {
         .catch((error) => {
           console.log(error)
         })
-    },
-
-    registerUser() {
-      this.$axios.post('http://165.22.120.0:5000/v1/users',{
-        rut: this.rut,
-        name: this.name,
-        pass: this.password,
-        email: "emaildefault",
-        phone: this.contact,
-        wholesaler: 0
-      })
-      .then((response) => {
-        //this.registerAddress(response.data.id);
-        const { rut, password } = this;
-        const { dispatch } = this.$store;
-        if (rut && password) {
-            dispatch('authentication/login', { rut, password, address: {townID: this.comuna.id, addr: this.streetNumber} });
-        }
-      })
-      .catch(function(error){
-        console.log(error)
-      });
-    },
-    registerAddress(id_user){
-      this.$axios.post('http://165.22.120.0:5000/v1/users/'+id_user.toString()+'/addresses',{
-        townID: this.comuna.id,
-        addr: this.streetNumber,
-        alias: "Hogar"
-      })
-      .then((response) => {
-        this.submitting = false;
-      })
-      .catch(function(error){
-        console.log(error)
-      });
     }
   }
 }
