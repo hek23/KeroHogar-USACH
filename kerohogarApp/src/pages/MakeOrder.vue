@@ -168,7 +168,6 @@ export default {
           this.discount = maxDiscount.discount_per_liter;
         }
       }
-      console.log(this.discounts);
 
       let extra_price = 0;
       if(this.product.has_formats) {
@@ -248,7 +247,6 @@ export default {
         this.$axios.get('http://165.22.120.0:5000/v1/users/' + user.id + '/addresses')  
           .then((response) => {
             this.order.addressID = response.data[0].id;
-            console.log(this.order.addressID);
           })
           .catch((error) => {
             console.log(error)

@@ -24,7 +24,6 @@ const mutations = {
 const actions = {
     async loadProducts({ commit, dispatch }) {
         // Build the products state in each action then commit it to local storage.
-        LocalStorage.remove('products')
         if(!LocalStorage.has('products')) {
             await Promise.all([dispatch('loadFuel'), dispatch('loadFuelFormats'), dispatch('loadOtherProducts')])
             commit('loadProducts')
