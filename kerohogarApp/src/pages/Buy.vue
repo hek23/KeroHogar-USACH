@@ -13,11 +13,11 @@
 
 
 
-      <div v-if="producto!=null">
+      <div v-if="fuel!=null">
         <q-item
           class="justify-center"
-          v-for="formato in formatos"
-          :key="formato.id"
+          v-for="format in fuelFormats"
+          :key="format.id"
           v-ripple>
           <q-btn
             align="around" 
@@ -25,8 +25,8 @@
             color="green" 
             icon= "local_gas_station"
             style = "width: 250px"
-            :to="{name:'order', params:{format: formato, product: producto}}">
-              <div>{{formato.name}}</div>
+            :to="{name:'order', params:{format: format, product: fuel}}">
+              <div>{{format.name}}</div>
           </q-btn>
         </q-item> 
       </div>
@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   mounted () {
@@ -57,34 +58,13 @@ export default {
     }
     
     this.$emit('title', "Kerohogar App");
-    this.loadData();
+    this.loadProducts();
   },
-  data(){
-    return{
-
-      formatos: null,
-      producto: null,
-    }
+  computed: {
+    ...mapGetters('products', ['fuel', 'fuelFormats', 'otherProducts'])
   },
   methods: {
-
-    loadData () {
-      this.$axios.get('http://165.22.120.0:5000/v1/products/1/formats')  
-        .then((response) => {
-          this.formatos = response.data;
-          
-        })
-        .catch(() => {
-          console.log("error")
-        })
-      this.$axios.get('http://165.22.120.0:5000/v1/products/1')  
-        .then((response) => {
-          this.producto = response.data;
-        })
-        .catch(() => {
-          console.log("error")
-        })
-    }
+    ...mapActions('products', ['loadProducts'])
   }
 }
 </script>
