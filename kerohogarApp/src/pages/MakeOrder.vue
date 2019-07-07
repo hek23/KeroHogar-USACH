@@ -62,11 +62,11 @@
 
         <div class="row justify-center q-mt-md">
           <q-btn label="Continuar" type="submit" color="primary"/>
-          <q-btn label="Cancelar" color="grey" class="q-ml-sm" to="/buy"/>
+          <q-btn label="Volver" color="grey" class="q-ml-sm" to="/buy"/>
         </div>
       </q-form>
 
-    <h6>Nombre_Receptor: {{this.localStorage.getItem('user')}}</h6>
+    <h6>Nombre_Receptor: {{this.$q.localStorage.getItem('user')}}</h6>
     <h6>Producto: {{this.productType}}</h6>
     <h6>Cantidad: {{this.order.quantity}}</h6>
     <h6>Total: {{this.product.price*this.order.quantity*this.format.capacity}}</h6>
@@ -242,7 +242,7 @@ export default {
         })
     },
     loadAddress () {
-      let user = JSON.parse(localStorage.getItem('user'));
+      let user = this.$q.localStorage.getItem('user');
       console.log(user.id)
       if (user && user.id) {
         this.$axios.get('http://165.22.120.0:5000/v1/users/2/addresses')  
@@ -277,7 +277,7 @@ export default {
         })
 
         
-        this.$axios.post('http://165.22.120.0:5000/v1/clients/' + JSON.parse(localStorage.getItem('user')).id + '/orders',{
+        this.$axios.post('http://165.22.120.0:5000/v1/clients/' + this.$q.localStorage.getItem('user').id + '/orders',{
 
           addressID: this.order.addressID,
           amount: this.amount,

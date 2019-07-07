@@ -1,5 +1,5 @@
-import { authHeader } from '../_helpers';
 import axios from 'axios';
+import { LocalStorage } from 'quasar';
 
 export const userService = {
     register,
@@ -9,10 +9,20 @@ export const userService = {
 };
 
 function register(user) {
-    return axios.post('http://165.22.120.0:5000/v1/users/login', user)
-        .then(response => {
-            return response;
+    return axios.post('http://165.22.120.0:5000/v1/users', {
+            rut: user.rut,
+            name: user.name,
+            pass: user.password,
+            email: user.email,
+            phone: user.phone,
+            wholesaler: 0
         })
+        .then(function (response) {
+            return response.data;
+        })
+        .catch(function (error) {
+            console.log(error)
+        });
 }
 
 function login(rut, password) {
@@ -23,7 +33,7 @@ function login(rut, password) {
         .then(function (response) {
             if (response.data.token) {
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
-                localStorage.setItem('user', JSON.stringify(response.data));
+                LocalStorage.set('user', response.data)
                 setAxiosHeaders(response.data.token)
             }
             return response.data;
@@ -43,13 +53,15 @@ function login(rut, password) {
         });
 }
 
-function registerAddress(address) {
-    let user = JSON.parse(localStorage.getItem('user'));
-    if (user && user.id) {
-        return axios.post('http://165.22.120.0:5000/v1/users/' + user.id + '/addresses', {
+function registerAddress(address, user_id) {
+    if ( !user_id && LocalStorage.has('user') ) {
+        user_id = LocalStorage.getItem('user').id
+    }
+    if ( user_id ) {
+        return axios.post('http://165.22.120.0:5000/v1/users/' + user_id + '/addresses', {
+            alias: address.alias,
             townID: address.townID,
-            addr: address.addr,
-            alias: "Hogar"
+            addr: address.addr
         });
     }
 }
@@ -60,5 +72,5 @@ function setAxiosHeaders(token) {
 
 function logout() {
     // remove user from local storage to log user out
-    localStorage.removeItem('user');
+    LocalStorage.remove('user');
 }

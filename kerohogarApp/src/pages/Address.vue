@@ -92,7 +92,7 @@ export default {
     methods:{
 
     loadAddress () {
-      let user = JSON.parse(localStorage.getItem('user'));
+      let user = this.$q.localStorage.getItem('user');
       console.log(user)
       if (user && user.id) {
         this.$axios.get('http://165.22.120.0:5000/v1/users/' + user.id + '/addresses')  

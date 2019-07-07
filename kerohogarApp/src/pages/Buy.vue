@@ -51,8 +51,8 @@
 
 export default {
   mounted () {
-    let user = JSON.parse(localStorage.getItem('user'));
-    if (user && user.id) {
+    let user = this.$q.localStorage.getItem('user');
+    if (user && user.token) {
       this.$axios.defaults.headers.common['Authorization'] = 'Bearer ' + user.token;
     }
     

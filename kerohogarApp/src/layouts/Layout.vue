@@ -2,7 +2,7 @@
   <q-layout view="hHh lpR lFf">
     <q-header elevated class="bg-primary text-white">
       <q-toolbar>
-        <q-btn flat @click="drawer = !drawer" round dense icon="menu" />
+        <q-btn v-if="loggedIn" flat @click="drawer = !drawer" round dense icon="menu" />
 
         <q-toolbar-title class="absolute-center">
           {{title}}
@@ -11,6 +11,7 @@
     </q-header>
 
     <q-drawer
+      v-if="loggedIn"
       v-model="drawer" 
       side="left" 
       bordered
@@ -47,6 +48,8 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
+
 const menuList = [
   {
     icon: 'local_gas_station',
@@ -79,6 +82,7 @@ const menuList = [
     separator: false
   }
 ]
+
 export default {
     data () {
       return {
@@ -88,20 +92,20 @@ export default {
       }
     },
     methods: {
-        setTitle(title) {
-            this.title = title;
-        }
+      ...mapActions('alert', ['clearAlert']),
+      setTitle(title) {
+          this.title = title;
+      }
     },
     computed: {
-        alert () {
-            return this.$store.state.alert
-        }
+      ...mapGetters('auth', ['loggedIn']),
+      ...mapGetters('alert', ['alert'])
     },
     watch:{
-        $route (to, from){
-            // clear alert on location change
-            this.$store.dispatch('alert/clear');
-        }
+      // clear alert on location change
+      $route (to, from){
+          this.clearAlert()
+      }
     } 
 };
 </script>
