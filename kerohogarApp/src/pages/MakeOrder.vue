@@ -54,7 +54,7 @@
         <q-separator />
         <p class="text-center text-weight-bold text-body1 q-mt-md">Detalles de su compra</p>
         <p class="text-body1">Precio unitario: {{product.price}} <em v-if="discount">- {{discount}}</em> </p>
-        <p v-if="format && format.added_price > 0" class="text-body1">Precio por bidón: {{format.added_price}}</p>
+        <p v-if="product.has_formats && format && format.added_price > 0" class="text-body1">Precio por bidón: {{format.added_price}}</p>
         <p class="text-body1">Cantidad total: {{realQuantity}} litros</p>
         <p class="text-body1">Subtotal: {{amount}}</p>
         <q-separator />
@@ -179,7 +179,7 @@ export default {
       return totalPrice ? totalPrice : 0;
     },
     realQuantity: function() {
-      let realQuantity = this.order.quantity;
+      let realQuantity = parseInt(this.order.quantity);
       if(this.product.has_formats && this.format.capacity > 0) {
         realQuantity *= this.format.capacity;
       }
@@ -245,7 +245,7 @@ export default {
       let user = this.$q.localStorage.getItem('user');
       console.log(user.id)
       if (user && user.id) {
-        this.$axios.get('http://165.22.120.0:5000/v1/users/2/addresses')  
+        this.$axios.get('http://165.22.120.0:5000/v1/users/' + user.id + '/addresses')  
           .then((response) => {
             this.order.addressID = response.data[0].id;
             console.log(this.order.addressID);
@@ -285,7 +285,7 @@ export default {
           time_block: this.order.time_block.map(opt => ({id: opt.id})),
           products: [{
             id: this.product.id,
-            format: this.format.id,
+            format: this.product.has_formats ? this.format.id : null,
             quantity: this.realQuantity
           }]  
         })

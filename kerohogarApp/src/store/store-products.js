@@ -23,7 +23,8 @@ const mutations = {
 
 const actions = {
     async loadProducts({ commit, dispatch }) {
-        // Build the products state in each action then commit it to local storage.        
+        // Build the products state in each action then commit it to local storage.
+        LocalStorage.remove('products')
         if(!LocalStorage.has('products')) {
             await Promise.all([dispatch('loadFuel'), dispatch('loadFuelFormats'), dispatch('loadOtherProducts')])
             commit('loadProducts')
@@ -46,6 +47,9 @@ const actions = {
     async loadOtherProducts({ commit }) {
         await productService.loadAllProducts()
             .then(products => {
+                products = products.filter(function(product) {
+                    return !product.has_formats
+                });
                 commit('loadOtherProducts', products)
             }
         )
