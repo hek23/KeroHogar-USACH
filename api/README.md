@@ -548,3 +548,7 @@ Resultado:
 ```javascript
 {"token":"654mblkamlvhjnlkmñv156"}
 ```
+
+## Work to do / Cosas por hacer
+
+- Optimizar/reducir consultas por usuario a base de datos

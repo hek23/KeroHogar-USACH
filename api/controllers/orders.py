@@ -72,15 +72,18 @@ def createOrder(ID):
             pass
 
         try:
-            #Add format price
-            cursor.execute("SELECT added_price, capacity FROM product_formats where id={} and capacity>0".format(int(product['format'])))
-            formatInfo = cursor.fetchone()
-            
-            #Apply format
-            amount=amount+ (math.ceil(int(product['quantity'])/formatInfo[1])) *formatInfo[0]
-            print (amount)
+            if (product.has_key('format')):
+                #Add format price
+                cursor.execute("SELECT added_price, capacity FROM product_formats where id={} and capacity>0".format(int(product['format'])))
+                formatInfo = cursor.fetchone()
+                
+                #Apply format
+                amount=amount+ (math.ceil(int(product['quantity'])/formatInfo[1])) *formatInfo[0]
+                print (amount)
         except TypeError:
             pass
+
+            
     #first insert order query
     #Status are false by default
     cursor.execute(orderQuery.format(int(orderDetails['addressID']),1,1,amount,orderDetails['delivery_date']))

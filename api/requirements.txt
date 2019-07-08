@@ -14,7 +14,7 @@ cryptography
 gunicorn
 bcrypt==3.1.6
 flask-jwt-extended
-#transbank-sdk
+
 python-tbk
 
 #para xmlsec
