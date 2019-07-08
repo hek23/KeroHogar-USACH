@@ -3,11 +3,12 @@ import { LocalStorage } from 'quasar';
 
 const state = {
     registering: false,
-    registered: false,
     loggingIn: false,
+    loadingProfileData: false,
     loggedIn: LocalStorage.has('user'),
-    user: LocalStorage.getItem('user'),
-    address: LocalStorage.getIndex('address')
+    user: LocalStorage.getItem('user') || {},
+    address: LocalStorage.getItem('address') || {},
+    profile: {}
 }
 
 const mutations = {
@@ -22,15 +23,29 @@ const mutations = {
         state.loggedIn = true
     },
 
-    registerRequest(state) {
+    registerRequestStart(state) {
         state.registering = true
     },
-    registerFailed(state) {
+    registerRequestEnd(state) {
         state.registering = false
     },
-    registerSuccessful(state) {
-        state.registering = false
-        state.registered = true
+
+    profileDataRequestStart(state) {
+        state.loadingProfileData = true
+    },
+    profileDataRequestEnd(state) {
+        state.loadingProfileData = false
+    },
+    updateProfileData(state, value) {
+        state.profile = {
+            rut: value.rut,
+            name: value.name,
+            email: value.email,
+            phone: value.phone,
+            old_password: '',
+            new_password: '',
+        };
+        LocalStorage.set('profile', state.profile)
     },
 
     updateUser(state, status) {
@@ -40,18 +55,17 @@ const mutations = {
         state.loggedIn = false
         state.loggingIn = false
         state.registering = false
-        state.registered = false
     }
 }
 
 const actions = {
     register({ commit, dispatch }, formUser) {
-        commit('registerRequest');
+        commit('registerRequestStart');
 
         userService.register(formUser)
             .then(
                 user => {
-                    commit('registerSuccessful');
+                    commit('registerRequestEnd');
                     commit('updateUser', user);
                     dispatch('login', { 
                         rut: formUser.rut, 
@@ -63,7 +77,7 @@ const actions = {
                     })
                 },
                 error => {
-                    commit('registerFailed', error);
+                    commit('registerRequestEnd', error);
                     dispatch('alert/error', error, { root: true });
                 }
             );
@@ -76,7 +90,7 @@ const actions = {
                 user => {
                     commit('loginSuccessful');
                     commit('updateUser', user);
-                    if( payload.address ) dispatch('registerAddress', payload.address)
+                    if (payload.address) dispatch('registerAddress', payload.address)
                     this.$router.push('/buy');
                 },
                 error => {
@@ -92,6 +106,40 @@ const actions = {
     },
     registerAddress({}, payload) {
         userService.registerAddress(payload.address, payload.user_id);
+    },
+
+    editProfile({ commit }, payload) {
+        commit('registerRequestStart');
+
+        let user_id = getUserId()
+        if (user_id)
+            userService.editProfile(payload, user_id)
+                .then(
+                    () => {
+                        commit('registerRequestEnd');
+                        commit('updateUserProfile', payload)
+                        this.$router.push('/profile');
+                    }
+                ).catch(
+                    error => {
+                        commit('registerRequestEnd')
+                        console.log(error)
+                    }
+                )
+    },
+    async loadProfileData({ commit }) {
+        commit('profileDataRequestStart')
+
+        let user_id = getUserId()
+        if (user_id)
+            await userService.loadProfileData(user_id)
+                .then(
+                    profileData => {
+                        commit('profileDataRequestEnd')
+                        if(profileData)
+                            commit('updateProfileData', profileData)
+                    }
+                )
     }
 }
 
@@ -102,14 +150,17 @@ const getters = {
     registering: (state) => {
         return state.registering
     },
-    registered: (state) => {
-        return state.registered
-    },
     loggingIn: (state) => {
         return state.loggingIn
     },
     loggedIn: (state) => {
         return state.loggedIn
+    },
+    loadingProfileData: (state) => {
+        return state.loadingProfileData
+    },
+    profile: (state) => {
+        return state.profile
     }
 }
 
@@ -119,4 +170,12 @@ export default {
     mutations,
     actions,
     getters
+}
+
+function getUserId() {
+    let user_id = null
+    if (LocalStorage.has('user')) {
+        user_id = LocalStorage.getItem('user').id
+    }
+    return user_id
 }
