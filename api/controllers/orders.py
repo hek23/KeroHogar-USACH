@@ -8,21 +8,28 @@ import math
 @current_app.route('/v1/clients/<ID>/orders', methods=['GET'])
 @user_required
 def ordersByClient (ID):
-    query = "SELECT id, delivery_status, payment_status, amount, delivery_date FROM clients WHERE client_id={}"
+    orderQuery = "SELECT t.name, a.address, o.delivery_status, o.payment_status, o.amount, o.delivery_date, p.name, op.quantity, op.product_format_id FROM addresses a INNER JOIN towns t on (a.town_id = t.id) INNER JOIN orders o on o.address_id = a.id INNER JOIN order_product op on op.order_id= o.id INNER JOIN products p on p.id = op.product_id where a.client_id={}"
+    prodFormatQuery = "SELECT pf.name FROM product_formats pf where id={}"
     cursor = mysqlConnector.get_db().cursor()
-    cursor.execute(query.format(ID))
-    result = cursor.fetchall()
+    cursor.execute(orderQuery.format(ID))
     orders = []
-    for order in result:
-        orders.append({
-            "id": order[0],
-            "delivery_status": order[1],
-            "payment_status": order[2],
-            "amount": order[3],
-            "delivery_date": order[4]
-        })
-    return Response(json.dumps(orders), status=200, mimetype='application/json')
-
+    for order in cursor.fetchall():
+        formatedOrder = {
+            'town': order[0],
+            'address': order[1],
+            'delivery_status': str(order[2]),
+            'payment_status': order[3],
+            'amount': order[4],
+            'delivery_date': str(order[5]),
+            'product_name': order[6],
+            'quantity': order[7]
+        }
+        if(order[8] != 'NULL' or order[8] != None):
+            cursor.execute(orderQuery.format(ID))
+            prodformat = cursor.fetchone()
+            formatedOrder['format'] = prodformat[0]            
+        orders.append(formatedOrder)
+    return Response(status = 200, response=json.dumps(orders), mimetype="application/json")
 #WIP
 @current_app.route('/v1/clients/<ID>/orders', methods=['POST'])
 @user_required
@@ -102,6 +109,6 @@ def createOrder(ID):
 @current_app.route('/v1/orders/<orderID>', methods=['POST'])
 @user_required
 def getOrderDetails(ID, orderID):
-    orderQuery = "SELECT "
+    orderQuery = "SELECT id"
     pass
 
