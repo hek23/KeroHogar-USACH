@@ -19,7 +19,7 @@ const mutations = {
         if (Object.keys(state.products).length > 0)
         {
             LocalStorage.set('products', state.products)
-            // Re-assignt the products object usint {} notation so that the view is updated
+            // Re-assign the products object usint {} notation so that the view is updated
             state.products = {
                 fuel: state.products.fuel,
                 fuelFormats: state.products.fuelFormats,

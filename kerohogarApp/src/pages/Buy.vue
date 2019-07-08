@@ -78,7 +78,7 @@
             option-label="name"
           />
           <div v-if="otherProduct" class="q-mt-md">
-            <p>Precio: {{otherProduct.price}}</p>
+            <p>Precio: {{otherProduct.price | addDotsToNumber}}</p>
           </div>
         </q-card-section>
 

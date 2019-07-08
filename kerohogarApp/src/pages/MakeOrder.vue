@@ -59,15 +59,15 @@
 
         <q-separator />
         <p class="text-center text-weight-bold text-body1 q-mt-md">Detalles de su compra</p>
-        <p class="text-body1">Precio unitario: {{product.price}} <em v-if="discount">- {{discount}}</em> </p>
-        <p v-if="product.has_formats && format && format.added_price > 0" class="text-body1">Precio por bidón: {{format.added_price}}</p>
-        <p class="text-body1">Cantidad total: {{realQuantity}} litros</p>
-        <p class="text-body1">Subtotal: {{amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}}</p>
+        <p class="text-body1">Precio unitario: {{product.price | addDotsToNumber}} <em v-if="discount">- {{discount}}</em> </p>
+        <p v-if="product.has_formats && format && format.added_price > 0" class="text-body1">Precio por bidón: {{format.added_price  | addDotsToNumber}}</p>
+        <p class="text-body1">Cantidad total: {{realQuantity | addDotsToNumber}} litros</p>
+        <p class="text-body1">Subtotal: {{amount | addDotsToNumber}}</p>
         <q-separator />
       
 
         <div class="row justify-center q-mt-md">
-          <q-btn label="Continuar" type="submit" color="secondary" to="/resume"/>
+          <q-btn label="Continuar" type="submit" color="secondary" />
           <q-btn label="Cancelar" color="grey" class="q-ml-sm" to="/buy"/>
         </div>
       </q-form>
@@ -249,7 +249,6 @@ export default {
     },
     loadAddress () {
       let user = this.$q.localStorage.getItem('user');
-      console.log(user.id)
       if (user && user.id) {
         this.$axios.get('http://165.22.120.0:5000/v1/users/' + user.id + '/addresses')  
           .then((response) => {
@@ -280,14 +279,13 @@ export default {
           icon: 'fas fa-check-circle',
           message: 'Submitted'
         })
-
+        
         this.$q.localStorage.set('productType',this.productType)
         this.$q.localStorage.set('quantity',this.orde.quantity)
         this.$q.localStorage.set('total',this.product.price*this.order.quantity*this.format.capacity)
         this.$q.localStorage.set('discount',this.discount*this.realQuantity)
         this.$q.localStorage.set('final',this.amount)
 
-        
         this.$axios.post('http://165.22.120.0:5000/v1/clients/' + this.$q.localStorage.getItem('user').id + '/orders',{
 
           addressID: this.order.addressID,
@@ -296,7 +294,7 @@ export default {
           time_block: this.order.time_block.map(opt => ({id: opt.id})),
           products: [{
             id: this.product.id,
-            format: this.product.has_formats ? this.format.id : null,
+            format: this.format.id,
             quantity: this.realQuantity
           }]  
         })
