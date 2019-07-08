@@ -5,10 +5,12 @@ const state = {
     registering: false,
     loggingIn: false,
     loadingProfileData: false,
+    loadingAddresses: false,
     loggedIn: LocalStorage.has('user'),
     user: LocalStorage.getItem('user') || {},
-    address: LocalStorage.getItem('address') || {},
-    profile: {}
+    addresses: LocalStorage.getItem('addresses') || [{}],
+    profile: {},
+    towns: []
 }
 
 const mutations = {
@@ -55,6 +57,24 @@ const mutations = {
         state.loggedIn = false
         state.loggingIn = false
         state.registering = false
+    },
+
+    updateUserAddresses(state, value) {
+        state.addresses = value
+        LocalStorage.set('addresses', state.addresses)
+    },
+    loadingUserAdresses(state) {
+        state.loadingAddresses = true
+    },
+    userAdressesLoaded(state) {
+        state.loadingAddresses = false
+    },
+    userAdressesFailed(state) {
+        state.loadingAddresses = false
+    },
+
+    saveTowns(state, value) {
+        state.towns = value
     }
 }
 
@@ -104,42 +124,80 @@ const actions = {
         commit('logout')
         commit('updateUser', null)
     },
-    registerAddress({}, payload) {
-        userService.registerAddress(payload.address, payload.user_id);
+    registerAddress({ dispatch }, payload) {
+        let user_id = getUserId() || payload.user_id
+        userService.registerAddress(payload.address || payload, user_id)
+            .then(() => {
+                    dispatch('loadUserAddresses')
+                }
+            ).catch(error => {
+                console.log(error)
+            })
     },
 
     editProfile({ commit }, payload) {
         commit('registerRequestStart');
 
         let user_id = getUserId()
-        if (user_id)
-            userService.editProfile(payload, user_id)
-                .then(
-                    () => {
-                        commit('registerRequestEnd');
-                        commit('updateUserProfile', payload)
-                        this.$router.push('/profile');
-                    }
-                ).catch(
-                    error => {
-                        commit('registerRequestEnd')
-                        console.log(error)
-                    }
-                )
+        userService.editProfile(payload, user_id)
+            .then(
+                () => {
+                    commit('registerRequestEnd');
+                    commit('updateUserProfile', payload)
+                    this.$router.push('/profile');
+                }
+            ).catch(
+                error => {
+                    commit('registerRequestEnd')
+                    console.log(error)
+                }
+            )
     },
     async loadProfileData({ commit }) {
         commit('profileDataRequestStart')
 
         let user_id = getUserId()
-        if (user_id)
-            await userService.loadProfileData(user_id)
-                .then(
-                    profileData => {
-                        commit('profileDataRequestEnd')
-                        if(profileData)
-                            commit('updateProfileData', profileData)
-                    }
-                )
+        await userService.loadProfileData(user_id)
+            .then(
+                profileData => {
+                    commit('profileDataRequestEnd')
+                    if(profileData)
+                        commit('updateProfileData', profileData)
+                }
+            )
+            .catch(
+                error => {
+                    commit('profileDataRequestEnd')
+                    console.log(error);
+                }
+            )
+    },
+    async loadUserAddresses({ commit }) {
+        commit('loadingUserAdresses')
+
+        let user_id = getUserId()
+        await userService.loadUserAddresses(user_id)
+            .then(
+                userAddresses => {
+                    commit('userAdressesLoaded')
+                    if(userAddresses)
+                        commit('updateUserAddresses', userAddresses)
+                }
+            )
+            .catch(
+                error => {
+                    commit('userAdressesFailed')
+                    console.log(error);
+                }
+            )
+    },
+    loadTowns({ commit }) {
+        userService.loadTowns()
+            .then(
+                towns => {
+                    commit('saveTowns', towns)
+                }
+            )
     }
 }
 
@@ -161,6 +219,15 @@ const getters = {
     },
     profile: (state) => {
         return state.profile
+    },
+    loadingAddresses: (state) => {
+        return state.loadingAddresses
+    },
+    addresses: (state) => {
+        return state.addresses
+    },
+    towns: (state) => {
+        return state.towns
     }
 }
 

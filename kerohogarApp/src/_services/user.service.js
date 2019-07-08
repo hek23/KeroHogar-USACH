@@ -7,7 +7,9 @@ export const userService = {
     login,
     logout,
     editProfile,
-    loadProfileData
+    loadProfileData,
+    loadUserAddresses,
+    loadTowns
 };
 
 function register(user) {
@@ -85,6 +87,26 @@ function loadProfileData(user_id) {
         })*/
         return Promise.resolve().then(function() {
             return {rut: '19323425-9', name: "Nicolás Mariángel", email: "nicolas.mariange@usach.cl", phone: "75984724"}
+        })
+}
+
+function loadUserAddresses(user_id) {
+    return axios.get('http://165.22.120.0:5000/v1/users/' + user_id + '/addresses')
+        .then(function (response) {
+            return response.data
+        })
+        .catch(function (error) {
+            console.log(error)
+        })
+}
+
+function loadTowns() {
+    return axios.get('http://165.22.120.0:5000/v1/towns')
+        .then((response) => {
+            return response.data
+        })
+        .catch((error) => {
+            console.log(error)
         })
 }
 

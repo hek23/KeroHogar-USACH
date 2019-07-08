@@ -112,7 +112,7 @@
               color="white"
               filled
               v-model="comuna"
-              :options="comunas"
+              :options="towns"
               label="Comuna"
               option-value="id"
               option-label="name"
@@ -129,7 +129,8 @@
                 label="Calle y numero*"
                 hint="ej: Acacia 213"
                 lazy-rules
-                :rules="[ val => val && val.length > 0 || 'Por favor ingresa dirección']"
+                :rules="[ val => !!val || 'Por favor ingresa dirección',
+                          val => val && val.length <= 200 || 'Máximo de 200 caracteres' ]"
               />
             </div>
           </div>
@@ -173,23 +174,21 @@ export default {
       comuna: null,
       email:null,
       submitting: false,
-
-      comunas: [{"id": 1, "name": "Las condes"}, {"id": 2, "name": "La reina"}, {"id": 3, "name": "\u00d1u\u00f1oa"}, {"id": 4, "name": "Providencia"}, {"id": 5, "name": "Vitacura"}],
     }
   },
   computed: {
-    ...mapGetters('auth', ['registering', 'loggingIn']),
+    ...mapGetters('auth', ['registering', 'loggingIn', 'towns']),
     creatingAccount() {
       return this.registering || this.loggingIn;
     }
   },
   mounted () {
     this.$emit('title', "Cree su cuenta");
-    this.getTowns();
+    this.loadTowns();
   },
 
   methods: {
-    ...mapActions('auth', ['register']),
+    ...mapActions('auth', ['register', 'loadTowns']),
     submitUser () {
       this.register({
         rut: this.rut,
@@ -203,17 +202,6 @@ export default {
           addr: this.streetNumber
         }
       })
-    },
-
-    getTowns(){
-        this.$axios.get('http://165.22.120.0:5000/v1/towns')  
-        .then((response) => {
-          //this.comunas = response.data.map(opt => ({id: opt.id, label: opt.name}))
-          this.comunas = response.data
-        })
-        .catch((error) => {
-          console.log(error)
-        })
     }
   }
 }
