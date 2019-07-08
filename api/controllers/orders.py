@@ -72,11 +72,10 @@ def createOrder(ID):
             pass
 
         try:
-            if (product.has_key('format')):
+            if ('format' in product):
                 #Add format price
                 cursor.execute("SELECT added_price, capacity FROM product_formats where id={} and capacity>0".format(int(product['format'])))
                 formatInfo = cursor.fetchone()
-                
                 #Apply format
                 amount=amount+ (math.ceil(int(product['quantity'])/formatInfo[1])) *formatInfo[0]
                 print (amount)
@@ -94,6 +93,8 @@ def createOrder(ID):
     for time_block in orderDetails['time_block']:
         cursor.execute(orderTimeBlockQuery.format(orderID, int(time_block['id'])))
     for product in orderDetails['products']:
+        if('format' not in product):
+            product['format'] = 'NULL'
         cursor.execute(orderProductQuery.format(orderID,product['id'],product['format'],product['quantity']))
     mysqlConnector.get_db().commit()
     return Response(status=201, response=json.dumps({"id":orderID}), mimetype="application/json")
