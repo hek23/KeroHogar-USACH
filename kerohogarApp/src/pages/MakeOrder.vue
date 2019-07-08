@@ -6,6 +6,8 @@
       >
 
         <q-input
+          bg-color="primary"
+          color="white"
           filled
           class="q-mb-xs"
           v-model="order.quantity"
@@ -18,6 +20,8 @@
         />
 
         <q-input 
+          bg-color="primary"
+          color="white"
           filled 
           v-model="order.delivery_date" 
           mask="date" 
@@ -40,6 +44,8 @@
         </q-input>
 
         <q-select
+          bg-color="primary"
+          color="white"
           filled
           multiple
           class="q-mb-lg"
@@ -56,12 +62,12 @@
         <p class="text-body1">Precio unitario: {{product.price}} <em v-if="discount">- {{discount}}</em> </p>
         <p v-if="format && format.added_price > 0" class="text-body1">Precio por bidón: {{format.added_price}}</p>
         <p class="text-body1">Cantidad total: {{realQuantity}} litros</p>
-        <p class="text-body1">Subtotal: {{amount}}</p>
+        <p class="text-body1">Subtotal: {{amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}}</p>
         <q-separator />
       
 
         <div class="row justify-center q-mt-md">
-          <q-btn label="Continuar" type="submit" color="primary" to="/resume"/>
+          <q-btn label="Continuar" type="submit" color="secondary" to="/resume"/>
           <q-btn label="Cancelar" color="grey" class="q-ml-sm" to="/buy"/>
         </div>
       </q-form>

@@ -43,7 +43,7 @@
        <div class="float-left">
            <q-btn
             label="Ir Al Pago"
-            color="primary"
+            color="secondary"
             >
           </q-btn>
         </div>

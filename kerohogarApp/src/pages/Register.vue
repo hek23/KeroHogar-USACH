@@ -9,6 +9,8 @@
           <div class="row">
             <div class="col-6">
               <q-input
+                bg-color="primary"
+                color="white"
                 filled
                 class="q-mr-xs"
                 v-model="name"
@@ -20,6 +22,8 @@
             </div>
             <div class="col-6">
               <q-input
+                bg-color="primary"
+                color="white"
                 filled
                 class="q-ml-xs"
                 v-model="lastName"
@@ -32,6 +36,8 @@
           </div>
 
           <q-input
+            bg-color="primary"
+            color="white"
             filled
             v-model="rut"
             label="Rut*"
@@ -43,7 +49,10 @@
             :rules="[ val => val && val.length > 0 || 'Por favor ingresa tu Rut']"
           />
 
-          <q-input filled v-model="password" :type="isPwd ? 'password' : 'text'" 
+          <q-input 
+            bg-color="primary"
+            color="white"
+            filled v-model="password" :type="isPwd ? 'password' : 'text'" 
             label="Contraseña*" 
             hint="ej: Tsga53KH"
             lazy-rules
@@ -66,6 +75,8 @@
 
             <div class="col-5">
             <q-input
+              bg-color="primary"
+              color="white"
               filled
               v-model="contact"
               label="Teléfono*"
@@ -78,6 +89,8 @@
 
             <div class="col-7">
               <q-input
+                bg-color="primary"
+                color="white"
                 filled
                 class="q-ml-xs"
                 v-model="email"
@@ -95,6 +108,8 @@
           <div class="row">
             <div class="col-5">
             <q-select
+              bg-color="primary"
+              color="white"
               filled
               v-model="comuna"
               :options="comunas"
@@ -106,6 +121,8 @@
             </div>
             <div class="col-7">
               <q-input
+                bg-color="primary"
+                color="white"
                 filled
                 class="q-ml-sm"
                 v-model="streetNumber"
@@ -123,7 +140,7 @@
               type="submit"
               :loading="creatingAccount"
               label="Registrarse"
-              color="primary"
+              color="secondary"
             >
               <template v-slot:loading>
                 <q-spinner-facebook />
