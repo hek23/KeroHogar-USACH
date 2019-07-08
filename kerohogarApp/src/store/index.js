@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 import { alert } from './alert.module';
 import auth from './store-auth';
 import products from './store-products';
+import order from './store-order';
 
 Vue.use(Vuex)
 
@@ -17,7 +18,8 @@ export default function (/* { ssrContext } */) {
     modules: {
       alert,
       auth,
-      products
+      products,
+      order
     },
 
     // enable strict mode (adds overhead!)

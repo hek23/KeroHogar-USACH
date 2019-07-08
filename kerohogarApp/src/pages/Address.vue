@@ -84,8 +84,10 @@
                         class="full-width q-mb-lg no-padding"
                         size="4em"
                     />
-                    <q-btn class="float-left" label="Volver" color="grey" to="/order" />
-                    <q-btn class="float-right" label="Continuar" type="submit" color="primary"/>
+                    <div class="row justify-center q-mt-md">
+                        <q-btn label="Continuar" class="q-mr-lg" type="submit" color="secondary"/>
+                        <q-btn label="Atrás" color="grey" :to="{name:'order', params:{format: order.format, product: order.product}}" />
+                    </div>
                 </q-form>
             </div>
             <div v-else>
@@ -117,9 +119,7 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
     data(){
         return{
-
             //Seleccion de direccion
-            addresses2: null,
             address: null,
 
             //Agregar Direccion
@@ -134,6 +134,9 @@ export default {
         if (from.path === '/order') {
           vm.makingAnOrder = true
           vm.$q.localStorage.set('makingAnOrder', true)
+        } else {            
+          vm.makingAnOrder = false
+          vm.$q.localStorage.remove('makingAnOrder')
         }
       });
     },
@@ -147,13 +150,19 @@ export default {
     mounted(){
       this.loadUserAddresses()
       this.loadTowns()
+
+      if(this.order.address != null) {
+          this.address = this.order.address
+      }
     },
     computed: {
-      ...mapGetters('auth', ['addresses', 'loadingAddresses', 'towns'])
+      ...mapGetters('auth', ['addresses', 'loadingAddresses', 'towns']),
+      ...mapGetters('order', ['order'])
     },
 
     methods:{
         ...mapActions('auth', ['loadTowns', 'loadUserAddresses', 'registerAddress']),
+        ...mapActions('order', ['updateAddressDetails']),
         addAddress() {
             this.registerAddress({
                 alias: this.alias,
@@ -162,7 +171,8 @@ export default {
             })
         },
         chooseAddress() {
-          
+            this.updateAddressDetails(this.address)
+            return this.$router.push('/summary')
         }
     }
     

@@ -43,8 +43,8 @@ const routes = [
         component: () => import('pages/Address.vue')
       },
       {
-        path:'/resume',
-        component: () => import('pages/Resume.vue')
+        path:'/summary',
+        component: () => import('pages/Summary.vue')
       }
     ]
   }
