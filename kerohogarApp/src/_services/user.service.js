@@ -13,7 +13,7 @@ export const userService = {
 };
 
 function register(user) {
-    return axios.post('http://165.22.120.0:5000/v1/users', {
+    return axios.post('users', {
             rut: user.rut,
             name: user.name,
             pass: user.password,
@@ -30,7 +30,7 @@ function register(user) {
 }
 
 function login(rut, password) {
-    return axios.post('http://165.22.120.0:5000/v1/users/login', {
+    return axios.post('users/login', {
             name: rut,
             pass: password,
         })
@@ -38,7 +38,6 @@ function login(rut, password) {
             if (response.data.token) {
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
                 LocalStorage.set('user', response.data)
-                setAxiosHeaders(response.data.token)
             }
             return response.data;
         })
@@ -58,7 +57,7 @@ function login(rut, password) {
 }
 
 function registerAddress(address, user_id) {
-    return axios.post('http://165.22.120.0:5000/v1/users/' + user_id + '/addresses', {
+    return axios.post('users/' + user_id + '/addresses', {
         alias: address.alias,
         townID: address.townID,
         addr: address.addr
@@ -66,7 +65,7 @@ function registerAddress(address, user_id) {
 }
 
 function editProfile(editedUser, user_id) {
-    return axios.put('http://165.22.120.0:5000/v1/users/' + user_id, {
+    return axios.put('users/' + user_id, {
         'rut': editedUser.rut,
         'name': editedUser.name,
         'pass': editedUser.new_password,
@@ -78,7 +77,7 @@ function editProfile(editedUser, user_id) {
 
 function loadProfileData(user_id) {
     /*
-    return axios.get('http://165.22.120.0:5000/v1/users/' + user_id)
+    return axios.get('users/' + user_id)
         .then(function(response) {
             return response.data
         })
@@ -91,7 +90,7 @@ function loadProfileData(user_id) {
 }
 
 function loadUserAddresses(user_id) {
-    return axios.get('http://165.22.120.0:5000/v1/users/' + user_id + '/addresses')
+    return axios.get('users/' + user_id + '/addresses')
         .then(function (response) {
             return response.data
         })
@@ -101,17 +100,13 @@ function loadUserAddresses(user_id) {
 }
 
 function loadTowns() {
-    return axios.get('http://165.22.120.0:5000/v1/towns')
+    return axios.get('towns')
         .then((response) => {
             return response.data
         })
         .catch((error) => {
             console.log(error)
         })
-}
-
-function setAxiosHeaders(token) {
-    axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
 }
 
 function logout() {

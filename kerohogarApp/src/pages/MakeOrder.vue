@@ -116,7 +116,7 @@ export default {
 
     if(this.product.id == null)
       this.product.id = 1;
-    if(this.product === this.order.product && this.format === this.order.format ) {
+    if(JSON.stringify(this.product) === JSON.stringify(this.order.product) && JSON.stringify(this.format) === JSON.stringify(this.order.format) ) {
       this.orderData = Object.assign({}, this.order)
     } else {
       this.clearOrder()
@@ -237,7 +237,7 @@ export default {
       }
     },
     loadDiscounts () {
-      this.$axios.get('http://165.22.120.0:5000/v1/products/' + this.product.id + '/discounts')  
+      this.$axios.get('products/' + this.product.id + '/discounts')  
         .then((response) => {
           this.discounts = response.data
         })
@@ -265,7 +265,7 @@ export default {
           message: 'Selecciona horarios'           
       })
 
-      this.$axios.get('http://165.22.120.0:5000/v1/timeblocks/available/'+this.orderData.delivery_date.toString().replace(/\//g, "-"))  
+      this.$axios.get('timeblocks/available/'+this.orderData.delivery_date.toString().replace(/\//g, "-"))  
         .then((response) => {
           this.horarios = response.data
           this.loadingTimeBlocks = false

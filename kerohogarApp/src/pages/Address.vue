@@ -131,7 +131,7 @@ export default {
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
-        if (from.path === '/order') {
+        if (['/order', '/address', '/summary'].includes(from.path)) {
           vm.makingAnOrder = true
           vm.$q.localStorage.set('makingAnOrder', true)
         } else {            

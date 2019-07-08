@@ -62,7 +62,7 @@ const actions = {
     },
     submitOrder({ commit }, payload) {
         commit('submitRequestStart')
-        axios.post('http://165.22.120.0:5000/v1/clients/' + LocalStorage.getItem('user').id + '/orders', {
+        axios.post('clients/' + LocalStorage.getItem('user').id + '/orders', {
                 addressID: payload.address.id,
                 amount: payload.amount,
                 delivery_date: payload.delivery_date.toString().replace(/\//g, "-"),

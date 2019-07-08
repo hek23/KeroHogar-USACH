@@ -111,7 +111,7 @@ export default {
         /*
             if(this.$q.localStorage.has('user')) {
                 let user_id = this.$q.localStorage.getItem('user').id
-                this.$axios.get('http://165.22.120.0:5000/v1/clients/' + user_id + '/orders')
+                this.$axios.get('clients/' + user_id + '/orders')
                     .then(function(response) {
                         this.orders = response.data
                         this.loading = false

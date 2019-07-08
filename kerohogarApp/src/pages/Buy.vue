@@ -104,11 +104,6 @@ export default {
     }
   },
   mounted () {
-    let user = this.$q.localStorage.getItem('user');
-    if (user && user.token) {
-      this.$axios.defaults.headers.common['Authorization'] = 'Bearer ' + user.token;
-    }
-    
     this.$emit('title', "Kerohogar App");
     this.loadProducts();
   },
