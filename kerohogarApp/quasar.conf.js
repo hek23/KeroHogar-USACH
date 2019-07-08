@@ -41,7 +41,7 @@ module.exports = function (ctx) {
         'QItemLabel',
         'QScrollArea',
         'QDialog',
-
+        
         'QInput',
         'QForm',
         'QSelect',
@@ -53,7 +53,12 @@ module.exports = function (ctx) {
         'QOptionGroup',
         'QExpansionItem',
         'QMarkupTable',
+        'QTable',
+        'QTh',
+        'QTr',
+        'QTd',
         
+        'QSpinner',
         'QSpinnerFacebook',
         'QSeparator',
         'QPopupProxy',

@@ -12,8 +12,7 @@
       </div>
 
 
-
-      <div v-if="fuel!=null">
+      <div v-if="fuel != null">
         <q-item
           class="justify-center"
           v-for="format in fuelFormats"
@@ -44,6 +43,13 @@
           </q-btn>
         </q-item> 
       </div>
+
+      <q-spinner
+        v-else
+        color="primary"
+        class="full-width q-mb-lg no-padding"
+        size="4em"
+      />
 
       <div class="row justify-center">
         <q-btn 

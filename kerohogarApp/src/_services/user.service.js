@@ -5,7 +5,9 @@ export const userService = {
     register,
     registerAddress,
     login,
-    logout
+    logout,
+    editProfile,
+    loadProfileData
 };
 
 function register(user) {
@@ -54,16 +56,36 @@ function login(rut, password) {
 }
 
 function registerAddress(address, user_id) {
-    if ( !user_id && LocalStorage.has('user') ) {
-        user_id = LocalStorage.getItem('user').id
-    }
-    if ( user_id ) {
-        return axios.post('http://165.22.120.0:5000/v1/users/' + user_id + '/addresses', {
-            alias: address.alias,
-            townID: address.townID,
-            addr: address.addr
-        });
-    }
+    return axios.post('http://165.22.120.0:5000/v1/users/' + user_id + '/addresses', {
+        alias: address.alias,
+        townID: address.townID,
+        addr: address.addr
+    });
+}
+
+function editProfile(editedUser, user_id) {
+    return axios.put('http://165.22.120.0:5000/v1/users/' + user_id, {
+        'rut': editedUser.rut,
+        'name': editedUser.name,
+        'pass': editedUser.new_password,
+        'email': editedUser.email,
+        'phone': editedUser.phone,
+        'wholesaler': 0
+    })
+}
+
+function loadProfileData(user_id) {
+    /*
+    return axios.get('http://165.22.120.0:5000/v1/users/' + user_id)
+        .then(function(response) {
+            return response.data
+        })
+        .catch(function(error) {
+            console.log(error)
+        })*/
+        return Promise.resolve().then(function() {
+            return {rut: '19323425-9', name: "Nicolás Mariángel", email: "nicolas.mariange@usach.cl", phone: "75984724"}
+        })
 }
 
 function setAxiosHeaders(token) {
@@ -72,5 +94,5 @@ function setAxiosHeaders(token) {
 
 function logout() {
     // remove user from local storage to log user out
-    LocalStorage.remove('user');
+    LocalStorage.clear();
 }

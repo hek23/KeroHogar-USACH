@@ -176,7 +176,7 @@ export default {
     submitUser () {
       this.register({
         rut: this.rut,
-        name: this.name,
+        name: this.name + " " + this.lastName,
         password: this.password,
         email: this.email,
         phone: this.contact,
