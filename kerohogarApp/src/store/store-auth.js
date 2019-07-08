@@ -1,5 +1,6 @@
 import { userService } from '../_services';
 import { LocalStorage } from 'quasar';
+import Vue from 'vue'
 
 const state = {
     registering: false,
@@ -10,7 +11,7 @@ const state = {
     user: LocalStorage.getItem('user') || {},
     addresses: LocalStorage.getItem('addresses') || [{}],
     profile: {},
-    towns: []
+    towns: LocalStorage.getItem('towns') || []
 }
 
 const mutations = {
@@ -74,7 +75,8 @@ const mutations = {
     },
 
     saveTowns(state, value) {
-        state.towns = value
+        Vue.set(state, 'towns', value)
+        LocalStorage.setItem('towns')
     }
 }
 
@@ -192,6 +194,7 @@ const actions = {
             )
     },
     loadTowns({ commit }) {
+        if (!LocalStorage.has('towns'))
         userService.loadTowns()
             .then(
                 towns => {
