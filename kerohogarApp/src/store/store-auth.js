@@ -61,22 +61,22 @@ const mutations = {
     },
 
     updateUserAddresses(state, value) {
-        state.addresses = value
+        Vue.set(state, 'addresses', value)
         LocalStorage.set('addresses', state.addresses)
     },
-    loadingUserAdresses(state) {
+    loadingUserAddresses(state) {
         state.loadingAddresses = true
     },
-    userAdressesLoaded(state) {
+    userAddressesLoaded(state) {
         state.loadingAddresses = false
     },
-    userAdressesFailed(state) {
+    userAddressesFailed(state) {
         state.loadingAddresses = false
     },
 
     saveTowns(state, value) {
         Vue.set(state, 'towns', value)
-        LocalStorage.setItem('towns')
+        LocalStorage.set('towns', value)
     }
 }
 
@@ -126,11 +126,12 @@ const actions = {
         commit('logout')
         commit('updateUser', null)
     },
-    registerAddress({ dispatch }, payload) {
+    registerAddress({ commit, dispatch }, payload) {
+        commit('loadingUserAddresses')
         let user_id = getUserId() || payload.user_id
         userService.registerAddress(payload.address || payload, user_id)
             .then(() => {
-                    dispatch('loadUserAddresses')
+                    dispatch('loadUserAddresses', {reload: true})
                 }
             ).catch(error => {
                 console.log(error)
@@ -140,8 +141,7 @@ const actions = {
     editProfile({ commit }, payload) {
         commit('registerRequestStart');
 
-        let user_id = getUserId()
-        userService.editProfile(payload, user_id)
+        userService.editProfile(payload)
             .then(
                 () => {
                     commit('registerRequestEnd');
@@ -158,8 +158,7 @@ const actions = {
     async loadProfileData({ commit }) {
         commit('profileDataRequestStart')
 
-        let user_id = getUserId()
-        await userService.loadProfileData(user_id)
+        await userService.loadProfileData()
             .then(
                 profileData => {
                     commit('profileDataRequestEnd')
@@ -174,22 +173,57 @@ const actions = {
                 }
             )
     },
-    async loadUserAddresses({ commit }) {
-        commit('loadingUserAdresses')
+    async loadUserAddresses({ commit }, payload) {
+        commit('loadingUserAddresses')
 
         let user_id = getUserId()
-        await userService.loadUserAddresses(user_id)
+        if (payload.reload === true)
+            await userService.loadUserAddresses(user_id)
+                .then(
+                    userAddresses => {
+                        commit('userAddressesLoaded')
+                        if(userAddresses)
+                            commit('updateUserAddresses', userAddresses)
+                    }
+                )
+                .catch(
+                    error => {
+                        commit('userAddressesFailed')
+                        console.log(error);
+                    }
+                )
+        else
+            commit('userAddressesLoaded')
+    },
+    deleteAddress({ commit, dispatch }, payload) {
+        commit('loadingUserAddresses')
+
+        let user_id = getUserId()
+        userService.deleteUserAddress(user_id, payload.id)
             .then(
-                userAddresses => {
-                    commit('userAdressesLoaded')
-                    if(userAddresses)
-                        commit('updateUserAddresses', userAddresses)
+                () => {
+                    dispatch('loadUserAddresses', { reload: true })
                 }
             )
             .catch(
                 error => {
-                    commit('userAdressesFailed')
-                    console.log(error);
+                    console.log(error)
+                }
+            )
+    },
+    editAddress({ commit, dispatch }, payload) {
+        commit('loadingUserAddresses')
+
+        let user_id = getUserId()
+        userService.editUserAddress(user_id, payload)
+            .then(
+                () => {
+                    dispatch('loadUserAddresses', { reload: true })
+                }
+            )
+            .catch(
+                error => {
+                    console.log(error)
                 }
             )
     },

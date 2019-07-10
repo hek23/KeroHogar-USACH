@@ -9,7 +9,9 @@ export const userService = {
     editProfile,
     loadProfileData,
     loadUserAddresses,
-    loadTowns
+    loadTowns,
+    deleteUserAddress,
+    editUserAddress
 };
 
 function register(user) {
@@ -64,28 +66,24 @@ function registerAddress(address, user_id) {
     });
 }
 
-function editProfile(editedUser, user_id) {
-    return axios.put('users/' + user_id, {
-        'rut': editedUser.rut,
-        'name': editedUser.name,
-        'pass': editedUser.new_password,
-        'email': editedUser.email,
-        'phone': editedUser.phone,
-        'wholesaler': 0
-    })
+function editProfile(editedUser) {
+    let payload = {
+        name: editedUser.name,
+        email: editedUser.email,
+        phone: editedUser.phone
+    }
+    if(editedUser.new_password !== '')
+        payload.pass = editedUser.new_password
+    return axios.put('users/', payload)
 }
 
-function loadProfileData(user_id) {
-    /*
-    return axios.get('users/' + user_id)
+function loadProfileData() {
+    return axios.get('users')
         .then(function(response) {
             return response.data
         })
         .catch(function(error) {
             console.log(error)
-        })*/
-        return Promise.resolve().then(function() {
-            return {rut: '19323425-9', name: "Nicolás Mariángel", email: "nicolas.mariange@usach.cl", phone: "75984724"}
         })
 }
 
@@ -97,6 +95,17 @@ function loadUserAddresses(user_id) {
         .catch(function (error) {
             console.log(error)
         })
+}
+
+function deleteUserAddress(user_id, address_id) {
+    return axios.delete('users/' + user_id + '/addresses/' + address_id)
+}
+function editUserAddress(user_id, address) {
+    return axios.put('users/' + user_id + '/addresses/' + address.id, {
+        addr: address.addr,
+        townID: address.town.id,
+        alias: address.alias
+    })
 }
 
 function loadTowns() {

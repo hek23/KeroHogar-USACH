@@ -92,15 +92,31 @@
             </div>
             <div v-else>
                 <h6 class="text-center q-ma-md">Tus direcciones</h6>
-                <q-list v-if="!loadingAddresses" bordered separator>
+                <q-list v-if="!loadingAddresses" bordered separator class="rounded-borders" > 
                     <q-item 
-                      clickable
-                      v-ripple
-                      v-for="(address, index) in addresses"
-                      :key="index" >
-                        <q-item-section><p><b>{{ address.alias }}</b>: {{ address.addr + ', ' + address.town }}</p></q-item-section>
+                        clickable
+                        v-ripple
+                        v-for="(address, index) in addresses"
+                        :key="index" 
+                    >
+                        <q-item-section top >
+                            <q-item-label lines="1">
+                                <span class="text-weight-medium">{{ address.alias }}</span>
+                            </q-item-label>
+                            <q-item-label caption lines="2">
+                                {{ address.town + ', ' + address.addr }}
+                            </q-item-label>
+                        </q-item-section>
+
+                        <q-item-section side>
+                            <div class="text-grey-8 q-gutter-xs">
+                                <q-btn class="text-red-6" size="14px" flat dense round icon="delete" @click="confirmDeleteAddress(address)" />
+                                <q-btn class="text-amber-14" size="14px" flat dense round icon="edit" @click="showEditAddress(address)" />
+                            </div>
+                        </q-item-section>
                     </q-item>
                 </q-list>
+
                 <q-spinner
                     v-else
                     color="primary"
@@ -109,6 +125,78 @@
                 />
             </div>
         </div>
+
+        <q-dialog v-model="editAddressPrompt">
+            <q-card>
+                <q-card-section>
+                    <div class="text-h6">Editar dirección</div>
+                </q-card-section>
+                <q-card-section class="q-mb-xl">
+                    <q-form
+                        @submit="editAddress(selectedAddress)"
+                        class="q-gutter-md"
+                    >
+                        <div class="row">
+                            <div class="col-12">
+                                <q-input
+                                    filled
+                                    v-model="selectedAddress.addr"
+                                    label="Calle y numero*"
+                                    hint="ej: Acacia 213"
+                                    lazy-rules
+                                    :rules="[ val => !!val || 'Por favor ingresa dirección',
+                                                val => val && val.length <= 200 || 'Máximo de 200 caracteres' ]"
+                                />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-5">
+                                <q-input
+                                    filled
+                                    v-model="selectedAddress.alias"
+                                    label="Alias*"
+                                    hint="ej: Hogar"
+                                    class="q-mr-sm"
+                                    lazy-rules
+                                    :rules="[ val => !!val || 'Por favor ingresa alias',
+                                                val => val && val.length <= 32 || 'Máximo de 32 caracteres' ]"
+                                />
+                            </div> 
+                            <div class="col-7">
+                                <q-select
+                                    filled
+                                    v-model="selectedAddress.town"
+                                    :options="towns"
+                                    label="Comuna"
+                                    class="q-ml-sm"
+                                    option-value="id"
+                                    option-label="name"
+                                    :rules="[val => !!val && val != 0 || 'Por favor escoger comuna']"
+                                />
+                            </div>
+                        </div>
+                        <div class="float-right">
+                            <q-btn label="Cerrar" class="q-mr-lg" color="grey" v-close-popup/>
+                            <q-btn label="Guardar cambios" type="submit" color="primary" v-close-popup/>
+                        </div>
+                    </q-form>
+                </q-card-section>
+            </q-card>
+        </q-dialog>
+
+        <q-dialog v-model="deleteAddressPrompt" persistent>
+            <q-card>
+                <q-card-section class="row items-center">
+                    <q-avatar icon="warning" color="red-6" text-color="white" />
+                    <span class="q-ml-sm">Estas seguro que quieres borrar tu dirección llamada "<span class="text-weight-medium">{{selectedAddress.alias}}</span>"?</span>
+                </q-card-section>
+
+                <q-card-actions align="right">
+                    <q-btn label="No" style="min-width:60px" color="grey" v-close-popup />
+                    <q-btn label="Si" style="min-width:60px" color="secondary" v-close-popup @click="deleteAddress(selectedAddress)" />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
     </q-page>
 </template>
 
@@ -121,6 +209,11 @@ export default {
         return{
             //Seleccion de direccion
             address: null,
+
+            // CRUD de dirección
+            selectedAddress: {},
+            deleteAddressPrompt: false,
+            editAddressPrompt: false,
 
             //Agregar Direccion
             town: null,
@@ -148,7 +241,7 @@ export default {
       });
     },
     mounted(){
-      this.loadUserAddresses()
+      this.loadUserAddresses({reload: false})
       this.loadTowns()
 
       if(this.order.address != null) {
@@ -161,7 +254,7 @@ export default {
     },
 
     methods:{
-        ...mapActions('auth', ['loadTowns', 'loadUserAddresses', 'registerAddress']),
+        ...mapActions('auth', ['loadTowns', 'loadUserAddresses', 'registerAddress', 'deleteAddress', 'editAddress']),
         ...mapActions('order', ['updateAddressDetails']),
         addAddress() {
             this.registerAddress({
@@ -173,7 +266,20 @@ export default {
         chooseAddress() {
             this.updateAddressDetails(this.address)
             return this.$router.push('/summary')
-        }
+        },
+        confirmDeleteAddress(selectedAddress) {
+            this.selectedAddress = selectedAddress
+            this.deleteAddressPrompt = true
+        },
+        showEditAddress(selectedAddress) {
+            this.selectedAddress = {
+                id: selectedAddress.id,
+                addr: selectedAddress.addr,
+                town: this.towns.find(town => town.name === selectedAddress.town),
+                alias: selectedAddress.alias
+            }
+            this.editAddressPrompt = true
+        },
     }
     
 }
