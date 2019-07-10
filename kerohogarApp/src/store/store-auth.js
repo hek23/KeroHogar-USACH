@@ -99,8 +99,8 @@ const actions = {
                     })
                 },
                 error => {
-                    commit('registerRequestEnd', error);
-                    dispatch('alert/error', error, { root: true });
+                    commit('registerRequestEnd');
+                    dispatch('alert/error', error.response.data.error, { root: true });
                 }
             );
     },

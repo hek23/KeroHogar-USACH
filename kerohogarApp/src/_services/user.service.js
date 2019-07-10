@@ -23,12 +23,6 @@ function register(user) {
             phone: user.phone,
             wholesaler: 0
         })
-        .then(function (response) {
-            return response.data;
-        })
-        .catch(function (error) {
-            console.log(error)
-        });
 }
 
 function login(rut, password) {

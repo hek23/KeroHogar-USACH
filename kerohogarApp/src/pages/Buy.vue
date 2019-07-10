@@ -82,9 +82,9 @@
           </div>
         </q-card-section>
 
-        <q-card-actions align="right" class="q-pr-md q-pb-md">
+        <q-card-actions align="center" class="q-pr-md q-pb-md">
           <q-btn label="Cerrar" color="grey" v-close-popup />
-          <q-btn label="Continuar" color="primary" v-close-popup 
+          <q-btn label="Continuar" color="secondary" v-close-popup 
             :to="{name:'order', params:{format: {}, product: otherProduct}}" />
         </q-card-actions>
       </q-card>

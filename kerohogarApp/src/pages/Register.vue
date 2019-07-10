@@ -9,7 +9,7 @@
           <div class="row">
             <div class="col-6">
               <q-input
-                bg-color="primary"
+                bg-color="green-2"
                 color="white"
                 filled
                 class="q-mr-xs"
@@ -22,7 +22,7 @@
             </div>
             <div class="col-6">
               <q-input
-                bg-color="primary"
+                bg-color="green-2"
                 color="white"
                 filled
                 class="q-ml-xs"
@@ -36,7 +36,7 @@
           </div>
 
           <q-input
-            bg-color="primary"
+            bg-color="green-2"
             color="white"
             filled
             v-model="rut"
@@ -50,7 +50,7 @@
           />
 
           <q-input 
-            bg-color="primary"
+            bg-color="green-2"
             color="white"
             filled v-model="password" :type="isPwd ? 'password' : 'text'" 
             label="Contraseña*" 
@@ -75,7 +75,7 @@
 
             <div class="col-5">
             <q-input
-              bg-color="primary"
+              bg-color="green-2"
               color="white"
               filled
               v-model="contact"
@@ -89,7 +89,7 @@
 
             <div class="col-7">
               <q-input
-                bg-color="primary"
+                bg-color="green-2"
                 color="white"
                 filled
                 class="q-ml-xs"
@@ -108,7 +108,7 @@
           <div class="row">
             <div class="col-5">
             <q-select
-              bg-color="primary"
+              bg-color="green-2"
               color="white"
               filled
               v-model="comuna"
@@ -121,7 +121,7 @@
             </div>
             <div class="col-7">
               <q-input
-                bg-color="primary"
+                bg-color="green-2"
                 color="white"
                 filled
                 class="q-ml-sm"
@@ -136,7 +136,7 @@
           </div>
 
           <q-separator />
-          <div class="float-left">
+          <div class="float-right">
             <q-btn
               type="submit"
               :loading="creatingAccount"
@@ -148,7 +148,7 @@
               </template>
             </q-btn>
           </div>
-          <div class="float-right">
+          <div class="float-left">
             <q-btn label="Volver" color="grey" to="/" />
           </div>
         </q-form>

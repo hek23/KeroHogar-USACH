@@ -55,7 +55,7 @@
                             </div>
                         </div>
                         <div>
-                            <q-btn class="float-right" label="Agregar" type="submit" color="primary"/>
+                            <q-btn class="float-right" label="Agregar" type="submit" color="secondary"/>
                         </div>
                     </q-form>
                 </q-expansion-item>
@@ -85,8 +85,8 @@
                         size="4em"
                     />
                     <div class="row justify-center q-mt-md">
-                        <q-btn label="Continuar" class="q-mr-lg" type="submit" color="secondary"/>
                         <q-btn label="Atrás" color="grey" :to="{name:'order', params:{format: order.format, product: order.product}}" />
+                        <q-btn label="Continuar" class="q-ml-lg" type="submit" color="secondary"/>
                     </div>
                 </q-form>
             </div>
@@ -187,11 +187,13 @@
         <q-dialog v-model="deleteAddressPrompt" persistent>
             <q-card>
                 <q-card-section class="row items-center">
-                    <q-avatar icon="warning" color="red-6" text-color="white" />
+                    <q-avatar icon="warning" color="red-6" text-color="white" style="margin: 0 auto"/>
+                </q-card-section>
+                <q-card-section class="row items-center">
                     <span class="q-ml-sm">Estas seguro que quieres borrar tu dirección llamada "<span class="text-weight-medium">{{selectedAddress.alias}}</span>"?</span>
                 </q-card-section>
 
-                <q-card-actions align="right">
+                <q-card-actions align="center">
                     <q-btn label="No" style="min-width:60px" color="grey" v-close-popup />
                     <q-btn label="Si" style="min-width:60px" color="secondary" v-close-popup @click="deleteAddress(selectedAddress)" />
                 </q-card-actions>

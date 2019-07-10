@@ -63,12 +63,12 @@
                 </q-input>
 
                 <q-separator />
-                <div class="float-left">
+                <div class="float-right">
                     <q-btn
                         type="submit"
                         :loading="registering || loggingIn"
                         label="Guardar cambios"
-                        color="primary"
+                        color="secondary"
                         @click="editProfile(profileData)"
                     >
                         <template v-slot:loading>
@@ -76,7 +76,7 @@
                         </template>
                     </q-btn>
                 </div>
-                <div class="float-right">
+                <div class="float-left">
                     <q-btn label="Volver" color="grey" to="/buy" />
                 </div>
             </q-form>

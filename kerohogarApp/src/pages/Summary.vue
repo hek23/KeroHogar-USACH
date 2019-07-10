@@ -38,12 +38,12 @@
       <q-separator />
 
       <div class="row justify-center q-mt-md">
-        <q-btn label="Ir Al Pago" class="q-mr-lg" :loading="submitting" @click="submitOrder(order)" color="secondary">
+        <q-btn label="Atrás" color="grey" to="/address" />
+        <q-btn label="Ir Al Pago" class="q-ml-lg" :loading="submitting" @click="submitOrder(order)" color="secondary">
           <template v-slot:loading>
             <q-spinner-facebook />
           </template>
         </q-btn>
-        <q-btn label="Atrás" color="grey" to="/address" />
     </div>
   </div>
 </template>

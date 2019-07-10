@@ -74,8 +74,8 @@
       
 
         <div class="row justify-center q-mt-md">
-          <q-btn label="Continuar" class="q-mr-lg" type="submit" color="secondary" />
           <q-btn label="Atrás" color="grey" to="/buy"/>
+          <q-btn label="Continuar" class="q-ml-lg" type="submit" color="secondary" />
         </div>
       </q-form>
     </div>
