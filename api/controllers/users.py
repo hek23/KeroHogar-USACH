@@ -34,6 +34,7 @@ def getUserInfo():
     results = cursor.fetchone()
     cursor.close()
     return Response(json.dumps({"rut":rut, "name":results[0], "email":results[1] , "phone":results[2]}), mimetype='application/json')
+
 @current_app.route('/v1/users', methods=['POST'])
 def createUser():
     userData = request.get_json()
@@ -58,7 +59,7 @@ def editUser():
     query = "UPDATE clients SET"
     params = []
     if 'name' in newUserData:
-        query = query + " name=\{}\'"
+        query = query + " name=\'{}\'"
         params.append(newUserData['name'])
     if 'password' in newUserData:
         if len(params)>0:
@@ -79,8 +80,8 @@ def editUser():
         if len(params)>0:
             query=query+","
         query= query + " wholesaler=\'{}\'"
-        params.append((userData['wholesaler'] == 1))
-    query = query + " WHERE rut='\{}\'"
+        params.append((newUserData['wholesaler'] == 1))
+    query = query + " WHERE rut= \'{}\'"
     params.append(get_jwt_identity().split("::")[0])
     cursor = mysqlConnector.get_db().cursor()
     cursor.execute(query.format(*params))
