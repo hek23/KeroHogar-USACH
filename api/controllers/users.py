@@ -15,6 +15,7 @@ def user_required(fn):
         cursor = mysqlConnector.get_db().cursor()
         cursor.execute("SELECT password FROM clients WHERE rut=\'{}\'".format(splited[0]))
         pwd = cursor.fetchone()
+        cursor.close()
         if (pwd is None):
             return Response(mimetype='application/json', status = 400, response=json.dumps({"msg":"No user/pass found"}))
         elif (pwd[0] != splited[1]):
@@ -23,6 +24,16 @@ def user_required(fn):
             return fn(*args, **kwargs)
     return wrapper
 
+@current_app.route('/v1/users', methods=['GET'])
+@user_required
+def getUserInfo():
+    query = "SELECT name, email, phone FROM clients where rut = \'{}\'"
+    rut = get_jwt_identity().split("::")[0]
+    cursor = mysqlConnector.get_db().cursor()
+    cursor.execute(query.format(rut))
+    results = cursor.fetchone()
+    cursor.close()
+    return Response(json.dumps({"rut":rut, "name":results[0], "email":results[1] , "phone":results[2]}), mimetype='application/json')
 @current_app.route('/v1/users', methods=['POST'])
 def createUser():
     userData = request.get_json()
@@ -37,16 +48,43 @@ def createUser():
         cursor.close()
         return Response(json.dumps({"id":id}), mimetype= 'application/json',status=201)
     except pymysql.err.IntegrityError:
+        cursor.close()
         return Response(json.dumps({"error": "Rut ya existente"}), mimetype='application/json', status=400)
 
-@current_app.route('/v1/users/<UserID>', methods=['PUT'])
+@current_app.route('/v1/users/', methods=['PUT'])
 @user_required
 def editUser():
-    userData = request.get_json()
-    query = "UPDATE clients SET rut=\'{}\', name = \'{}\', password=\'{}\', email=\'{}\', phone=\'{}\', wholesaler={}"
-    wholesaler = (userData['wholesaler'] == 1)
+    newUserData = request.get_json()
+    query = "UPDATE clients SET"
+    params = []
+    if 'name' in newUserData:
+        query = query + " name=\{}\'"
+        params.append(newUserData['name'])
+    if 'password' in newUserData:
+        if len(params)>0:
+            query=query+","
+        query= query + " password=\'{}\'"
+        params.append(bcrypt.hashpw(userData['pass'].encode('utf-8'), bcrypt.gensalt(12)).decode('utf-8'))
+    if 'email' in newUserData:
+        if len(params)>0:
+            query=query+","
+        query= query + " email=\'{}\'"
+        params.append(newUserData['email'])
+    if 'phone' in newUserData:
+        if len(params)>0:
+            query=query+","
+        query= query + " phone=\'{}\'"
+        params.append(newUserData['phone'])
+    if 'wholesaler' in newUserData:
+        if len(params)>0:
+            query=query+","
+        query= query + " wholesaler=\'{}\'"
+        params.append((userData['wholesaler'] == 1))
+    query = query + " WHERE rut='\{}\'"
+    params.append(get_jwt_identity().split("::")[0])
     cursor = mysqlConnector.get_db().cursor()
-    cursor.execute(query.format(userData['rut'], userData['name'], bcrypt.hashpw(userData['pass'].encode('utf-8'), bcrypt.gensalt(12)).decode('utf-8'), userData['email'], userData['phone'], wholesaler))
+    cursor.execute(query.format(*params))
+    cursor.close()
     mysqlConnector.get_db().commit()
     return Response(mimetype='application/json', status =200)
 

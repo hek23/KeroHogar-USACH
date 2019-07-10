@@ -29,6 +29,7 @@ def ordersByClient (ID):
             prodformat = cursor.fetchone()
             formatedOrder['format'] = prodformat[0]            
         orders.append(formatedOrder)
+    cursor.close()
     return Response(status = 200, response=json.dumps(orders), mimetype="application/json")
 #WIP
 @current_app.route('/v1/clients/<ID>/orders', methods=['POST'])
@@ -46,7 +47,6 @@ def createOrder(ID):
     #Verify identity with JWT and address
     identity = get_jwt_identity()
     splited = identity.split("::")
-    cursor = mysqlConnector.get_db().cursor()
     cursor.execute("SELECT id FROM clients where rut=\'{}\'".format(splited[0]))
     vari= cursor.fetchone()
     #Verify if id from DB is same as id in URL
@@ -104,6 +104,7 @@ def createOrder(ID):
             product['format'] = 'NULL'
         cursor.execute(orderProductQuery.format(orderID,product['id'],product['format'],product['quantity']))
     mysqlConnector.get_db().commit()
+    cursor.close()
     return Response(status=201, response=json.dumps({"id":orderID}), mimetype="application/json")
 
 @current_app.route('/v1/orders/<orderID>', methods=['POST'])

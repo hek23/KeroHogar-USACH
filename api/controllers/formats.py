@@ -11,9 +11,9 @@ def getFormatsByProduct(Id):
 	cursor = mysqlConnector.get_db().cursor()
 	cursor.execute(sqlQuery.format(Id))
 	result = cursor.fetchall()
+	cursor.close()
 	if (result is None):
 		return Response(json.dumps({}),mimetype='application/json')
-	cursor.close()
 	formats = []
 	for row in result:
 		format = {
@@ -33,8 +33,8 @@ def getFormatByProduct(ProdId,FormId):
 	cursor = mysqlConnector.get_db().cursor()
 	cursor.execute(sqlQuery.format(ProdId,FormId))
 	result = cursor.fetchone()
+	cursor.close()
 	if (result is None):
-		cursor.close()
 		return Response(json.dumps({}), mimetype='application/json')
 	format = {"name":result[0], "capacity":result[1], "added_price":result[2], "minimum_quantity":result[3]}
 	return Response(json.dumps(format), mimetype='application/json')
