@@ -27,7 +27,7 @@ export default {
             rowsPerPage: 7 // current rows per page being displayed
         },
         columns: [
-            { name: 'name', align: 'center', label: 'Nombre', field: 'name', sortable: true, classes: 'ellipsis', style: 'max-width: 160px'},
+            { name: 'product_name', align: 'center', label: 'Nombre', field: 'product_name', sortable: true, classes: 'ellipsis', style: 'max-width: 120px'},
             { name: 'delivery_status', label: 'Entrega', field: 'delivery_status', sortable: true },
             { name: 'delivery_date', label: 'Fecha', field: 'delivery_date', sortable: true },
         ],
@@ -41,6 +41,7 @@ export default {
   },
   methods: {
         loadOrders() {
+        /*
             this.orders = [
                 {
                     'id': 4,
@@ -107,18 +108,17 @@ export default {
                     'delivery_date': '2019-07-19',
                 }
             ];
-            this.loading = false
-        /*
+            this.loading = false*/
             if(this.$q.localStorage.has('user')) {
                 let user_id = this.$q.localStorage.getItem('user').id
                 this.$axios.get('clients/' + user_id + '/orders')
-                    .then(function(response) {
+                    .then(response => {
                         this.orders = response.data
                         this.loading = false
-                    }).catch(function (error) {
+                    }).catch(error => {
                         console.log(error)
                     })
-            }*/
+            }
         }
     }
 }
