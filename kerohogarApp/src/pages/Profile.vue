@@ -66,7 +66,7 @@
                 <div class="float-left">
                     <q-btn
                         type="submit"
-                        :loading="registering"
+                        :loading="registering || loggingIn"
                         label="Guardar cambios"
                         color="primary"
                         @click="editProfile(profileData)"
@@ -109,7 +109,7 @@ export default {
         this.profileData = Object.assign({}, this.profile)
     },
     computed: {
-        ...mapGetters('auth', ['registering', 'loadingProfileData', 'profile'])
+        ...mapGetters('auth', ['registering', 'loadingProfileData', 'profile', 'loggingIn'])
     },
     methods:{
         ...mapActions('auth', ['editProfile', 'loadProfileData'])

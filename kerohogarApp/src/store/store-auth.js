@@ -10,7 +10,7 @@ const state = {
     loggedIn: LocalStorage.has('user'),
     user: LocalStorage.getItem('user') || {},
     addresses: LocalStorage.getItem('addresses') || [{}],
-    profile: {},
+    profile: LocalStorage.getItem('profile') || {},
     towns: LocalStorage.getItem('towns') || []
 }
 
@@ -138,15 +138,21 @@ const actions = {
             })
     },
 
-    editProfile({ commit }, payload) {
+    editProfile({ commit, dispatch }, payload) {
         commit('registerRequestStart');
 
         userService.editProfile(payload)
             .then(
                 () => {
                     commit('registerRequestEnd');
-                    commit('updateUserProfile', payload)
-                    this.$router.push('/profile');
+                    commit('updateProfileData', payload)
+                    if(payload.new_password.length >= 6)
+                        dispatch('login', {
+                            rut: payload.rut,
+                            password: payload.new_password
+                        })
+                    else
+                        this.$router.push('/buy')
                 }
             ).catch(
                 error => {
@@ -156,28 +162,30 @@ const actions = {
             )
     },
     async loadProfileData({ commit }) {
-        commit('profileDataRequestStart')
-
-        await userService.loadProfileData()
-            .then(
-                profileData => {
-                    commit('profileDataRequestEnd')
-                    if(profileData)
-                        commit('updateProfileData', profileData)
-                }
-            )
-            .catch(
-                error => {
-                    commit('profileDataRequestEnd')
-                    console.log(error);
-                }
-            )
+        if( !LocalStorage.has('profile') )
+        {
+            commit('profileDataRequestStart')
+            await userService.loadProfileData()
+                .then(
+                    profileData => {
+                        commit('profileDataRequestEnd')
+                        if(profileData)
+                            commit('updateProfileData', profileData)
+                    }
+                )
+                .catch(
+                    error => {
+                        commit('profileDataRequestEnd')
+                        console.log(error);
+                    }
+                )
+        }
     },
     async loadUserAddresses({ commit }, payload) {
         commit('loadingUserAddresses')
 
         let user_id = getUserId()
-        if (payload.reload === true)
+        if (payload.reload === true || !LocalStorage.has('addresses'))
             await userService.loadUserAddresses(user_id)
                 .then(
                     userAddresses => {
