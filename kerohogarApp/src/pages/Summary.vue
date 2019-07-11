@@ -9,8 +9,16 @@
       </thead>
       <tbody>
         <tr>
-          <td class="text-left">Nombre Receptor:</td>
-          <td class="text-left">Juan Pablo Rojas</td>
+          <td class="text-left">Producto:</td>
+          <td class="text-left">{{ order.format.name || order.product.name }}</td>
+        </tr>
+        <tr>
+          <td class="text-left">Cantidad:</td>
+          <td class="text-left">{{ order.realQuantity | addDotsToNumber }} {{(order.product.id == 1 ? ('litro' + ((order.realQuantity > 1) ? 's' : '')) : ('unidad' + ((order.realQuantity > 1) ? 'es' : '' )) )}}</td>
+        </tr>
+        <tr>
+          <td class="text-left">Monto a pagar:</td>
+          <td class="text-left">{{ order.amount | addDotsToNumber }}</td>
         </tr>
         <tr>
           <td class="text-left">Dirección de envío:</td>
@@ -21,16 +29,8 @@
           <td class="text-left">{{ order.delivery_date }}</td>
         </tr>
         <tr>
-          <td class="text-left">Producto:</td>
-          <td class="text-left">{{ order.format.name || order.product.name }}</td>
-        </tr>
-        <tr>
-          <td class="text-left">Cantidad:</td>
-          <td class="text-left">{{ order.quantity | addDotsToNumber }}</td>
-        </tr>
-        <tr>
-          <td class="text-left">Monto a pagar:</td>
-          <td class="text-left">{{ order.amount | addDotsToNumber }}</td>
+          <td class="text-left">Horario de entrega:</td>
+          <td class="text-left"><span v-for="time_block in order.time_block" :key="time_block.id">{{ time_block.start.slice(0, -3) + " - " + time_block.end.slice(0, -3) }}<br></span></td>
         </tr>
       </tbody>
     </q-markup-table>

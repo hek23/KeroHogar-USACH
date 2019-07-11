@@ -1,5 +1,6 @@
 import { productService } from '../_services';
 import { LocalStorage } from 'quasar';
+import Vue from 'vue'
 
 const state = {
     products: LocalStorage.getItem('products') || {},
@@ -7,19 +8,19 @@ const state = {
 
 const mutations = {
     loadFuel(state, value) {
-        state.products.fuel = value 
+        Vue.set(state.products, 'fuel', value) 
     },
     loadFuelFormats(state, value) {
-        state.products.fuelFormats = value 
+        Vue.set(state.products, 'fuelFormats', value)
     },
     loadOtherProducts(state, value) {
-        state.products.otherProducts = value 
+        Vue.set(state.products, 'otherProducts', value)
     },
     loadProducts(state) {
         if (Object.keys(state.products).length > 0)
         {
             LocalStorage.set('products', state.products)
-            // Re-assign the products object usint {} notation so that the view is updated
+            // Re-assign the products object using {} notation so that the view is updated
             state.products = {
                 fuel: state.products.fuel,
                 fuelFormats: state.products.fuelFormats,

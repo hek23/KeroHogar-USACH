@@ -73,10 +73,11 @@ const actions = {
                     quantity: payload.realQuantity
                 }]
             })
-            .then(function (response) {
+            .then(response => {
                 commit('submitRequestEnd')
+                window.location = response.data.payurl
             })
-            .catch(function (error) {
+            .catch(error => {
                 commit('submitRequestEnd')
                 console.log(error)
             });
