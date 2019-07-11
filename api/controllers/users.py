@@ -61,11 +61,11 @@ def editUser():
     if 'name' in newUserData:
         query = query + " name=\'{}\'"
         params.append(newUserData['name'])
-    if 'password' in newUserData:
+    if 'pass' in newUserData:
         if len(params)>0:
             query=query+","
         query= query + " password=\'{}\'"
-        params.append(bcrypt.hashpw(userData['pass'].encode('utf-8'), bcrypt.gensalt(12)).decode('utf-8'))
+        params.append(bcrypt.hashpw(newUserData['pass'].encode('utf-8'), bcrypt.gensalt(12)).decode('utf-8'))
     if 'email' in newUserData:
         if len(params)>0:
             query=query+","
