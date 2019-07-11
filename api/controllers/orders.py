@@ -1,9 +1,10 @@
-from helpers import mysqlConnector
+from helpers import mysqlConnector, transbankInitializer
 from flask import current_app, g, Response, request
 import json
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from .users import user_required
 import math
+import tbk
 
 @current_app.route('/v1/clients/<ID>/orders', methods=['GET'])
 @user_required
@@ -88,7 +89,6 @@ def createOrder(ID):
                 print (amount)
         except TypeError:
             pass
-
             
     #first insert order query
     #Status are false by default
@@ -105,11 +105,44 @@ def createOrder(ID):
         cursor.execute(orderProductQuery.format(orderID,product['id'],product['format'],product['quantity']))
     mysqlConnector.get_db().commit()
     cursor.close()
-    return Response(status=201, response=json.dumps({"id":orderID}), mimetype="application/json")
 
-@current_app.route('/v1/orders/<orderID>', methods=['POST'])
-@user_required
-def getOrderDetails(ID, orderID):
-    orderQuery = "SELECT id"
-    pass
 
+    #PAYMENT Section
+    transaction = transbankInitializer.getWebpay().init_transaction(
+        amount= amount,
+        buy_order=orderID,
+        return_url='http://' + getip() + ':5000'+'/v1/payment',
+        final_url='http://'+ getip() + ':5000'+ '',
+        session_id=identity
+    )
+    return Response(status=201, response=json.dumps({"payurl":transaction['url'] + '?token_ws=' + transaction['token']}), mimetype="application/json")
+
+@current_app.route('/v1/payment/', methods=['POST'])
+def paymentReturn():
+    print("PAYMENT CAME BACK!")
+    token = request.form['token_ws']
+    try:
+        transaction = transbankInitializer.getWebpay().get_transaction_result(token)
+    except tbk.soap.exceptions.SoapServerException:
+        return json.dumps({"msg":"Timeout", "tr":transaction})
+    transaction_detail = transaction['detailOutput'][0]
+    print(transaction_detail)
+    transbankInitializer.getWebpay().acknowledge_transaction(token)
+    if transaction_detail['responseCode'] == 0:
+        #Update, Payment validated
+        return Response(json.dumps({"msg":"PAYMENT SUCCEDDED!"}))
+    else:
+        return Response(json.dumps({"msg":"PAYMENT FAILED"}))
+
+import socket
+def getip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        # doesn't even have to be reachable
+        s.connect(('10.255.255.255', 1))
+        IP = s.getsockname()[0]
+    except:
+        IP = '127.0.0.1'
+    finally:
+        s.close()
+    return IP
