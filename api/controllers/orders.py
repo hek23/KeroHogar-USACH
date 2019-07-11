@@ -1,5 +1,5 @@
 from helpers import mysqlConnector, transbankInitializer
-from flask import current_app, g, Response, request
+from flask import current_app, g, Response, request, redirect
 import json
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from .users import user_required
@@ -111,7 +111,7 @@ def createOrder(ID):
     transaction = transbankInitializer.getWebpay().init_transaction(
         amount= amount,
         buy_order=orderID,
-        return_url='http://' + getip() + ':5000'+'/v1/payment',
+        return_url='http://' + getip() + ':5000/v1/payment',
         final_url='http://'+ getip() + ':5000'+ '',
         session_id=identity
     )
@@ -137,8 +137,10 @@ def paymentReturn():
         cursor.execute(query)
         mysqlConnector.get_db().commit()
         cursor.close()
-        return Response(json.dumps({"msg":"PAYMENT SUCCEDDED!"}))
+        #Redirect para ver el menu. Sale todo bien
+        return redirect("http://" + getip() + ":8080/success", code=302)
     else:
+        
         return Response(json.dumps({"msg":"PAYMENT FAILED"}))
 
 import socket
