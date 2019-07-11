@@ -6,9 +6,11 @@
       >
 
         <q-input
+          bg-color="grey-4"
+          color="green-10"
           filled
           class="q-mb-xs"
-          v-model="order.quantity"
+          v-model="orderData.quantity"
           :label="'Número de ' + productType"
           :mask="quantityMask"
           lazy-rules
@@ -18,8 +20,10 @@
         />
 
         <q-input 
+          bg-color="grey-4"
+          color="green-10"
           filled 
-          v-model="order.delivery_date" 
+          v-model="orderData.delivery_date" 
           mask="date" 
           :rules="['date', val => val && val >= minDate || 'No puedes escoger una fecha del pasado']" 
           label="Dia de entrega" 
@@ -29,7 +33,7 @@
             <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
                 <q-date 
-                  v-model="order.delivery_date" 
+                  v-model="orderData.delivery_date" 
                   @input="() => { $refs.qDateProxy.hide(), getHorarios() }" 
                   :today-btn=true 
                   :options="date => date >= minDate"
@@ -40,62 +44,61 @@
         </q-input>
 
         <q-select
+          v-if="!loadingTimeBlocks"
+          bg-color="grey-4"
+          color="green-10"
           filled
           multiple
           class="q-mb-lg"
-          v-model="order.time_block"
-          label = "Selecciona horario"
+          v-model="orderData.time_block"
+          label = "Selecciona horario(s)"
           :options="horarios"
           option-value="id"
-          :option-label="(time_block) => time_block.start + ' - ' + time_block.end"
+          :option-label="(time_block) => time_block.start.slice(0, -3) + ' - ' + time_block.end.slice(0, -3)"
           :rules="[val => !!val && val != 0 || 'Debes elegir al menos un horario']"
+        />
+        <q-spinner
+          v-else
+          color="primary"
+          class="full-width q-mb-lg no-padding"
+          size="4em"
         />
 
         <q-separator />
         <p class="text-center text-weight-bold text-body1 q-mt-md">Detalles de su compra</p>
-        <p class="text-body1">Precio unitario: {{product.price}} <em v-if="discount">- {{discount}}</em> </p>
-        <p v-if="format && format.added_price > 0" class="text-body1">Precio por bidón: {{format.added_price}}</p>
-        <p class="text-body1">Cantidad total: {{realQuantity}} litros</p>
-        <p class="text-body1">Subtotal: {{amount}}</p>
+        <p class="text-body1">Precio unitario: {{product.price | addDotsToNumber}} <em v-if="discount">- {{discount}}</em> </p>
+        <p v-if="product.has_formats && format && format.added_price > 0" class="text-body1">Precio por bidón: {{format.added_price  | addDotsToNumber}}</p>
+        <p class="text-body1">Cantidad total: {{realQuantity | addDotsToNumber}} litros</p>
+        <p class="text-body1">Subtotal: {{amount | addDotsToNumber}}</p>
         <q-separator />
       
 
         <div class="row justify-center q-mt-md">
-          <q-btn label="Continuar" type="submit" color="primary"/>
-          <q-btn label="Cancelar" color="grey" class="q-ml-sm" to="/buy"/>
+          <q-btn label="Atrás" color="grey" to="/buy"/>
+          <q-btn label="Continuar" class="q-ml-lg" type="submit" color="secondary" />
         </div>
       </q-form>
-
     </div>
   </q-page>
 </template>
 
 <script>
+import { LocalStorage } from 'quasar'
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
   props: ['product', 'format'],
   data () {
     return {
-      order: {
-        addressID: 1,
+      orderData: {
         quantity: null,
         delivery_date: null,
         time_block: [],
+        product: this.product,
+        format: this.format
       },
-      /*
-      producto: {
-        id: null,
-        name: '',
-        price: 300,
-        has_formats: true,
-        format: {
-          id: null,
-          name: '',
-          added_price: 0,
-          capacity: 20,
-          minimum_quantity: 40,
-        }
-      },*/
       horarios: null,
+      loadingTimeBlocks: false,
 
       minQuantity: 2,
       maxQuantity: 50,
@@ -111,12 +114,19 @@ export default {
       return this.$router.push('/buy');
     }
 
-    if(this.product.id == null) {
+    if(this.product.id == null)
       this.product.id = 1;
+    if(JSON.stringify(this.product) === JSON.stringify(this.order.product) && JSON.stringify(this.format) === JSON.stringify(this.order.format) ) {
+      this.orderData = Object.assign({}, this.order)
+    } else {
+      this.clearOrder()
+      this.updateProductDetails({
+        product: this.product,
+        format: this.format
+      })
     }
 
     this.loadDiscounts();
-    this.loadAddress();
     this.calculateMinQuantity();
     this.calculateMaxQuantity();
     this.calculateProductType(); 
@@ -126,6 +136,7 @@ export default {
     this.$emit('title', name);
   },
   computed: {
+    ...mapGetters('order', ['order']),
     minDate: function() {
       let date = new Date();
       let year = '' + date.getFullYear();
@@ -161,18 +172,17 @@ export default {
           this.discount = maxDiscount.discount_per_liter;
         }
       }
-      console.log(this.discounts);
 
       let extra_price = 0;
       if(this.product.has_formats) {
-        extra_price = this.order.quantity * this.format.added_price
+        extra_price = this.orderData.quantity * this.format.added_price
       }
 
       let totalPrice = unitPrice * actualQuantity + extra_price;
       return totalPrice ? totalPrice : 0;
     },
     realQuantity: function() {
-      let realQuantity = parseInt(this.order.quantity);
+      let realQuantity = parseInt(this.orderData.quantity);
       if(this.product.has_formats && this.format.capacity > 0) {
         realQuantity *= this.format.capacity;
       }
@@ -181,6 +191,7 @@ export default {
   },
 
   methods: {
+    ...mapActions('order', ['updateProductDetails', 'updateOrderDetails', 'clearOrder']),
     calculateMinQuantity() {
       if(this.product.has_formats) {
         if(this.format.capacity > 0) {
@@ -226,7 +237,7 @@ export default {
       }
     },
     loadDiscounts () {
-      this.$axios.get('http://localhost:5000/v1/products/' + this.product.id + '/discounts')  
+      this.$axios.get('products/' + this.product.id + '/discounts')  
         .then((response) => {
           this.discounts = response.data
         })
@@ -234,92 +245,34 @@ export default {
           console.log(error)
         })
     },
-    loadAddress () {
-      let user = JSON.parse(localStorage.getItem('user'));
-      if (user && user.id) {
-        this.$axios.get('http://localhost:5000/v1/users/' + user.id + '/addresses')  
-          .then((response) => {
-            this.order.addressID = response.data[0].id;
-            console.log(this.order.addressID);
-          })
-          .catch((error) => {
-            console.log(error)
-          })
-      } else {
-        this.order.addressID = 1;
-      }
-      
-    },
-
     onSubmit () {
-      if (this.order.quantity == null) {
-        this.$q.notify({
-          color: 'red-5',
-          textColor: 'white',
-          icon: 'fas fa-exclamation-triangle',
-          message: 'Poner cantidad de bidones'
-        })
-      }
-      else {
-        this.$q.notify({
-          color: 'green-4',
-          textColor: 'white',
-          icon: 'fas fa-check-circle',
-          message: 'Submitted'
-        })
-
-        
-        this.$axios.post('http://localhost:5000/v1/clients/' + JSON.parse(localStorage.getItem('user')).id + '/orders',{
-
-          addressID: this.order.addressID,
-          amount: this.amount,
-          delivery_date: this.order.delivery_date.toString().replace(/\//g, "-"),
-          time_block: this.order.time_block.map(opt => ({id: opt.id})),
-          products: [{
-            id: this.product.id,
-            format: this.format.id,
-            quantity: this.realQuantity
-          }]
-        
-        })
-        .then(function(response){
-          console.log(response)
-        })
-        .catch(function(error){
-          console.log(error)
-        });
-        
-
-
-      }
+      this.updateOrderDetails({
+        quantity: this.orderData.quantity,
+        realQuantity: this.realQuantity,
+        delivery_date: this.orderData.delivery_date,
+        time_block: this.orderData.time_block,
+        amount: this.amount
+      })
+      return this.$router.push('/address')
     },
     //Para hacer la peticion al backend
     getHorarios(){
-        if(this.order.delivery_date == null){
-            this.$q.notify({
-                textColor: 'white',
-                color: 'red-5',
-                icon: 'fas fa-exclamation-triangle',
-                message: 'Debe seleccionar dia'           
-            })
-        }
-        else{
+      this.loadingTimeBlocks = true
+      this.$q.notify({
+          textColor: 'white',
+          color: 'green',
+          icon: 'fas fa-exclamation-triangle',
+          message: 'Selecciona horarios'           
+      })
 
-            this.$q.notify({
-                textColor: 'white',
-                color: 'green',
-                icon: 'fas fa-exclamation-triangle',
-                message: 'Selecciona un horario'           
-            })
-
-            this.$axios.get('http://localhost:5000/v1/timeblocks/available/'+this.order.delivery_date.toString().replace(/\//g, "-"))  
-              .then((response) => {
-                this.horarios = response.data
-              })
-              .catch((error) => {
-                console.log(error)
-              })            
-        }
+      this.$axios.get('timeblocks/available/'+this.orderData.delivery_date.toString().replace(/\//g, "-"))  
+        .then((response) => {
+          this.horarios = response.data
+          this.loadingTimeBlocks = false
+        })
+        .catch((error) => {
+          console.log(error)
+        })   
     }
   }
 }

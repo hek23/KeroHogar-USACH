@@ -13,6 +13,14 @@ const routes = [
         component: () => import('pages/Register.vue')
       },
       {
+        path: '/profile',
+        component: () => import('pages/Profile.vue')
+      },
+      {
+        path: '/records',
+        component: () => import('pages/Records.vue')
+      },
+      {
         path:'/buy',
         component: () => import('pages/Buy.vue')
       },
@@ -30,6 +38,14 @@ const routes = [
         path:'/checkout',
         component: () => import('pages/Checkout.vue')
       },
+      {
+        path:'/address',
+        component: () => import('pages/Address.vue')
+      },
+      {
+        path:'/summary',
+        component: () => import('pages/Summary.vue')
+      }
     ]
   }
 ]

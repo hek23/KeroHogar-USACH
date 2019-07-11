@@ -9,6 +9,8 @@
           <div class="row">
             <div class="col-6">
               <q-input
+                bg-color="grey-4"
+                color="green-10"
                 filled
                 class="q-mr-xs"
                 v-model="name"
@@ -20,6 +22,8 @@
             </div>
             <div class="col-6">
               <q-input
+                bg-color="grey-4"
+                color="green-10"
                 filled
                 class="q-ml-xs"
                 v-model="lastName"
@@ -32,6 +36,8 @@
           </div>
 
           <q-input
+            bg-color="grey-4"
+            color="green-10"
             filled
             v-model="rut"
             label="Rut*"
@@ -43,7 +49,10 @@
             :rules="[ val => val && val.length > 0 || 'Por favor ingresa tu Rut']"
           />
 
-          <q-input filled v-model="password" :type="isPwd ? 'password' : 'text'" 
+          <q-input 
+            bg-color="grey-4"
+            color="green-10"
+            filled v-model="password" :type="isPwd ? 'password' : 'text'" 
             label="Contraseña*" 
             hint="ej: Tsga53KH"
             lazy-rules
@@ -60,24 +69,50 @@
 
           <q-separator />
 
-          <q-input
-            filled
-            v-model="contact"
-            label="Teléfono*"
-            mask="#########"
-            hint="ej: 911111111"
-            lazy-rules
-            :rules="[ val => val && val.length > 0 || 'Por favor ingresa tu número de teléfono']"
-          />
+
+
+          <div class = "row">
+
+            <div class="col-5">
+            <q-input
+              bg-color="grey-4"
+              color="green-10"
+              filled
+              v-model="contact"
+              label="Teléfono*"
+              mask="#########"
+              hint="ej: 911111111"
+              lazy-rules
+              :rules="[ val => val && val.length > 0 || 'Por favor ingresa tu número de teléfono']"
+            />
+            </div>
+
+            <div class="col-7">
+              <q-input
+                bg-color="grey-4"
+                color="green-10"
+                filled
+                class="q-ml-sm"
+                v-model="email"
+                label="Correo*"
+                hint="ej: email@email.com"
+                lazy-rules
+                :rules="[ val => val && val.length > 0 || 'Por favor ingresa tu correo']"
+              />
+            </div>
+
+          </div>
 
 
 
           <div class="row">
             <div class="col-5">
             <q-select
+              bg-color="grey-4"
+              color="green-10"
               filled
               v-model="comuna"
-              :options="comunas"
+              :options="towns"
               label="Comuna"
               option-value="id"
               option-label="name"
@@ -86,32 +121,35 @@
             </div>
             <div class="col-7">
               <q-input
+                bg-color="grey-4"
+                color="green-10"
                 filled
                 class="q-ml-sm"
                 v-model="streetNumber"
                 label="Calle y numero*"
                 hint="ej: Acacia 213"
                 lazy-rules
-                :rules="[ val => val && val.length > 0 || 'Por favor ingresa dirección']"
+                :rules="[ val => !!val || 'Por favor ingresa dirección',
+                          val => val && val.length <= 200 || 'Máximo de 200 caracteres' ]"
               />
             </div>
           </div>
 
           <q-separator />
-          <div class="float-left">
+          <div class="float-right">
             <q-btn
               type="submit"
-              :loading="submitting"
+              :loading="creatingAccount"
               label="Registrarse"
-              color="primary"
+              color="secondary"
             >
               <template v-slot:loading>
                 <q-spinner-facebook />
               </template>
             </q-btn>
           </div>
-          <div class="float-right">
-            <q-btn label="Cancelar" color="grey" to="/" />
+          <div class="float-left">
+            <q-btn label="Volver" color="grey" to="/" />
           </div>
         </q-form>
     </div>
@@ -119,6 +157,8 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+
 export default {
   data () {
     return {
@@ -132,88 +172,36 @@ export default {
       streetNumber:null,
       //Select
       comuna: null,
+      email:null,
       submitting: false,
-
-      comunas: [{"id": 1, "name": "Las condes"}, {"id": 2, "name": "La reina"}, {"id": 3, "name": "\u00d1u\u00f1oa"}, {"id": 4, "name": "Providencia"}, {"id": 5, "name": "Vitacura"}],
     }
   },
   computed: {
-    registering () {
-      return this.$store.state.authentication.status.registering;
+    ...mapGetters('auth', ['registering', 'loggingIn', 'towns']),
+    creatingAccount() {
+      return this.registering || this.loggingIn;
     }
   },
   mounted () {
     this.$emit('title', "Cree su cuenta");
-    this.getTowns();
+    this.loadTowns();
   },
 
   methods: {
+    ...mapActions('auth', ['register', 'loadTowns']),
     submitUser () {
-      this.submitting = true;
-      this.registerUser();
-      /*
-      if (this.comuna == null) {
-        this.$q.notify({
-          color: 'red-5',
-          textColor: 'white',
-          icon: 'fas fa-exclamation-triangle',
-          message: 'Debes seleccionar la comuna'
-        })
-      }
-      else {
-        this.$q.notify({
-          color: 'green-4',
-          textColor: 'white',
-          icon: 'fas fa-check-circle',
-          message: 'Registrado con éxito'
-        })
-      }*/
-    },
-
-    getTowns(){
-        this.$axios.get('http://localhost:5000/v1/towns')  
-        .then((response) => {
-          //this.comunas = response.data.map(opt => ({id: opt.id, label: opt.name}))
-          this.comunas = response.data
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    },
-
-    registerUser() {
-      this.$axios.post('http://localhost:5000/v1/users',{
+      this.register({
         rut: this.rut,
-        name: this.name,
-        pass: this.password,
-        email: "emaildefault",
+        name: this.name + " " + this.lastName,
+        password: this.password,
+        email: this.email,
         phone: this.contact,
-        wholesaler: 0
-      })
-      .then((response) => {
-        //this.registerAddress(response.data.id);
-        const { rut, password } = this;
-        const { dispatch } = this.$store;
-        if (rut && password) {
-            dispatch('authentication/login', { rut, password, address: {townID: this.comuna.id, addr: this.streetNumber} });
+        address: {
+          alias: 'Hogar',
+          townID: this.comuna.id, 
+          addr: this.streetNumber
         }
       })
-      .catch(function(error){
-        console.log(error)
-      });
-    },
-    registerAddress(id_user){
-      this.$axios.post('http://localhost:5000/v1/users/'+id_user.toString()+'/addresses',{
-        townID: this.comuna.id,
-        addr: this.streetNumber,
-        alias: "Hogar"
-      })
-      .then((response) => {
-        this.submitting = false;
-      })
-      .catch(function(error){
-        console.log(error)
-      });
     }
   }
 }

@@ -12,12 +12,11 @@
       </div>
 
 
-
-      <div v-if="producto!=null">
+      <div v-if="fuel != null">
         <q-item
           class="justify-center"
-          v-for="formato in formatos"
-          :key="formato.id"
+          v-for="format in fuelFormats"
+          :key="format.id"
           v-ripple>
           <q-btn
             align="around" 
@@ -25,12 +24,32 @@
             color="green" 
             icon= "local_gas_station"
             style = "width: 250px"
-            :to="{name:'order', params:{format: formato, product: producto}}">
-              <div>{{formato.name}}</div>
+            :to="{name:'order', params:{format: format, product: fuel}}">
+              <div>{{format.name}}</div>
+          </q-btn>
+        </q-item>
+        <q-item
+          v-if="otherProducts != null"
+          class="justify-center"
+          v-ripple>
+          <q-btn
+            align="around" 
+            class="btn-fixed-width" 
+            color="green" 
+            icon= "local_offer"
+            style = "width: 250px"
+            @click ="selectOtherProduct = true">
+              <div>Otros productos</div>
           </q-btn>
         </q-item> 
       </div>
 
+      <q-spinner
+        v-else
+        color="primary"
+        class="full-width q-mb-lg no-padding"
+        size="4em"
+      />
 
       <div class="row justify-center">
         <q-btn 
@@ -43,48 +62,59 @@
       </div>
 
     </div>
+
+    <q-dialog v-model="selectOtherProduct">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6 text-center">Elija el producto</div>
+        </q-card-section>
+
+        <q-card-section>
+          <q-select 
+            bg-color="grey-4"
+            color="green-10"
+            filled
+            v-model="otherProduct" 
+            label="Producto"
+            :options="otherProducts"
+            option-value="id"
+            option-label="name"
+          />
+          <div v-if="otherProduct" class="q-mt-md">
+            <p>Precio: {{otherProduct.price | addDotsToNumber}}</p>
+          </div>
+        </q-card-section>
+
+        <q-card-actions align="center" class="q-pr-md q-pb-md">
+          <q-btn label="Cerrar" color="grey" v-close-popup />
+          <q-btn label="Continuar" color="secondary" v-close-popup 
+            :to="{name:'order', params:{format: {}, product: otherProduct}}" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
     
   </q-page>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
-  mounted () {
-    let user = JSON.parse(localStorage.getItem('user'));
-    if (user && user.id) {
-      this.$axios.defaults.headers.common['Authorization'] = 'Bearer ' + user.token;
+  data() {
+    return {
+      selectOtherProduct: false,
+      otherProduct: null
     }
-    
-    this.$emit('title', "Kerohogar App");
-    this.loadData();
   },
-  data(){
-    return{
-
-      formatos: null,
-      producto: null,
-    }
+  mounted () {
+    this.$emit('title', "Kerohogar App");
+    this.loadProducts();
+  },
+  computed: {
+    ...mapGetters('products', ['fuel', 'fuelFormats', 'otherProducts'])
   },
   methods: {
-
-    loadData () {
-      this.$axios.get('http://localhost:5000/v1/products/1/formats')  
-        .then((response) => {
-          this.formatos = response.data;
-          
-        })
-        .catch(() => {
-          console.log("error")
-        })
-      this.$axios.get('http://localhost:5000/v1/products/1')  
-        .then((response) => {
-          this.producto = response.data;
-        })
-        .catch(() => {
-          console.log("error")
-        })
-    }
+    ...mapActions('products', ['loadProducts'])
   }
 }
 </script>

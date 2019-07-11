@@ -11,8 +11,8 @@ export const alert = {
         error({ commit }, message) {
             commit('error', message);
         },
-        clear({ commit }, message) {
-            commit('success', message);
+        clearAlert({ commit }) {
+            commit('clear');
         }
     },
     mutations: {
@@ -28,5 +28,10 @@ export const alert = {
             state.type = null;
             state.message = null;
         }
+    },
+    getters: {
+        alert: (state) => {
+            return state
+        },
     }
 }

@@ -1,30 +1,39 @@
-import { authHeader } from '../_helpers';
 import axios from 'axios';
+import { LocalStorage } from 'quasar';
 
 export const userService = {
     register,
     registerAddress,
     login,
-    logout
+    logout,
+    editProfile,
+    loadProfileData,
+    loadUserAddresses,
+    loadTowns,
+    deleteUserAddress,
+    editUserAddress
 };
 
 function register(user) {
-    return axios.post('http://localhost:5000/v1/users/login', user)
-        .then(response => {
-            return response;
+    return axios.post('users', {
+            rut: user.rut,
+            name: user.name,
+            pass: user.password,
+            email: user.email,
+            phone: user.phone,
+            wholesaler: 0
         })
 }
 
 function login(rut, password) {
-    return axios.post('http://localhost:5000/v1/users/login', {
+    return axios.post('users/login', {
             name: rut,
             pass: password,
         })
         .then(function (response) {
             if (response.data.token) {
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
-                localStorage.setItem('user', JSON.stringify(response.data));
-                setAxiosHeaders(response.data.token)
+                LocalStorage.set('user', response.data)
             }
             return response.data;
         })
@@ -43,22 +52,67 @@ function login(rut, password) {
         });
 }
 
-function registerAddress(address) {
-    let user = JSON.parse(localStorage.getItem('user'));
-    if (user && user.id) {
-        return axios.post('http://localhost:5000/v1/users/' + user.id + '/addresses', {
-            townID: address.townID,
-            addr: address.addr,
-            alias: "Hogar"
-        });
-    }
+function registerAddress(address, user_id) {
+    return axios.post('users/' + user_id + '/addresses', {
+        alias: address.alias,
+        townID: address.townID,
+        addr: address.addr
+    });
 }
 
-function setAxiosHeaders(token) {
-    axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
+function editProfile(editedUser) {
+    let payload = {
+        name: editedUser.name,
+        email: editedUser.email,
+        phone: editedUser.phone
+    }
+    if(editedUser.new_password !== '')
+        payload.pass = editedUser.new_password
+    return axios.put('users/', payload)
+}
+
+function loadProfileData() {
+    return axios.get('users')
+        .then(function(response) {
+            return response.data
+        })
+        .catch(function(error) {
+            console.log(error)
+        })
+}
+
+function loadUserAddresses(user_id) {
+    return axios.get('users/' + user_id + '/addresses')
+        .then(function (response) {
+            return response.data
+        })
+        .catch(function (error) {
+            console.log(error)
+        })
+}
+
+function deleteUserAddress(user_id, address_id) {
+    return axios.delete('users/' + user_id + '/addresses/' + address_id)
+}
+function editUserAddress(user_id, address) {
+    return axios.put('users/' + user_id + '/addresses/' + address.id, {
+        addr: address.addr,
+        townID: address.town.id,
+        alias: address.alias
+    })
+}
+
+function loadTowns() {
+    return axios.get('towns')
+        .then((response) => {
+            return response.data
+        })
+        .catch((error) => {
+            console.log(error)
+        })
 }
 
 function logout() {
     // remove user from local storage to log user out
-    localStorage.removeItem('user');
+    LocalStorage.clear();
 }
