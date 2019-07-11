@@ -9,8 +9,8 @@
           <div class="row">
             <div class="col-6">
               <q-input
-                bg-color="green-2"
-                color="white"
+                bg-color="grey-4"
+                color="green-10"
                 filled
                 class="q-mr-xs"
                 v-model="name"
@@ -22,8 +22,8 @@
             </div>
             <div class="col-6">
               <q-input
-                bg-color="green-2"
-                color="white"
+                bg-color="grey-4"
+                color="green-10"
                 filled
                 class="q-ml-xs"
                 v-model="lastName"
@@ -36,8 +36,8 @@
           </div>
 
           <q-input
-            bg-color="green-2"
-            color="white"
+            bg-color="grey-4"
+            color="green-10"
             filled
             v-model="rut"
             label="Rut*"
@@ -50,8 +50,8 @@
           />
 
           <q-input 
-            bg-color="green-2"
-            color="white"
+            bg-color="grey-4"
+            color="green-10"
             filled v-model="password" :type="isPwd ? 'password' : 'text'" 
             label="Contraseña*" 
             hint="ej: Tsga53KH"
@@ -75,8 +75,8 @@
 
             <div class="col-5">
             <q-input
-              bg-color="green-2"
-              color="white"
+              bg-color="grey-4"
+              color="green-10"
               filled
               v-model="contact"
               label="Teléfono*"
@@ -89,12 +89,12 @@
 
             <div class="col-7">
               <q-input
-                bg-color="green-2"
-                color="white"
+                bg-color="grey-4"
+                color="green-10"
                 filled
-                class="q-ml-xs"
+                class="q-ml-sm"
                 v-model="email"
-                label="Correo"
+                label="Correo*"
                 hint="ej: email@email.com"
                 lazy-rules
                 :rules="[ val => val && val.length > 0 || 'Por favor ingresa tu correo']"
@@ -108,8 +108,8 @@
           <div class="row">
             <div class="col-5">
             <q-select
-              bg-color="green-2"
-              color="white"
+              bg-color="grey-4"
+              color="green-10"
               filled
               v-model="comuna"
               :options="towns"
@@ -121,8 +121,8 @@
             </div>
             <div class="col-7">
               <q-input
-                bg-color="green-2"
-                color="white"
+                bg-color="grey-4"
+                color="green-10"
                 filled
                 class="q-ml-sm"
                 v-model="streetNumber"

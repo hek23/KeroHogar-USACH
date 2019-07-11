@@ -8,10 +8,12 @@
                 <div class="row">
                     <div class="col-12">
                     <q-input
+                        bg-color="grey-4"
+                        color="green-10"
                         filled
                         class="q-mr-xs"
                         v-model="profileData.name"
-                        label="Nombre*"
+                        label="Nombre"
                         hint="ej: Jose Pablo"
                         lazy-rules
                         :rules="[ val => val && val.length > 0 || 'Por favor ingresa tu nombre']"
@@ -22,9 +24,11 @@
                 <div class = "row">
                     <div class="col-5">
                     <q-input
+                        bg-color="grey-4"
+                        color="green-10"
                         filled
                         v-model="profileData.phone"
-                        label="Teléfono*"
+                        label="Teléfono"
                         mask="#########"
                         hint="ej: 911111111"
                         lazy-rules
@@ -34,8 +38,10 @@
 
                     <div class="col-7">
                     <q-input
+                        bg-color="grey-4"
+                        color="green-10"
                         filled
-                        class="q-ml-xs"
+                        class="q-ml-sm"
                         v-model="profileData.email"
                         label="Correo"
                         hint="ej: email@email.com"
@@ -47,8 +53,8 @@
 
                 <q-separator />
 
-                <q-input filled v-model="profileData.new_password" :type="isPwd ? 'password' : 'text'" 
-                    label="Contraseña*" 
+                <q-input bg-color="grey-4" color="green-10" filled v-model="profileData.new_password" :type="isPwd ? 'password' : 'text'" 
+                    label="Contraseña" 
                     hint="ej: Tsga53KH"
                     lazy-rules
                     :rules="[ val => val && val.length >= 6 || 'Ingrese al menos 6 caracteres']"

@@ -12,12 +12,14 @@
 
       <form @submit.prevent="ingresar" class="q-gutter-y-md" style="max-width:600px; margin: 0 auto;">
         <q-input
+          bg-color="grey-4"
+          color="green-10"
           filled
           v-model="rut"
           label="Ingrese su rut"
           hint="Ej: 11222333-4"
         />
-        <q-input filled v-model="password" class="q-mb-sm" :type="isPwd ? 'password' : 'text'" label="Ingrese su contraseña">
+        <q-input bg-color="grey-4" color="green-10" filled v-model="password" class="q-mb-sm" :type="isPwd ? 'password' : 'text'" label="Ingrese su contraseña">
           <template v-slot:append>
             <q-icon
               :name="isPwd ? 'visibility_off' : 'visibility'"

@@ -6,8 +6,8 @@
       >
 
         <q-input
-          bg-color="primary"
-          color="white"
+          bg-color="grey-4"
+          color="green-10"
           filled
           class="q-mb-xs"
           v-model="orderData.quantity"
@@ -20,8 +20,8 @@
         />
 
         <q-input 
-          bg-color="primary"
-          color="white"
+          bg-color="grey-4"
+          color="green-10"
           filled 
           v-model="orderData.delivery_date" 
           mask="date" 
@@ -45,8 +45,8 @@
 
         <q-select
           v-if="!loadingTimeBlocks"
-          bg-color="primary"
-          color="white"
+          bg-color="grey-4"
+          color="green-10"
           filled
           multiple
           class="q-mb-lg"

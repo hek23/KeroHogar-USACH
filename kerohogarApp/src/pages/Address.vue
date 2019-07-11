@@ -8,8 +8,8 @@
                     icon="add"
                     label="Agregar nueva dirección"
                     class="full-width bg-grey-2 q-pa-sm"
-                    header-class="bg-grey-4"
-                    active-class="bg-grey-5"
+                    header-class="bg-grey-5"
+                    active-class="bg-grey-6"
                 >
                     <q-form
                         @submit="addAddress()"
@@ -18,6 +18,8 @@
                         <div class="row">
                             <div class="col-12">
                                 <q-input
+                                    bg-color="grey-4"
+                                    color="green-10"
                                     filled
                                     v-model="streetAddress"
                                     label="Calle y numero*"
@@ -31,6 +33,8 @@
                         <div class="row">
                           <div class="col-5">
                                 <q-input
+                                    bg-color="grey-4"
+                                    color="green-10"
                                     filled
                                     v-model="alias"
                                     label="Alias*"
@@ -43,6 +47,8 @@
                             </div> 
                             <div class="col-7">
                                 <q-select
+                                    bg-color="grey-4"
+                                    color="green-10"
                                     filled
                                     v-model="town"
                                     :options="towns"
@@ -69,6 +75,8 @@
                     class="q-gutter-md"
                 >
                     <q-select
+                        bg-color="grey-4"
+                        color="green-10"
                         filled
                         v-if="!loadingAddresses"
                         v-model="address"
@@ -139,6 +147,8 @@
                         <div class="row">
                             <div class="col-12">
                                 <q-input
+                                    bg-color="grey-4"
+                                    color="green-10"
                                     filled
                                     v-model="selectedAddress.addr"
                                     label="Calle y numero*"
@@ -152,6 +162,8 @@
                         <div class="row">
                             <div class="col-5">
                                 <q-input
+                                    bg-color="grey-4"
+                                    color="green-10"
                                     filled
                                     v-model="selectedAddress.alias"
                                     label="Alias*"
@@ -164,6 +176,8 @@
                             </div> 
                             <div class="col-7">
                                 <q-select
+                                    bg-color="grey-4"
+                                    color="green-10"
                                     filled
                                     v-model="selectedAddress.town"
                                     :options="towns"

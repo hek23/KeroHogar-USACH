@@ -36,7 +36,7 @@
             align="around" 
             class="btn-fixed-width" 
             color="green" 
-            icon= "local_gas_station"
+            icon= "local_offer"
             style = "width: 250px"
             @click ="selectOtherProduct = true">
               <div>Otros productos</div>
@@ -66,11 +66,14 @@
     <q-dialog v-model="selectOtherProduct">
       <q-card>
         <q-card-section>
-          <div class="text-h6">Elija el producto</div>
+          <div class="text-h6 text-center">Elija el producto</div>
         </q-card-section>
 
         <q-card-section>
           <q-select 
+            bg-color="grey-4"
+            color="green-10"
+            filled
             v-model="otherProduct" 
             label="Producto"
             :options="otherProducts"
