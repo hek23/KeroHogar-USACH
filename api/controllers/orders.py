@@ -121,6 +121,7 @@ def createOrder(ID):
 def paymentReturn():
     print("PAYMENT CAME BACK!")
     token = request.form['token_ws']
+    #token = request.get_json()['token']
     try:
         transaction = transbankInitializer.getWebpay().get_transaction_result(token)
     except tbk.soap.exceptions.SoapServerException:
@@ -130,6 +131,12 @@ def paymentReturn():
     transbankInitializer.getWebpay().acknowledge_transaction(token)
     if transaction_detail['responseCode'] == 0:
         #Update, Payment validated
+        query = "UPDATE orders SET payment_status=2 where id="+transaction_detail['buyOrder']
+        print(query)
+        cursor = mysqlConnector.get_db().cursor()
+        cursor.execute(query)
+        mysqlConnector.get_db().commit()
+        cursor.close()
         return Response(json.dumps({"msg":"PAYMENT SUCCEDDED!"}))
     else:
         return Response(json.dumps({"msg":"PAYMENT FAILED"}))
