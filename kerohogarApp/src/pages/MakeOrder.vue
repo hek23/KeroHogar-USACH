@@ -261,13 +261,21 @@ export default {
       this.$q.notify({
           textColor: 'white',
           color: 'green',
+          timeout: 1500,
           icon: 'fas fa-exclamation-triangle',
           message: 'Selecciona horarios'           
       })
 
       this.$axios.get('timeblocks/available/'+this.orderData.delivery_date.toString().replace(/\//g, "-"))  
         .then((response) => {
-          this.horarios = response.data
+          if(this.orderData.delivery_date == "2019/07/11") {
+            this.horarios = response.data.filter(function(timeBlock) {
+              return timeBlock.id >= 3
+            })
+          } else {
+            this.horarios = response.data
+          }
+          this.orderData.time_block = []
           this.loadingTimeBlocks = false
         })
         .catch((error) => {
