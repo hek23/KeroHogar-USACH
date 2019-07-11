@@ -109,7 +109,7 @@
                             @endif
                         </td>
                         <td>
-                            @if($order->delivery_status == App\Order::PENDING_PAYMENT)
+                            @if($order->payment_status == App\Order::PENDING_PAYMENT)
                                 <i class="fas fa-wallet" style="font-size:24px;color:red"></i>
                             @else
                                 <i class="fas fa-wallet" style="font-size:24px;color:green"></i>
