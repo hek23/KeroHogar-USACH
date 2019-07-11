@@ -52,7 +52,7 @@ const mutations = {
     },
 
     updateUser(state, status) {
-        state.user = status
+        Vue.set(state, 'user', status)
     },
     logout(state) {
         state.loggedIn = false

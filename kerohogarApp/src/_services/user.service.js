@@ -31,11 +31,12 @@ function login(rut, password) {
             pass: password,
         })
         .then(function (response) {
-            if (response.data.token) {
+            const data = response.data
+            if (data.token) {
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
-                LocalStorage.set('user', response.data)
+                LocalStorage.set('user', data)
             }
-            return response.data;
+            return data;
         })
         .catch(function (error) {
             const response = error.response;
