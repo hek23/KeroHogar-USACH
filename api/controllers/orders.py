@@ -138,9 +138,9 @@ def paymentReturn():
         mysqlConnector.get_db().commit()
         cursor.close()
         #Redirect para ver el menu. Sale todo bien
-        return redirect("http://" + getip() + ":8080/success", code=302)
+        return redirect("http://" + getip() + ":8080/#/success", code=302)
     else:
-        
+
         return Response(json.dumps({"msg":"PAYMENT FAILED"}))
 
 import socket
