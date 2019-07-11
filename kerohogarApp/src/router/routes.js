@@ -45,6 +45,10 @@ const routes = [
       {
         path:'/summary',
         component: () => import('pages/Summary.vue')
+      },
+      {
+        path:'/success',
+        component: () => import('pages/Success.vue')
       }
     ]
   }

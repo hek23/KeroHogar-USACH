@@ -84,65 +84,80 @@
                     <tr>
                         <td>N°</td>
                         <td width="8%">Cliente</td>
+                        <td>Comuna</td>
                         <td>Pedido</td>
                         <td>E. Entrega</td>
                         <td>E. Pago</td>
                         <td>Monto</td>
-                        <td>Comuna</td>
                         <td>Día entrega</td>
                         <td>Horario entrega</td>
-                        <td colspan="4" width=20%>Acciones</td>
+                        <td colspan="1">Acciones</td>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($orders as $order)
                     <tr>
                         <td>{{ ++$rowItem }}</td>
-                        <td>{{ (!is_null($order->client->rut)) ? $order->client->rutFormat() : $order->client->name }}</td>
-                        <td>{{ $order->productNameFormat() }}</td>
-                        <td>{{ $order->deliveryStatusFormat() }}</td>
-                        <td>{{ $order->paymentStatusFormat() }}</td>
-                        <td>{{ $order->amount }}</td>
+                        <td>{{ $order->client->name }}</td>
                         <td>{{ $order->address->town->name }}</td>
+                        <td>{{ $order->productNameFormat() }}</td>
+                        <td>
+                            @if($order->delivery_status == App\Order::PENDING_DELIVERY)
+                                <i class="fas fa-truck" style="font-size:24px;color:red"></i>
+                            @else
+                                <i class="fas fa-truck" style="font-size:24px;color:green"></i>
+                            @endif
+                        </td>
+                        <td>
+                            @if($order->delivery_status == App\Order::PENDING_PAYMENT)
+                                <i class="fas fa-wallet" style="font-size:24px;color:red"></i>
+                            @else
+                                <i class="fas fa-wallet" style="font-size:24px;color:green"></i>
+                            @endif
+                        </td>
+                        <td>{{ $order->amount }}</td>
                         <td>{{ $order->delivery_date }}</td>
                         <td>
                             @foreach ($order->delivery_blocks as $timeBlock)
                                 {{ $timeBlock->start . " - " . $timeBlock->end }}<br>
                             @endforeach
                         </td>
-                        <td>
-                            @can('view', App\Order::class)
-                            <a href="{{ route('orders.show', $order->id)}}" class="btn btn-info">{{__('navigation.show')}}</a>
-                            @endcan
-                        </td>
-                        <td>
-                            @can('deliver', App\Order::class)
-                            @if($order->delivery_status !== App\Order::DELIVERED)
-                            <form action="{{ route('orders.delivered', $order->id)}}" method="post">
-                                @csrf
-                                <button class="btn btn-primary delete" data-confirm="{{__('navigation.confirm_delivered')}}" type="submit">{{__('navigation.delivered')}}</button>
-                            </form>
-                            @endif
-                            @endcan
-                        </td>
-                        <td>
-                            @can('payment', App\Order::class)
-                            @if($order->payment_status !== App\Order::PAID)
-                            <form action="{{ route('orders.paid', $order->id)}}" method="post">
-                                @csrf
-                                <button class="btn btn-primary delete" data-confirm="{{__('navigation.confirm_paid')}}" type="submit">{{__('navigation.paid')}}</button>
-                            </form>
-                            @endif
-                            @endcan
-                        </td>
-                        <td>
-                            @can('delete', App\Order::class)
-                            <form action="{{ route('orders.destroy', $order->id)}}" method="post">
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn btn-danger delete" data-confirm="{{__('navigation.confirm_deletion')}}" type="submit">{{__('navigation.delete')}}</button>
-                            </form>
-                            @endcan
+                        <td class="dropdown">
+                            <a id="actionDropdown{{$rowItem}}" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false" v-pre>
+                                Acciones <span class="caret"></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="actionDropdown{{$rowItem}}">
+                                @can('view', App\Order::class)
+                                <a href="{{ route('orders.show', $order->id)}}" class="dropdown-item" style="color:#6cb2eb;">{{__('navigation.show')}}</a>
+                                @endcan
+                                @can('deliver', App\Order::class)
+                                @if($order->delivery_status !== App\Order::DELIVERED)
+                                <form action="{{ route('orders.delivered', $order->id)}}" method="post">
+                                    @csrf
+                                    <button class="dropdown-item delete" style="color:#3490dc;" data-confirm="{{__('navigation.confirm_delivered')}}"
+                                        type="submit">{{__('navigation.delivered')}}</button>
+                                </form>
+                                @endif
+                                @endcan
+                                @can('payment', App\Order::class)
+                                @if($order->payment_status !== App\Order::PAID)
+                                <form action="{{ route('orders.paid', $order->id)}}" method="post">
+                                    @csrf
+                                    <button class="dropdown-item delete" style="color:#3490dc;" data-confirm="{{__('navigation.confirm_paid')}}"
+                                        type="submit">{{__('navigation.paid')}}</button>
+                                </form>
+                                @endif
+                                @endcan
+                                @can('delete', App\Order::class)
+                                <form action="{{ route('orders.destroy', $order->id)}}" method="post">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="dropdown-item delete" style="color:red;" data-confirm="{{__('navigation.confirm_deletion')}}"
+                                        type="submit">{{__('navigation.delete')}}</button>
+                                </form>
+                                @endcan
+                            </div>
                         </td>
                     </tr>
                     @endforeach
