@@ -4,6 +4,58 @@
 
 TBD
 
+
+## Instalación y requisitos
+
+### Requisitos
+- Base de datos MySQL 5.7 o patch version similar.
+- Python 3.7 o superior
+- Pip3
+- Configuradas las variables de entorno para "database" en admin_page
+
+### Instalación
+Dada la utilización de los SDk de transbank, se debn tener instaladas dependencias de sistema. Estas dependencias son cubiertas según el sistema operativo con los siguientes comandos
+
+Ubuntu/Debian:
+
+```sh
+sudo apt-get install libssl-dev libxml2-dev libxmlsec1-dev 
+```
+
+Basados en RedHat:
+
+```sh
+sudo yum install openssl-devel libxml2-devel xmlsec1-devel xmlsec1-openssl-devel libtool-ltdl-devel
+```
+
+Para la instalación de la API, se deben instalar las dependencias. Esto se realiza con pip. En el caso de que se tengan dos versiones de pip y python (Ubuntu 18 por ejemplo), se utiliza de la siguiente manera:
+
+```sh
+pip3 install -r requirements.txt
+```
+
+En el caso de no tener dos versiones de python y/o pip, solo con "pip" en lugar de "pip3" es suficiente
+
+### Ejecución
+
+Para hacer correr la API, luego de instaladas las dependencias, se debe ejecutar el siguiente comando:
+
+```sh
+python3 start.py
+```
+Lo anterior lanzará el programa que expone la API, usando variables definidos en el entorno de sistema (vease el siguiente punto).
+
+### Variables de entorno necesarias
+
+Para la ejecución correcta de la API se necesitan variables de entorno, como datos específicos. Estos son los siguientes:
+
+- DB_USERNAME : representa el nombre de usuario usado en la base de datos
+- DB_DATABASE : representa el nombre de la base de datos creada en el proceso de inicialización del admin
+- DB_PASSWORD: Contraseña del usuario para su uso
+- DB_HOST: Puerto para el acceso a la base de datos
+- DB_PORT: Puerto para acceder a la base de datos
+- FLASKPORT (OPCIONAL): Puerto para exponer la API
+
 ## Formato
 
 Las llamadas de API contienen el formato estandard de REST, siendo de siguiente manera:
@@ -457,7 +509,7 @@ Resultado:
 
 #### Ingresar (login)
 
-Dado que practicamente todas las funcionalidades anteriores requieren autetificación, esta se implementó con JWT. Así en los headers se espera que venga el token con la llave "Authentification"
+Dado que practicamente todas las funcionalidades anteriores requieren autetificación, esta se implementó con JWT. Así en los headers se espera que venga el token con la llave "Authentification", con valor "Bearer TOKEN"
 
 > Parámetro: nombre de usuario y contraseña (Body)
 > Método: POST
@@ -473,46 +525,30 @@ Resultado:
 ```HTTP 200 OK```con body 
 
 ```javascript
-{"id":2,"token":"$2b$12$kcQIuRVkAUk2z/g2TzzOM.7Pv5odfq61Q10ClMUhk3XsHvl0X8YrS"}
+{"id":2,"token":"$2b$12$kcQIuRVkAUk2z/g2TzzOM.7Pv5odfq61Q10ClMUhk3XsHvl0X8YrS", "refresh": "asdads123457jgfdsw"}
 
 ```
 
  o ``` HTTP 401 UNAUTHORIZED```
 
-## Instalación y requisitos
 
-### Requisitos
-- Base de datos MySQL 5.7 o patch version similar.
-- Python 3.7 o superior
-- Pip3
-- Configuradas las variables de entorno para "database" en admin_page
+#### Refrescar token
 
-### Instalación
+Dado el uso de JWT y que estos son efímeros (vencen), se debe tener un método para poder refrescarlos y obtener un token válido en el caso de vencer.
 
-Para la instalación de la API, se deben instalar las dependencias. Esto se realiza con pip. En el caso de que se tengan dos versiones de pip y python (Ubuntu 18 por ejemplo), se utiliza de la siguiente manera:
+> Parámetro: Token de refresco (token)
+> Método: POST
+> Ruta: ```HOST/version/users/refresh```
 
-```sh
-pip3 install -r requirements.txt
+Body: Vacío
+Headers: Authorization, con el token de refresco (refresh), contenido como "Bearer TOKEN"
+Resultado:
+```HTTP 200 OK```con body 
+
+```javascript
+{"token":"654mblkamlvhjnlkmñv156"}
 ```
 
-En el caso de no tener dos versiones de python y/o pip, solo con "pip" en lugar de "pip3" es suficiente
+## Work to do / Cosas por hacer
 
-### Ejecución
-
-Para hacer correr la API, luego de instaladas las dependencias, se debe ejecutar el siguiente comando:
-
-```sh
-python3 start.py
-```
-Lo anterior lanzará el programa que expone la API, usando variables definidos en el entorno de sistema (vease el siguiente punto).
-
-### Variables de entorno necesarias
-
-Para la ejecución correcta de la API se necesitan variables de entorno, como datos específicos. Estos son los siguientes:
-
-- DB_USERNAME : representa el nombre de usuario usado en la base de datos
-- DB_DATABASE : representa el nombre de la base de datos creada en el proceso de inicialización del admin
-- DB_PASSWORD: Contraseña del usuario para su uso
-- DB_HOST: Puerto para el acceso a la base de datos
-- DB_PORT: Puerto para acceder a la base de datos
-- FLASKPORT (OPCIONAL): Puerto para exponer la API
+- Optimizar/reducir consultas por usuario a base de datos

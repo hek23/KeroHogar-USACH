@@ -5,8 +5,8 @@ module.exports = function (ctx) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     boot: [
-      'fake-backend.js',
-      'axios.js'
+      'axios.js',
+      'filters.js'
     ],
 
     css: [
@@ -39,7 +39,10 @@ module.exports = function (ctx) {
         'QItem',
         'QItemSection',
         'QItemLabel',
-
+        'QScrollArea',
+        'QDialog',
+        'QAvatar',
+        
         'QInput',
         'QForm',
         'QSelect',
@@ -49,7 +52,14 @@ module.exports = function (ctx) {
         'QCardActions',
         'QImg',
         'QOptionGroup',
+        'QExpansionItem',
+        'QMarkupTable',
+        'QTable',
+        'QTh',
+        'QTr',
+        'QTd',
         
+        'QSpinner',
         'QSpinnerFacebook',
         'QSeparator',
         'QPopupProxy',
@@ -63,7 +73,9 @@ module.exports = function (ctx) {
       // Quasar plugins
       plugins: [
         'Notify',
-        'Dialog'
+        'Dialog',
+        'LocalStorage',
+        'SessionStorage'
       ]
 
       // iconSet: 'ionicons-v4'

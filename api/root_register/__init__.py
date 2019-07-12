@@ -8,7 +8,7 @@ from flask_jwt_extended import JWTManager
 
 
 #App initialization
-app = Flask(__name__)
+app = Flask("KerhogarAPI")
 cors = CORS(app, resources={r"/v1/*": {"origins": "*"}})
 # MySQL configurations
 app.config['MYSQL_DATABASE_USER'] = os.getenv('DB_USERNAME','user')
@@ -17,7 +17,14 @@ app.config['MYSQL_DATABASE_DB'] = os.getenv('DB_DATABASE','db')
 app.config['MYSQL_DATABASE_HOST'] = os.getenv('DB_HOST','localhost')
 app.config['MYSQL_DATABASE_PORT'] = int(os.getenv('DB_PORT', '3306'))
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_KEY', 'super-secret')  # Change this!
+
+#Start JWT
 jwt = JWTManager(app)
+
+#Import Transbank objects
+from helpers import transbankInitializer as webpayManager
+
+
 #Init DB Connections
 from helpers import mysqlConnector
 

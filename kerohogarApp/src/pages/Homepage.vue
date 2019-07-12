@@ -12,12 +12,14 @@
 
       <form @submit.prevent="ingresar" class="q-gutter-y-md" style="max-width:600px; margin: 0 auto;">
         <q-input
+          bg-color="grey-4"
+          color="green-10"
           filled
           v-model="rut"
           label="Ingrese su rut"
           hint="Ej: 11222333-4"
         />
-        <q-input filled v-model="password" class="q-mb-sm" :type="isPwd ? 'password' : 'text'" label="Ingrese su contraseña">
+        <q-input bg-color="grey-4" color="green-10" filled v-model="password" class="q-mb-sm" :type="isPwd ? 'password' : 'text'" label="Ingrese su contraseña">
           <template v-slot:append>
             <q-icon
               :name="isPwd ? 'visibility_off' : 'visibility'"
@@ -54,6 +56,7 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
     data(){
@@ -67,44 +70,21 @@ export default {
       this.$emit('title', "Ingreso de usuarios");
     },
     computed: {
-        loggingIn () {
-            return this.$store.state.authentication.status.loggingIn;
-        }
+      ...mapGetters('auth', ['loggingIn'])
     },
     created () {
         // reset login status
-        this.$store.dispatch('authentication/logout');
+        //this.$store.dispatch('authentication/logout');
+        this.logout();
     },
 
     methods:{
+      ...mapActions('auth', ['login', 'logout']),
       ingresar () {
         const { rut, password } = this;
-        const { dispatch } = this.$store;
         if (rut && password) {
-            dispatch('authentication/login', { rut, password });
+            this.login({ rut, password });
         }
-
-        /*
-        // Simulating a delay here.
-        // When we are done, we reset "logging_in"
-        // Boolean to false to restore the
-        // initial state.
-        setTimeout(() => {
-          // delay simulated, we are done,
-          // now restoring submit to its initial state
-          
-        }, 3000)
-
-        this.$q.dialog({
-          title: 'Mensaje',
-          message: 'Mensaje',
-          cancel: true,
-          persistent: true
-        }).onOk(() => {
-          console.log('Ingresa')
-        }).onCancel(() => {
-          console.log('Rut no registrado')
-        })*/
       }
     }
   }
